@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { Button } from "@/components/ui/Button/Button";
 import type { ExerciseMedia } from "../../domain/exercise";
 import styles from "./ExerciseMedia.module.css";
 
@@ -47,13 +48,14 @@ export function ApprovedExerciseMedia({
               unoptimized
             />
           )}
-          <button
-            className={styles.mediaControl}
-            type="button"
+          <Button
+            className={styles.mediaAction}
+            size="compact"
+            variant="secondary"
             onClick={() => setIsVisible(false)}
           >
             Hide demonstration
-          </button>
+          </Button>
         </>
       ) : (
         <div className={styles.mediaPrompt}>
@@ -61,13 +63,14 @@ export function ApprovedExerciseMedia({
             An approved {media.kind === "video" ? "video" : "animation"} is
             available. It will play only after you choose to show it.
           </p>
-          <button
-            className={styles.mediaControl}
-            type="button"
+          <Button
+            className={styles.mediaAction}
+            size="compact"
+            variant="secondary"
             onClick={() => setIsVisible(true)}
           >
             Show demonstration
-          </button>
+          </Button>
         </div>
       )}
       {media.attribution && (
