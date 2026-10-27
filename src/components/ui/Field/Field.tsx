@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 import styles from "./Field.module.css";
 
 type SharedFieldProps = {
@@ -7,11 +7,6 @@ type SharedFieldProps = {
   id: string;
   label: string;
 };
-
-type InputProps = Omit<ComponentPropsWithoutRef<"input">, "size"> &
-  SharedFieldProps & {
-    leadingIcon?: ReactNode;
-  };
 
 type SelectProps = ComponentPropsWithoutRef<"select"> & SharedFieldProps;
 
@@ -22,54 +17,6 @@ function describedBy(
 ): string | undefined {
   const ids = [existing, hintId, errorId].filter(Boolean);
   return ids.length > 0 ? ids.join(" ") : undefined;
-}
-
-export function Input({
-  "aria-describedby": ariaDescribedBy,
-  error,
-  hint,
-  id,
-  label,
-  leadingIcon,
-  ...props
-}: InputProps) {
-  const controlId = id;
-  const hintId = hint ? `${controlId}-hint` : undefined;
-  const errorId = error ? `${controlId}-error` : undefined;
-
-  return (
-    <label className={styles.field} htmlFor={controlId}>
-      <span className={styles.label}>{label}</span>
-      <span className={styles.control} data-invalid={Boolean(error)}>
-        {leadingIcon && (
-          <span className={styles.leadingIcon} aria-hidden="true">
-            {leadingIcon}
-          </span>
-        )}
-        <input
-          {...props}
-          id={controlId}
-          className={styles.input}
-          aria-invalid={Boolean(error) || undefined}
-          aria-describedby={describedBy(
-            ariaDescribedBy,
-            hintId,
-            errorId,
-          )}
-        />
-      </span>
-      {hint && (
-        <span className={styles.hint} id={hintId}>
-          {hint}
-        </span>
-      )}
-      {error && (
-        <span className={styles.error} id={errorId}>
-          {error}
-        </span>
-      )}
-    </label>
-  );
 }
 
 export function Select({
