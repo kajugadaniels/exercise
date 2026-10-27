@@ -7,7 +7,7 @@
 
 ## 1. Data minimization
 
-Collect only data required for an approved user-visible feature. The public exercise catalog should work without a profile. Do not collect birth date, sex/gender, height, weight, photos, injury/medical history, disability, location, contacts, or wearable data unless a later approved feature cannot work without it and receives a specific privacy review.
+Collect only data required for an approved user-visible feature. Requiring a Clerk session does not justify collecting an additional application profile: the exercise catalog must work without fitness or demographic profile fields. Do not collect birth date, sex/gender, height, weight, photos, injury/medical history, disability, location, contacts, or wearable data unless a later approved feature cannot work without it and receives a specific privacy review.
 
 ## 2. Data classes
 
