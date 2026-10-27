@@ -4,17 +4,17 @@
 
 ## Project status
 
-**Phase 1 foundation is present but unverified.** The repository contains a Next.js 16.4.3/React 19.3.0 scaffold, the logo/favicon, Outfit typography, semantic light/dark tokens, responsive starter styles, governance, and safe environment templates. No Clerk tenant, database, feature integration, test result, build result, or deployment is claimed to work.
+**The exercise-library vertical slice is implemented in code but remains unverified.** The repository contains a Next.js 16.4.3/React 19.3.0 application shell, the logo/favicon, Outfit typography, semantic light/dark tokens, a pinned exercise-provider adapter, responsive catalog/detail routes, and an accessible React Muscle Highlighter wrapper. No test, lint, type-check, build, live provider runtime, Clerk tenant, database, or deployment result is claimed to work.
 
 | Capability | Status |
 | --- | --- |
 | Engineering rulebook | Implemented as documentation |
-| Architecture and provider design | Documented, not implemented |
-| Responsive Next.js foundation | Scaffolded and styled; not built or run by an agent |
-| Exercise catalog integration | Planned; metadata contract inspected |
+| Architecture and provider design | Implemented for the initial read-only catalog |
+| Responsive Next.js foundation | Implemented in code; not built or run by an agent |
+| Exercise catalog integration | Pinned adapter, Zod validation, normalization, search, filtering, pagination, and detail lookup written |
 | Exercise GIF use | **Blocked for public/commercial release pending rights verification** |
 | Clerk authentication | Approved approach, not configured |
-| Muscle visualization | Approved dependency, developer installation pending |
+| Muscle visualization | Typed mapping and accessible front/back detail component written; not browser-verified |
 | Database and persistence | Pending developer decision |
 | Deployment | Not configured or verified |
 
@@ -56,6 +56,9 @@ The platform provides general fitness information, not medical advice, diagnosis
 - Clerk sign-up, sign-in, sessions, account management, and minimal profile onboarding
 - Source attribution and provider failure handling
 
+The catalog-to-detail flow above is now present in code. Authentication and any
+account-dependent capabilities remain outside this integration task.
+
 ### Future
 
 - Interactive front/back muscle explorer
@@ -96,11 +99,11 @@ Exercise discovery should remain useful when the provider, animation, account se
 | Framework | Next.js 16.4.3 App Router |
 | UI | React 19.3.0 |
 | Language | TypeScript with strict settings |
-| Authentication | Clerk `@clerk/nextjs@^7.9.21`, installation/configuration pending |
+| Authentication | Clerk `@clerk/nextjs@^7.9.21` declared; tenant/configuration pending |
 | Exercise source | Exercise Gym GIFs DB behind a provider abstraction |
-| Validation | Zod `^4.6.7`, installation pending |
-| Muscle anatomy | React Muscle Highlighter `^1.2.0`, installation pending |
-| Icons | Hugeicons React `^1.1.10` and Core Free Icons `^4.3.5`, installation pending |
+| Validation | Zod `^4.6.7` declared and used at the provider boundary |
+| Muscle anatomy | React Muscle Highlighter `^1.2.0` declared and wrapped in the detail feature |
+| Icons | Hugeicons React `^1.1.10` and Core Free Icons `^4.3.5` declared and used |
 | Typography | Outfit through `next/font/google` |
 | Styling | Plain CSS, semantic tokens, and colocated CSS Modules; Tailwind/CSS-in-JS/UI kits are not approved |
 | Database/ORM | Not selected |
@@ -136,7 +139,26 @@ Core boundaries:
 
 See [`.agents/architecture.md`](.agents/architecture.md) and [`.agents/api.md`](.agents/api.md).
 
-## 8. Normalized exercise contract
+## 8. Implemented exercise data flow
+
+The `/exercises` Server Component parses bounded URL search parameters and calls
+the Exercise Gym GIFs adapter. The adapter fetches only from the fixed
+`v1.1.0` jsDelivr base, verifies response type and size, parses JSON, validates
+the payload with Zod, and maps it into application-owned `Exercise` records.
+Search and all four filters operate on normalized values with AND semantics;
+results are sorted by name and paginated at 24 records per page.
+
+The detail route uses provider muscle and slug segments to resolve one validated
+record. Presentation components receive only normalized records. Provider JSON,
+URL construction, rights status, and attribution stay inside the feature's
+provider/domain boundary.
+
+Failure behavior is explicit: malformed or unavailable provider data reaches the
+route error boundary, invalid detail identifiers return the local not-found
+state, and missing optional metadata is displayed as unavailable rather than
+invented.
+
+## 9. Normalized exercise contract
 
 The application will own a stable model rather than expose third-party response objects:
 
@@ -152,7 +174,7 @@ The application will own a stable model rather than expose third-party response 
 
 Difficulty is deliberately absent until an approved source supports it. The UI must never invent missing fields.
 
-## 9. Exercise Gym GIFs DB
+## 10. Exercise Gym GIFs DB
 
 The [Exercise Gym GIFs DB repository](https://github.com/JahelCuadrado/ExerciseGymGifsDB) was inspected on 2026-10-27. Its README documents a static English/Spanish JSON API, 19 muscle groups and 1,323 exercises for the inspected release, and a pinned jsDelivr base:
 
@@ -174,23 +196,30 @@ The provider README says the GIFs were collected from the internet, the maintain
 
 This is a release blocker until provenance, license, attribution, embedding/redistribution, and commercial rights are resolved. See [`.agents/exercises.md`](.agents/exercises.md). This documentation is not legal advice.
 
-## 10. Muscle visualization
+## 11. Muscle visualization
 
 [React Muscle Highlighter](https://github.com/soroojshehryar/react-muscle-highlighter) was inspected at repository version 1.2.0. Its package declares an MIT license and React 18/19 peer support. It exposes typed front/back anatomy views and a fixed slug set.
 
-Provider and visualization names differ—for example `delts`/`deltoids`, `glutes`/`gluteal`, `quads`/`quadriceps`, and `traps`/`trapezius`. A typed, exhaustively tested mapping layer will translate provider IDs to application IDs and then to highlighter slugs. Unsupported muscles receive a text fallback; unsafe casts or string guessing are forbidden.
+Provider and visualization names differ—for example `delts`/`deltoids`, `glutes`/`gluteal`, `quads`/`quadriceps`, and `traps`/`trapezius`. The implemented typed table maps every one of the 19 provider muscle IDs to an inspected highlighter slug or explicit `null`. Ambiguous values such as `lats`, `spine`, and `levator-scapulae` remain unsupported rather than being guessed.
 
-The SVG is expected to require a narrow Client Component. A synchronized text/list interface, keyboard operation, visible focus, announced view changes, and non-color labels are required regardless of package claims. See [`.agents/muscle-visualization.md`](.agents/muscle-visualization.md).
+The narrow Client Component provides front/back controls, an announced view state, primary/secondary colors with a text legend, selectable text-equivalent muscle buttons, and honest unsupported-muscle labels. The installed library's SVG paths are pointer-only in version 1.2.0, so the SVG is illustrative and non-interactive; real buttons provide the equivalent interaction and keyboard path. See [`.agents/muscle-visualization.md`](.agents/muscle-visualization.md).
 
-## 11. Authentication
+Exercise Gym GIF URLs are retained only as restricted provider metadata. The
+normal application flow renders a first-party CSS placeholder and never requests
+or displays those GIFs. The media contract also has a separate verified state
+for a future licensed GIF or MP4 source; that branch waits for an explicit user
+action before loading motion and can be hidden again. The current adapter never
+produces that verified state, so it cannot enable the blocked collection.
+
+## 12. Authentication
 
 Clerk will manage sign-up, sign-in, sessions, and account UI. The installed Clerk version's official App Router documentation must be consulted during implementation.
 
 The recommended route policy keeps exercise discovery public and protects profile, favorites, workouts, and history, but the developer must confirm it. Middleware redirects are not sufficient authorization: every private server operation derives the actor from the Clerk session and owner-scopes access. Profile onboarding stays minimal and avoids unnecessary health data.
 
-## 12. Proposed repository structure
+## 13. Repository structure
 
-Directories will be created only when implementation requires them:
+Feature directories are created only when implementation requires them:
 
 ```text
 .
@@ -213,19 +242,19 @@ Directories will be created only when implementation requires them:
 
 Routes compose features; features own domain behavior. UI never consumes provider JSON directly. See [`.agents/folder-structure.md`](.agents/folder-structure.md).
 
-## 13. Local development
+## 14. Local development
 
-A Next.js scaffold exists. Agents never install dependencies or run the application, lint, tests, type checks, formatters, or builds. The developer performs those commands and shares output when assistance is needed.
+A Next.js application and dependency manifest exist. Agents never install dependencies or run the application, lint, tests, type checks, formatters, or builds. The developer performs those commands and shares output when assistance is needed.
 
-Install the approved Phase 1 runtime dependencies manually:
+Install the declared dependencies from the lockfile:
 
 ```bash
-npm install @clerk/nextjs@^7.9.21 zod@^4.6.7 @hugeicons/react@^1.1.10 @hugeicons/core-free-icons@^4.3.5 react-muscle-highlighter@^1.2.0
+npm ci
 ```
 
 Outfit is provided by `next/font/google`; it does not require an npm package. No database, ORM, RapidAPI, analytics, or testing dependency is included in this command.
 
-## 14. Environment variables
+## 15. Environment variables
 
 Safe committed templates exist for both environments:
 
@@ -251,7 +280,7 @@ EXERCISE_PROVIDER_VERSION=v1.1.0
 
 No RapidAPI or database variable should be added until that integration is approved. Agents never read or modify real `.env*` values.
 
-## 15. Security and privacy
+## 16. Security and privacy
 
 - Validate all browser and provider input at runtime.
 - Build provider paths from allowlisted HTTPS origins and validated identifiers.
@@ -264,55 +293,84 @@ No RapidAPI or database variable should be added until that integration is appro
 
 Read [`.agents/security.md`](.agents/security.md), [`.agents/privacy.md`](.agents/privacy.md), and [`.agents/authentication.md`](.agents/authentication.md).
 
-## 16. Accessibility and design quality
+## 17. Accessibility and design quality
 
 The target is WCAG 2.2 AA. Core flows must work with keyboard, touch, zoom/reflow, reduced motion, forced colors, and assistive technology. Animated exercise content requires available written instruction; the anatomy diagram requires a text equivalent. Loading, empty, provider error, malformed data, and missing-media states are first-class product states.
 
 The approved foundation uses Outfit, logo coral `#ff4b33` as primary, logo navy as secondary, compact but accessible text sizes, system-aware dark mode, and manual `data-theme` hooks for a future theme control. Route `page.module.css`/`layout.module.css` files own composition, while shared and feature components use same-name colocated CSS Modules. See [`.agents/design.md`](.agents/design.md) and [`.agents/accessibility.md`](.agents/accessibility.md).
 
-## 17. Testing and quality control
+## 18. Testing and quality control
 
-Planned coverage includes:
+Written unit coverage includes provider schema validation, normalization,
+filter combinations, detail resolution, failure translation, restricted/missing
+media behavior, exhaustive muscle mapping, and unsupported values. These tests
+use Node's test API and small synthetic records, but no project test script or
+approved component-test harness exists yet, so they have not been executed.
 
-- unit tests for runtime schemas, normalization, filters, URL construction, and muscle mappings;
-- component tests for catalog states, accessible filters, media fallback, and diagram wrapper;
+Still required after test-tool approval:
+
+- component interaction tests for accessible filters, media fallback, and the diagram wrapper;
 - integration tests for provider success/failure and Clerk-protected owner scope;
 - end-to-end tests for browse→filter→detail and later authentication/personal workflows;
 - manual keyboard, screen-reader, contrast, motion, mobile, and media checks.
 
 Tests use small synthetic/sanitized fixtures rather than live APIs or copied GIF collections. Agents may write tests but may not execute tests, builds, lint, formatters, or type checks under [`.agents/workflow.md`](.agents/workflow.md).
 
-## 18. Performance and deployment
+## 19. Manual verification
+
+After installing dependencies, run the developer commands below and then verify:
+
+1. Open `/exercises` at 320px, tablet, and desktop widths.
+2. Search for `Barbell Curl`; combine muscle, body area, equipment, and category filters; confirm the URL preserves the state.
+3. Move between result pages and open `/exercises/biceps/barbell-curl`.
+4. Confirm no provider GIF request appears in the browser network panel.
+5. Switch front/back anatomy views and operate each supported muscle label with keyboard only.
+6. Confirm unsupported muscles remain in the text list with “diagram unavailable.”
+7. Check light, system dark, 200% zoom, reduced motion, and forced-colors modes.
+8. Temporarily use an invalid provider base in a disposable local environment and confirm the safe retry state; restore the pinned base afterward.
+
+Developer verification commands:
+
+```bash
+npm run lint
+./node_modules/.bin/tsc --noEmit
+npm run build
+npm run dev
+```
+
+No test command is documented until a test runner is approved and configured.
+
+## 20. Performance and deployment
 
 The application is designed for Vercel-compatible deployment but is not linked or deployed. Initial performance targets use Core Web Vitals “good” thresholds as measurement goals, not current results. Server rendering, bounded data reads, narrow hydration, reserved media space, and controlled animation are preferred.
 
 Production release requires developer-run quality checks, Clerk production verification, security headers, outage/fallback checks, accessibility review, privacy alignment, and approved rights for every exercise asset. The unresolved GIF rights currently block a public release using that media. See [`.agents/performance.md`](.agents/performance.md) and [`.agents/deployment.md`](.agents/deployment.md).
 
-## 19. Roadmap
+## 21. Roadmap
 
 | Phase | Recommended scope |
 | --- | --- |
 | 0 — Foundation | Rulebook, architecture, source/licensing research — **documented** |
-| 1 — Web shell and vertical slice | Approved scaffold, design tokens, app shell, fixture-backed browse/detail, error states, baseline accessibility |
-| 2 — Provider integration | Runtime schemas, pinned adapter, facets/search, caching/error policy; enable only legally approved media |
+| 1 — Web shell and vertical slice | Implemented in code; developer verification pending |
+| 2 — Provider integration | Initial runtime schemas, pinned adapter, normalized search/filter/detail, cache/error policy implemented; legal review still blocks release |
 | 3 — Accounts | Clerk integration, route policy, minimal onboarding |
-| 4 — Anatomy | Approved muscle dependency, normalization, accessible diagram/detail integration |
+| 4 — Anatomy | Initial dependency wrapper, exhaustive mapping, and accessible detail integration implemented; browser verification pending |
 | 5 — Persistence decision | Select database/ORM after requirements and privacy review |
 | 6 — Personal workouts | Favorites, plans, sets/reps/rest after persistence approval |
 | Later | Progress, PWA evaluation, native client, licensed video providers |
 
-## 20. Known limitations and open decisions
+## 22. Known limitations and open decisions
 
 - The final product name and full voice/art direction remain unresolved; the logo, Outfit, coral primary, and navy secondary are approved.
-- The application scaffold and dependency manifest exist, but runtime dependencies listed above have not been installed by an agent and the app has not been verified.
-- No test harness or deployment is configured.
-- The exercise provider's documented schema was inspected, but integration behavior has not been implemented or runtime-validated here.
+- The application and dependency manifest exist, but dependencies have not been installed by an agent and the app has not been verified.
+- No component-test harness, test script, or deployment is configured.
+- The provider's pinned public payload shapes were inspected and encoded in runtime schemas, but the application integration has not been executed against them.
 - Exercise Gym GIF media provenance and commercial rights are unresolved and blocking.
-- React Muscle Highlighter accessibility and visuals have not been tested in this project.
+- React Muscle Highlighter's rendered visuals have not been browser-tested in this project; its inspected SVG paths do not supply keyboard interaction, so the wrapper uses separate semantic controls.
 - Database, ORM, persistence model, hosting regions, storage, native framework, monetization, paid APIs, and analytics remain undecided.
 - RapidAPI is optional and not approved/configured.
 
-## 21. Contributing
+## 23. Contributing
 
 Before changing anything:
 
@@ -326,7 +384,7 @@ Before changing anything:
 
 Commit suggestions follow Conventional Commit style with one explicitly staged file per suggested commit. Agents never perform Git writes. See [`.agents/git.md`](.agents/git.md).
 
-## 22. Reference review
+## 24. Reference review
 
 The governance structure was adapted from the accessible [CareBasket repository](https://github.com/kajugadaniels/care-basket), especially its short root agent entry point, authoritative rule index, precedence model, conservative workflow, topic ownership, and truthful completion reporting. CareBasket shopping, family, payment, AI, and hackathon business rules were intentionally not copied.
 
