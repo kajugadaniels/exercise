@@ -1,0 +1,111 @@
+.page {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.hero {
+  display: grid;
+  gap: var(--space-4);
+  max-inline-size: var(--reading-max);
+}
+
+.context {
+  inline-size: fit-content;
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  color: var(--color-primary-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.heroTitle {
+  max-inline-size: 14ch;
+  margin: 0;
+  font-size: var(--text-display);
+  letter-spacing: var(--tracking-tight);
+}
+
+.summary {
+  max-inline-size: 58ch;
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.primaryLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: fit-content;
+  min-block-size: var(--control-height);
+  padding-inline: var(--space-4);
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  text-decoration: none;
+}
+
+.overview {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.sectionHeading {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.sectionTitle,
+.sectionDescription,
+.previewTitle,
+.previewDescription {
+  margin: 0;
+}
+
+.sectionDescription,
+.previewDescription {
+  color: var(--color-text-muted);
+}
+
+.previewList {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.previewItem {
+  display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-5);
+  border-block-start: 1px solid var(--color-border);
+}
+
+.previewValue {
+  color: var(--color-primary-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+@media (hover: hover) {
+  .primaryLink:hover {
+    background-color: var(--color-primary-hover);
+    color: var(--color-on-primary);
+  }
+}
+
+@media (min-width: 40rem) {
+  .previewList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (forced-colors: active) {
+  .primaryLink {
+    border: 1px solid ButtonText;
+  }
+}
