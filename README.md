@@ -270,7 +270,7 @@ cp .env.local.example .env.local
 Then replace placeholders locally. The templates define:
 
 ```dotenv
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_APP_URL=http://localhost:4000
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_REPLACE_ME
 CLERK_SECRET_KEY=sk_test_REPLACE_ME
 CLERK_WEBHOOK_SIGNING_SECRET=whsec_REPLACE_ME
@@ -297,7 +297,9 @@ Read [`.agents/security.md`](.agents/security.md), [`.agents/privacy.md`](.agent
 
 The target is WCAG 2.2 AA. Core flows must work with keyboard, touch, zoom/reflow, reduced motion, forced colors, and assistive technology. Animated exercise content requires available written instruction; the anatomy diagram requires a text equivalent. Loading, empty, provider error, malformed data, and missing-media states are first-class product states.
 
-The approved foundation uses Outfit, logo coral `#ff4b33` as primary, logo navy as secondary, compact but accessible text sizes, system-aware dark mode, and manual `data-theme` hooks for a future theme control. Route `page.module.css`/`layout.module.css` files own composition, while shared and feature components use same-name colocated CSS Modules. See [`.agents/design.md`](.agents/design.md) and [`.agents/accessibility.md`](.agents/accessibility.md).
+The approved foundation uses Outfit, logo coral `#ff4b33` as primary, logo navy as secondary, compact but accessible text sizes, system-aware dark mode, and manual `data-theme` hooks for a future theme control. The liquid-glass layer is intentionally limited to navigation, controls, grouped content, and transient feedback; opaque token fallbacks support reduced-transparency preferences and forced-colors mode.
+
+Reusable UI primitives live in `src/components/ui`: `Button` provides primary, secondary, ghost, danger, and loading states; `Input` and `Select` provide required visible labels plus hint/error wiring; `Badge` provides semantic compact labels; and `ToastProvider`/`useToast` provide success, error, and informational notifications. The root layout mounts the toast provider once. Route `page.module.css`/`layout.module.css` files own composition, while shared and feature components use same-name colocated CSS Modules. See [`.agents/design.md`](.agents/design.md) and [`.agents/accessibility.md`](.agents/accessibility.md).
 
 ## 18. Testing and quality control
 
@@ -337,6 +339,8 @@ npm run lint
 npm run build
 npm run dev
 ```
+
+The development and production start scripts bind to port `4000`; open `http://localhost:4000` after the server starts.
 
 No test command is documented until a test runner is approved and configured.
 
@@ -382,7 +386,7 @@ Before changing anything:
 6. Add applicable tests without executing prohibited commands.
 7. Finish with the required completion report and developer-run verification commands.
 
-Commit suggestions follow Conventional Commit style with one explicitly staged file per suggested commit. Agents never perform Git writes. See [`.agents/git.md`](.agents/git.md).
+Commit suggestions use the repository's `(type): description` format and always include an explicit single-file `git add` command before the matching commit command. Agents never perform Git writes. See [`.agents/git.md`](.agents/git.md).
 
 ## 24. Reference review
 
