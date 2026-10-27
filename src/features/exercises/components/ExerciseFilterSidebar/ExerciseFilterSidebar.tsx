@@ -122,7 +122,11 @@ function FilterList<TValue extends string>({
 
 export function ExerciseFilterSidebar({ query }: ExerciseFilterSidebarProps) {
   return (
-    <aside className={styles.sidebar} aria-label="Exercise filters">
+    <aside
+      className={styles.sidebar}
+      id="exercise-filters"
+      aria-label="Exercise filters"
+    >
       <section
         className={styles.filterGroup}
         aria-labelledby="exercise-body-parts-title"
