@@ -5,8 +5,6 @@ import {
   getProfileForClerkUser,
 } from "@/features/profile/server/profile-service";
 
-export const dynamic = "force-dynamic";
-
 const noStoreHeaders = { "Cache-Control": "no-store" };
 
 export async function GET() {
