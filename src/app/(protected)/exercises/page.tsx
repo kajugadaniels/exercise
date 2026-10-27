@@ -1,5 +1,10 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import {
+  RefreshIcon,
+  SearchRemoveIcon,
+} from "@hugeicons/core-free-icons";
+import { Icon } from "@/components/ui/Icon/Icon";
 import { ExerciseCard } from "@/features/exercises/components/ExerciseCard/ExerciseCard";
 import { ExerciseFilterSheet } from "@/features/exercises/components/ExerciseFilterSheet/ExerciseFilterSheet";
 import { ExercisePagination } from "@/features/exercises/components/ExercisePagination/ExercisePagination";
@@ -90,16 +95,16 @@ async function ExerciseCatalog({
       </div>
 
       <div className={styles.results}>
-        <div className={styles.toolbar}>
-          <p className={styles.resultCount} aria-live="polite">
-            {result.total === 0
-              ? "No exercises found"
-              : `Showing ${firstResult}–${lastResult} of ${result.total}`}
-          </p>
-          <p className={styles.pageStatus}>
-            Page {result.page} of {result.pageCount}
-          </p>
-        </div>
+        {result.total > 0 ? (
+          <div className={styles.toolbar}>
+            <p className={styles.resultCount} aria-live="polite">
+              Showing {firstResult}–{lastResult} of {result.total}
+            </p>
+            <p className={styles.pageStatus}>
+              Page {result.page} of {result.pageCount}
+            </p>
+          </div>
+        ) : null}
 
         {result.items.length > 0 ? (
           <>
@@ -118,10 +123,19 @@ async function ExerciseCatalog({
           </>
         ) : (
           <div className={styles.emptyState}>
-            <h3>No matching exercises</h3>
-            <p>Try a shorter name or choose another filter.</p>
+            <div className={styles.emptyIcon} aria-hidden="true">
+              <Icon icon={SearchRemoveIcon} size={64} />
+            </div>
+            <div className={styles.emptyCopy} role="status">
+              <h3>No matching exercises</h3>
+              <p>
+                No exercise matches your current search and filters. Reset them
+                to explore the full library.
+              </p>
+            </div>
             <Link className={styles.stateAction} href="/exercises">
-              View all exercises
+              <Icon icon={RefreshIcon} size={18} />
+              <span>Reset filters</span>
             </Link>
           </div>
         )}
