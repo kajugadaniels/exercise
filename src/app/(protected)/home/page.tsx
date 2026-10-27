@@ -4,16 +4,22 @@ import styles from "./page.module.css";
 
 const workspacePreview = [
   {
-    id: "catalog",
-    title: "Exercise catalog",
-    value: "Demo data",
-    description: "Preview the catalog layout before verified exercise data is connected.",
+    id: "profile",
+    title: "Training profile",
+    value: "Complete",
+    description: "Your measurements and preferences are securely connected to your account.",
   },
   {
-    id: "account",
-    title: "Account access",
-    value: "Connected",
-    description: "Use the profile control in the navigation bar to manage your Clerk account.",
+    id: "progress",
+    title: "Progress history",
+    value: "Tracking",
+    description: "Measurement changes are saved as private snapshots you can review over time.",
+  },
+  {
+    id: "catalog",
+    title: "Exercise catalog",
+    value: "Explore",
+    description: "Browse the exercise workspace while the verified catalog is being completed.",
   },
 ] as const;
 
@@ -21,11 +27,11 @@ export default function HomePage() {
   return (
     <main className={styles.page} id="main-content">
       <header className={styles.hero}>
-        <p className={styles.context}>Demo workspace</p>
+        <p className={styles.context}>Training workspace</p>
         <h1 className={styles.heroTitle}>Your training space</h1>
         <p className={styles.summary}>
-          The protected application shell is ready. Explore the sample catalog
-          while the final exercise experience is being prepared.
+          Your profile, measurements, and progress history now stay connected
+          to your private account. Explore exercises or update your latest data.
         </p>
         <Link className={styles.primaryLink} href={AUTH_ROUTES.exercises}>
           Browse exercises
@@ -38,7 +44,7 @@ export default function HomePage() {
             Workspace overview
           </h2>
           <p className={styles.sectionDescription}>
-            Static placeholder information for the new protected pages.
+            The essentials that support your personal training record.
           </p>
         </div>
 
