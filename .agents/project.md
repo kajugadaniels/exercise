@@ -31,11 +31,12 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | Exercise provider adapter and validated catalog | MVP | Read-only catalog from verified provider fields |
 | Browse, search, filter, detail pages | MVP | Body part, muscle, equipment, category; graceful missing media |
 | Clerk sign-up/sign-in/account | Implemented in code, unverified | Authenticated-first route policy; Clerk tenant and runtime verification remain developer-owned |
-| Post-registration profile onboarding | MVP | Minimal non-sensitive preferences only |
+| Post-registration profile onboarding | MVP, approved 2026-10-27 | Mandatory gender, height, weight, derived BMI, and country profile before protected product use |
 | Muscle highlighter on detail pages | MVP after dependency approval | Local React SVG package; explicit normalization |
 | Interactive muscle explorer | Future | Select muscle, filter catalog, open detail |
-| Favorites and workout plans | Future, persistence pending | No persistence before database/ORM approval |
-| Sets, reps, rest, history, goals | Future | Avoid unnecessary health data |
+| Favorites and workout plans | Future | Persist only after their product model is approved |
+| Measurement progress/history | MVP, approved 2026-10-27 | Append when height or weight changes; owner-scoped and deleted with the fitness profile |
+| Sets, reps, rest, workout history, goals | Next phase | Define the training record before implementation |
 | PWA | Future | Separate approval and offline/data policy |
 | Native mobile application | Future / pending framework decision | Not supplied by Next.js automatically |
 | RapidAPI muscle image generator | Optional / pending approval | Must never be a required dependency |
@@ -47,11 +48,11 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 3. A result shows supported metadata and an animation only when lawful and available.
 4. The detail page explains supported instructions and muscles without inventing difficulty or safety claims.
 5. An SVG diagram highlights normalized primary/secondary muscles.
-6. Future profile onboarding and personalized persistence follow only after their separate approvals.
+6. A first-time authenticated user completes the required profile before accessing the protected product.
 
 ## 5. Explicit exclusions until approved
 
-- A database, ORM, schema, migrations, or user-data persistence
+- Persistence beyond the approved user and profile foundation
 - Native mobile framework or native app
 - Monetization, subscriptions, coaching marketplace, social feed, leaderboards
 - AI-generated exercise instructions, medical guidance, or inferred health conclusions
@@ -76,11 +77,11 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | Decision | Current state |
 | --- | --- |
 | Product identity | Final name and voice remain unresolved; logo mark, Outfit, coral primary, and navy secondary are approved |
-| Database and hosting | Unresolved |
-| ORM/query layer | Unresolved |
+| Database and hosting | Neon PostgreSQL approved for separate development and production databases only; deployment account/region remain developer-owned |
+| ORM/query layer | Prisma ORM 7 approved; pin the stable major and use migrations without a shadow database |
 | Dependency installation | Clerk, Zod, Hugeicons, and React Muscle Highlighter versions are approved; developer installation/output pending |
 | Styling architecture | Plain CSS with semantic tokens and colocated CSS Modules is approved; Tailwind/CSS-in-JS/UI kits require a future stack-change approval |
-| Account onboarding scope | Authentication is approved; profile fields and onboarding remain unresolved pending a specific privacy review |
+| Account onboarding scope | Mandatory gender, height, weight, country, and derived BMI approved on 2026-10-27; correction and deletion are required |
 | Media commercial rights and alternative licensed provider | Blocking public use of ExerciseGymGifsDB GIFs |
 | Native framework | Unresolved |
 | Monetization | Unresolved |
