@@ -124,6 +124,32 @@ test("resolves exercise details through the normalized provider contract", async
   assert.equal(exercise?.primaryMuscle, "biceps");
 });
 
+test("limits each catalog page to 24 exercises", async () => {
+  const exercises = Array.from({ length: 25 }, (_, index) => {
+    const sequence = String(index + 1).padStart(2, "0");
+    const slug = `curl-variation-${sequence}`;
+
+    return {
+      ...providerExerciseFixture,
+      id: `biceps/${slug}`,
+      slug,
+      name: `Curl variation ${sequence}`,
+      file: undefined,
+      gifUrl: undefined,
+    };
+  });
+  const adapter = createExerciseGymGifsAdapter(async (path) => {
+    assert.equal(path, "exercises.json");
+    return { count: exercises.length, exercises };
+  });
+
+  const result = await adapter.list({ page: 1 });
+
+  assert.equal(result.exercises.length, 24);
+  assert.equal(result.pageSize, 24);
+  assert.equal(result.pageCount, 2);
+});
+
 test("translates unexpected provider failures into a safe typed error", async () => {
   const adapter = createExerciseGymGifsAdapter(async () => {
     throw new Error("synthetic upstream failure");
