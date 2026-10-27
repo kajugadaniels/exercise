@@ -2,11 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Cancel01Icon,
-  FilterIcon,
-  Search02Icon,
-} from "@hugeicons/core-free-icons";
+import { Cancel01Icon, Search02Icon } from "@hugeicons/core-free-icons";
 import { Icon } from "@/components/ui/Icon/Icon";
 import type { ExerciseQuery } from "../../domain/exercise";
 import styles from "./ExerciseSearch.module.css";
@@ -25,10 +21,6 @@ export function ExerciseSearch({
   const openButtonRef = useRef<HTMLButtonElement>(null);
   const [isExpanded, setIsExpanded] = useState(Boolean(query.search));
   const [search, setSearch] = useState(query.search ?? "");
-  const hasActiveFilters = Boolean(
-    query.bodyPart || query.category || query.equipment || query.muscle,
-  );
-
   useEffect(() => {
     if (isExpanded) {
       inputRef.current?.focus();
@@ -106,20 +98,6 @@ export function ExerciseSearch({
           <Icon icon={Search02Icon} size={20} />
         </button>
       )}
-
-      <a
-        className={styles.roundButton}
-        data-active={hasActiveFilters ? "true" : "false"}
-        href="#exercise-filters"
-        title="Exercise filters"
-        aria-label={
-          hasActiveFilters
-            ? "Exercise filters, filters active"
-            : "Exercise filters"
-        }
-      >
-        <Icon icon={FilterIcon} size={20} />
-      </a>
     </div>
   );
 }
