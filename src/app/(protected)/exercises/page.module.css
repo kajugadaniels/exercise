@@ -87,7 +87,43 @@
   list-style: none;
 }
 
-.emptyState,
+.emptyState {
+  display: grid;
+  gap: var(--space-5);
+  align-content: center;
+  justify-items: center;
+  min-block-size: 22rem;
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+}
+
+.emptyIcon {
+  display: grid;
+  inline-size: 7rem;
+  block-size: 7rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  place-items: center;
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-text);
+}
+
+.emptyCopy {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: center;
+  max-inline-size: 34rem;
+}
+
+.emptyCopy h3,
+.emptyCopy p {
+  margin: 0;
+}
+
+.emptyCopy h3 {
+  font-size: var(--text-lg);
+}
+
 .errorState {
   display: grid;
   gap: var(--space-3);
@@ -105,6 +141,7 @@
 
 .stateAction {
   display: inline-flex;
+  gap: var(--space-2);
   align-items: center;
   min-block-size: var(--control-height);
   padding-inline: var(--space-4);
