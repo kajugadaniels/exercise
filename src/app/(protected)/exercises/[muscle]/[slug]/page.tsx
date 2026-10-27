@@ -6,11 +6,9 @@ import {
   EquipmentGym01Icon,
   ExternalLinkIcon,
   Target01Icon,
-  WorkoutSportIcon,
 } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Badge } from "@/components/ui/Badge/Badge";
 import { Icon } from "@/components/ui/Icon/Icon";
 import { ExerciseThumbnail } from "@/features/exercises/components/ExerciseThumbnail/ExerciseThumbnail";
 import { toExerciseSummary } from "@/features/exercises/catalog/exercise-summary";
@@ -84,11 +82,6 @@ async function ExerciseDetail({ params }: ExerciseDetailPageProps) {
 
       <header className={styles.header}>
         <div className={styles.headingCopy}>
-          {exercise.category && (
-            <Badge tone="primary">
-              {formatExerciseValue(exercise.category)}
-            </Badge>
-          )}
           <h1 className={styles.title}>{exercise.name}</h1>
           <p className={styles.summary}>
             Review the movement, target muscles, and source instructions before
@@ -101,6 +94,45 @@ async function ExerciseDetail({ params }: ExerciseDetailPageProps) {
         <figure className={styles.mediaPanel}>
           <div className={styles.mediaFrame}>
             <ExerciseThumbnail image={summary.image} size="detail" />
+            <dl className={styles.mediaBadges} aria-label="Training overview">
+              <div className={styles.mediaBadge}>
+                <dt>
+                  <Icon icon={Target01Icon} size={18} />
+                  <span>Muscle</span>
+                </dt>
+                <dd>{primaryMuscle}</dd>
+              </div>
+
+              {exercise.bodyPart && (
+                <div className={styles.mediaBadge}>
+                  <dt>
+                    <Icon icon={BodyPartMuscleIcon} size={18} />
+                    <span>Body part</span>
+                  </dt>
+                  <dd>{formatExerciseValue(exercise.bodyPart)}</dd>
+                </div>
+              )}
+
+              {exercise.equipment && (
+                <div className={styles.mediaBadge}>
+                  <dt>
+                    <Icon icon={EquipmentGym01Icon} size={18} />
+                    <span>Equipment</span>
+                  </dt>
+                  <dd>{formatExerciseValue(exercise.equipment)}</dd>
+                </div>
+              )}
+
+              {exercise.category && (
+                <div className={styles.mediaBadge}>
+                  <dt>
+                    <Icon icon={Activity03Icon} size={18} />
+                    <span>Category</span>
+                  </dt>
+                  <dd>{formatExerciseValue(exercise.category)}</dd>
+                </div>
+              )}
+            </dl>
           </div>
           <figcaption className={styles.mediaCaption}>
             <span className={styles.captionDot} aria-hidden="true" />
@@ -108,107 +140,48 @@ async function ExerciseDetail({ params }: ExerciseDetailPageProps) {
           </figcaption>
         </figure>
 
-        <section
-          className={styles.factsPanel}
-          aria-labelledby="training-overview-title"
-        >
-          <div className={styles.panelHeading}>
-            <span className={styles.panelIcon} aria-hidden="true">
-              <Icon icon={WorkoutSportIcon} size={20} />
-            </span>
-            <div>
-              <h2 className={styles.sectionTitle} id="training-overview-title">
-                Training overview
-              </h2>
-              <p>Verified details from the exercise catalog.</p>
-            </div>
-          </div>
-
-          <dl className={styles.factList}>
-            <div className={styles.fact}>
-              <dt>
-                <Icon icon={Target01Icon} size={18} />
-                Primary muscle
-              </dt>
-              <dd>{primaryMuscle}</dd>
-            </div>
-
-            {exercise.bodyPart && (
-              <div className={styles.fact}>
-                <dt>
-                  <Icon icon={BodyPartMuscleIcon} size={18} />
-                  Body part
-                </dt>
-                <dd>{formatExerciseValue(exercise.bodyPart)}</dd>
-              </div>
-            )}
-
-            {exercise.equipment && (
-              <div className={styles.fact}>
-                <dt>
-                  <Icon icon={EquipmentGym01Icon} size={18} />
-                  Equipment
-                </dt>
-                <dd>{formatExerciseValue(exercise.equipment)}</dd>
-              </div>
-            )}
-
-            {exercise.category && (
-              <div className={styles.fact}>
-                <dt>
-                  <Icon icon={Activity03Icon} size={18} />
-                  Category
-                </dt>
-                <dd>{formatExerciseValue(exercise.category)}</dd>
-              </div>
-            )}
-          </dl>
-        </section>
-      </div>
-
-      <div className={styles.guideGrid}>
-        <section
-          className={styles.instructions}
-          aria-labelledby="instructions-title"
-        >
-          <div className={styles.instructionsHeading}>
-            <div>
-              <h2 className={styles.sectionTitle} id="instructions-title">
-                How to perform it
-              </h2>
-              <p>Follow the available source instructions in order.</p>
-            </div>
-            {exercise.instructions.length > 0 && (
-              <span className={styles.stepCount}>
-                {exercise.instructions.length}{" "}
-                {exercise.instructions.length === 1 ? "step" : "steps"}
-              </span>
-            )}
-          </div>
-
-          {exercise.instructions.length > 0 ? (
-            <ol className={styles.instructionList}>
-              {exercise.instructions.map((instruction, index) => (
-                <li key={`${exercise.id}-instruction-${index + 1}`}>
-                  <span className={styles.stepNumber} aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <p>{instruction}</p>
-                </li>
-              ))}
-            </ol>
-          ) : (
-            <div className={styles.missingInstructions}>
-              <p>Written instructions are not available for this exercise.</p>
-            </div>
-          )}
-        </section>
-
         <ExerciseMuscleVisual
           primaryMuscle={exercise.primaryMuscle}
           secondaryMuscles={exercise.secondaryMuscles}
         />
       </div>
+
+      <section
+        className={styles.instructions}
+        aria-labelledby="instructions-title"
+      >
+        <div className={styles.instructionsHeading}>
+          <div>
+            <h2 className={styles.sectionTitle} id="instructions-title">
+              How to perform it
+            </h2>
+            <p>Follow the available source instructions in order.</p>
+          </div>
+          {exercise.instructions.length > 0 && (
+            <span className={styles.stepCount}>
+              {exercise.instructions.length}{" "}
+              {exercise.instructions.length === 1 ? "step" : "steps"}
+            </span>
+          )}
+        </div>
+
+        {exercise.instructions.length > 0 ? (
+          <ol className={styles.instructionList}>
+            {exercise.instructions.map((instruction, index) => (
+              <li key={`${exercise.id}-instruction-${index + 1}`}>
+                <span className={styles.stepNumber} aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <p>{instruction}</p>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <div className={styles.missingInstructions}>
+            <p>Written instructions are not available for this exercise.</p>
+          </div>
+        )}
+      </section>
 
       <footer className={styles.source}>
         <div>
