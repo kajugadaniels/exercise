@@ -224,7 +224,7 @@ Build a primitive only when a real use requires it; then reuse it.
 | Component | Core design rules |
 | --- | --- |
 | **Button / ActionLink** | Text names the outcome; icon is supporting. Variants reflect semantic importance. At most one primary action per region. Loading preserves size and accessible name. Navigation uses links, not buttons. |
-| **Field** | Persistent label, optional hint, inline error, strong control boundary, minimum control height, and 1rem input text. |
+| **Field** | Persistent label, optional hint, inline error, minimum control height, and 1rem input text. Text/number inputs use the shared icon-led full-pill component with surface/icon color changes for hover and focus rather than borders; forced-colors mode restores a native boundary. |
 | **Card** | Used only for a real grouped object. Whole-card targets contain no nested interactive target. Shadow depends on surface hierarchy, not decoration. |
 | **ExerciseCard** | Stable media frame, exercise name, verified concise metadata, honest missing-media state; long names wrap without expanding the grid unexpectedly. |
 | **ExerciseMedia** | Reserved aspect ratio, lawful source state, loading/error fallback, reduced-motion behavior, and no unrelated replacement media. |
