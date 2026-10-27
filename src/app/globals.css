@@ -1,48 +1,46 @@
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
   /* Brand colors: the coral is taken from the approved logo mark. */
   --color-primary: #ff4b33;
-  --color-primary-hover: #e43b25;
-  --color-primary-active: #c92f1c;
-  --color-on-primary: #180b08;
-  --color-primary-text: #b52714;
-  --color-secondary: #092e68;
-  --color-on-secondary: #ffffff;
+  --color-primary-hover: #ff684f;
+  --color-primary-active: #ff7c68;
+  --color-on-primary: #000000;
+  --color-primary-text: #ff8878;
+  --color-secondary: #82adff;
+  --color-on-secondary: #000000;
 
-  /* Light theme. */
-  --color-background: #f5f7fa;
-  --color-surface: #ffffff;
-  --color-surface-raised: #ffffff;
-  --color-surface-soft: #edf1f6;
-  --color-text: #151821;
-  --color-text-muted: #596273;
-  --color-border: #d6dce6;
-  --color-border-strong: #788397;
-  --color-focus: #092e68;
-  --color-success: #167447;
-  --color-warning: #8a5700;
-  --color-danger: #b42318;
-  --color-info: #155ea8;
-  --color-primary-soft: rgb(255 75 51 / 0.12);
-  --color-secondary-soft: rgb(9 46 104 / 0.1);
-  --color-secondary-text: #092e68;
-  --color-success-soft: rgb(22 116 71 / 0.12);
-  --color-success-text: #11613b;
-  --color-danger-soft: rgb(180 35 24 / 0.1);
-  --color-danger-text: #9f2017;
-  --color-danger-hover: #961c14;
-  --color-on-danger: #ffffff;
+  /* Pure-black theme. */
+  --color-background: #000000;
+  --color-surface: #080808;
+  --color-surface-raised: #101010;
+  --color-surface-soft: #181818;
+  --color-text: #f7f7f7;
+  --color-text-muted: #b3b3b3;
+  --color-border: #2f2f2f;
+  --color-border-strong: #767676;
+  --color-focus: #ff8878;
+  --color-success: #6fd3a1;
+  --color-warning: #f5bb5b;
+  --color-danger: #ff8a80;
+  --color-info: #83bfff;
+  --color-primary-soft: rgb(255 75 51 / 0.16);
+  --color-secondary-soft: rgb(130 173 255 / 0.14);
+  --color-secondary-text: #a9c6ff;
+  --color-success-soft: rgb(111 211 161 / 0.14);
+  --color-success-text: #83dfb2;
+  --color-danger-soft: rgb(255 138 128 / 0.14);
+  --color-danger-text: #ffaaa2;
+  --color-danger-hover: #ff9b92;
+  --color-on-danger: #2a0604;
 
   /* Liquid glass is reserved for controls, navigation, and grouped content. */
-  --color-glass-surface: rgb(255 255 255 / 0.72);
-  --color-glass-strong: rgb(255 255 255 / 0.88);
-  --color-glass-soft: rgb(237 241 246 / 0.66);
-  --color-glass-border: rgb(255 255 255 / 0.78);
-  --color-glass-border-strong: rgb(120 131 151 / 0.42);
-  --color-canvas-accent-primary: rgb(255 75 51 / 0.12);
-  --color-canvas-accent-secondary: rgb(9 46 104 / 0.1);
-  --color-navigation-surface: rgb(12 17 25 / 0.82);
+  --color-glass-surface: rgb(8 8 8 / 0.78);
+  --color-glass-strong: rgb(16 16 16 / 0.9);
+  --color-glass-soft: rgb(24 24 24 / 0.72);
+  --color-glass-border: rgb(255 255 255 / 0.12);
+  --color-glass-border-strong: rgb(255 255 255 / 0.22);
+  --color-navigation-surface: rgb(0 0 0 / 0.86);
   --color-navigation-border: rgb(255 255 255 / 0.26);
   --color-navigation-text: #ffffff;
   --color-navigation-text-muted: rgb(255 255 255 / 0.72);
@@ -84,11 +82,11 @@
   --radius-md: 0.875rem;
   --radius-lg: 1.25rem;
   --radius-full: 999px;
-  --shadow-sm: 0 1px 2px rgb(21 24 33 / 0.08);
-  --shadow-md: 0 1rem 3rem rgb(21 24 33 / 0.12);
-  --shadow-action: 0 0.5rem 1.25rem rgb(255 75 51 / 0.2);
-  --shadow-glass: 0 1.25rem 3rem rgb(21 24 33 / 0.1);
-  --shadow-glass-inset: inset 0 1px 0 rgb(255 255 255 / 0.72);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35);
+  --shadow-md: 0 1rem 3rem rgb(0 0 0 / 0.4);
+  --shadow-action: 0 0.5rem 1.25rem rgb(255 75 51 / 0.14);
+  --shadow-glass: 0 1.25rem 3rem rgb(0 0 0 / 0.3);
+  --shadow-glass-inset: inset 0 1px 0 rgb(255 255 255 / 0.1);
   --glass-filter: blur(1.25rem) saturate(145%);
   --glass-filter-compact: blur(0.875rem) saturate(130%);
 
@@ -112,14 +110,14 @@
     --color-primary-text: #ff8878;
     --color-secondary: #82adff;
     --color-on-secondary: #07162f;
-    --color-background: #0b0e14;
-    --color-surface: #131823;
-    --color-surface-raised: #191f2c;
-    --color-surface-soft: #202736;
-    --color-text: #f4f6fa;
-    --color-text-muted: #aab3c3;
-    --color-border: #30394a;
-    --color-border-strong: #78859b;
+    --color-background: #000000;
+    --color-surface: #080808;
+    --color-surface-raised: #101010;
+    --color-surface-soft: #181818;
+    --color-text: #f7f7f7;
+    --color-text-muted: #b3b3b3;
+    --color-border: #2f2f2f;
+    --color-border-strong: #767676;
     --color-focus: #ff8878;
     --color-success: #6fd3a1;
     --color-warning: #f5bb5b;
@@ -134,13 +132,11 @@
     --color-danger-text: #ffaaa2;
     --color-danger-hover: #ff9b92;
     --color-on-danger: #2a0604;
-    --color-glass-surface: rgb(19 24 35 / 0.72);
-    --color-glass-strong: rgb(25 31 44 / 0.88);
-    --color-glass-soft: rgb(32 39 54 / 0.66);
+    --color-glass-surface: rgb(8 8 8 / 0.78);
+    --color-glass-strong: rgb(16 16 16 / 0.9);
+    --color-glass-soft: rgb(24 24 24 / 0.72);
     --color-glass-border: rgb(255 255 255 / 0.12);
     --color-glass-border-strong: rgb(255 255 255 / 0.22);
-    --color-canvas-accent-primary: rgb(255 75 51 / 0.12);
-    --color-canvas-accent-secondary: rgb(130 173 255 / 0.1);
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35);
     --shadow-md: 0 1rem 3rem rgb(0 0 0 / 0.4);
     --shadow-action: 0 0.5rem 1.25rem rgb(255 75 51 / 0.14);
@@ -149,48 +145,27 @@
   }
 }
 
-/* These hooks allow a future theme control to override the system setting. */
+/* Theme hooks preserve the pure-black palette until a light theme is approved. */
 :root[data-theme="light"] {
-  color-scheme: light;
-  --color-primary-hover: #e43b25;
-  --color-primary-active: #c92f1c;
-  --color-primary-text: #b52714;
-  --color-secondary: #092e68;
-  --color-on-secondary: #ffffff;
-  --color-background: #f5f7fa;
-  --color-surface: #ffffff;
-  --color-surface-raised: #ffffff;
-  --color-surface-soft: #edf1f6;
-  --color-text: #151821;
-  --color-text-muted: #596273;
-  --color-border: #d6dce6;
-  --color-border-strong: #788397;
-  --color-focus: #092e68;
-  --color-success: #167447;
-  --color-warning: #8a5700;
-  --color-danger: #b42318;
-  --color-info: #155ea8;
-  --color-primary-soft: rgb(255 75 51 / 0.12);
-  --color-secondary-soft: rgb(9 46 104 / 0.1);
-  --color-secondary-text: #092e68;
-  --color-success-soft: rgb(22 116 71 / 0.12);
-  --color-success-text: #11613b;
-  --color-danger-soft: rgb(180 35 24 / 0.1);
-  --color-danger-text: #9f2017;
-  --color-danger-hover: #961c14;
-  --color-on-danger: #ffffff;
-  --color-glass-surface: rgb(255 255 255 / 0.72);
-  --color-glass-strong: rgb(255 255 255 / 0.88);
-  --color-glass-soft: rgb(237 241 246 / 0.66);
-  --color-glass-border: rgb(255 255 255 / 0.78);
-  --color-glass-border-strong: rgb(120 131 151 / 0.42);
-  --color-canvas-accent-primary: rgb(255 75 51 / 0.12);
-  --color-canvas-accent-secondary: rgb(9 46 104 / 0.1);
-  --shadow-sm: 0 1px 2px rgb(21 24 33 / 0.08);
-  --shadow-md: 0 1rem 3rem rgb(21 24 33 / 0.12);
-  --shadow-action: 0 0.5rem 1.25rem rgb(255 75 51 / 0.2);
-  --shadow-glass: 0 1.25rem 3rem rgb(21 24 33 / 0.1);
-  --shadow-glass-inset: inset 0 1px 0 rgb(255 255 255 / 0.72);
+  color-scheme: dark;
+  --color-background: #000000;
+  --color-surface: #080808;
+  --color-surface-raised: #101010;
+  --color-surface-soft: #181818;
+  --color-text: #f7f7f7;
+  --color-text-muted: #b3b3b3;
+  --color-border: #2f2f2f;
+  --color-border-strong: #767676;
+  --color-glass-surface: rgb(8 8 8 / 0.78);
+  --color-glass-strong: rgb(16 16 16 / 0.9);
+  --color-glass-soft: rgb(24 24 24 / 0.72);
+  --color-glass-border: rgb(255 255 255 / 0.12);
+  --color-glass-border-strong: rgb(255 255 255 / 0.22);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35);
+  --shadow-md: 0 1rem 3rem rgb(0 0 0 / 0.4);
+  --shadow-action: 0 0.5rem 1.25rem rgb(255 75 51 / 0.14);
+  --shadow-glass: 0 1.25rem 3rem rgb(0 0 0 / 0.3);
+  --shadow-glass-inset: inset 0 1px 0 rgb(255 255 255 / 0.1);
 }
 
 :root[data-theme="dark"] {
@@ -200,14 +175,14 @@
   --color-primary-text: #ff8878;
   --color-secondary: #82adff;
   --color-on-secondary: #07162f;
-  --color-background: #0b0e14;
-  --color-surface: #131823;
-  --color-surface-raised: #191f2c;
-  --color-surface-soft: #202736;
-  --color-text: #f4f6fa;
-  --color-text-muted: #aab3c3;
-  --color-border: #30394a;
-  --color-border-strong: #78859b;
+  --color-background: #000000;
+  --color-surface: #080808;
+  --color-surface-raised: #101010;
+  --color-surface-soft: #181818;
+  --color-text: #f7f7f7;
+  --color-text-muted: #b3b3b3;
+  --color-border: #2f2f2f;
+  --color-border-strong: #767676;
   --color-focus: #ff8878;
   --color-success: #6fd3a1;
   --color-warning: #f5bb5b;
@@ -222,13 +197,11 @@
   --color-danger-text: #ffaaa2;
   --color-danger-hover: #ff9b92;
   --color-on-danger: #2a0604;
-  --color-glass-surface: rgb(19 24 35 / 0.72);
-  --color-glass-strong: rgb(25 31 44 / 0.88);
-  --color-glass-soft: rgb(32 39 54 / 0.66);
+  --color-glass-surface: rgb(8 8 8 / 0.78);
+  --color-glass-strong: rgb(16 16 16 / 0.9);
+  --color-glass-soft: rgb(24 24 24 / 0.72);
   --color-glass-border: rgb(255 255 255 / 0.12);
   --color-glass-border-strong: rgb(255 255 255 / 0.22);
-  --color-canvas-accent-primary: rgb(255 75 51 / 0.12);
-  --color-canvas-accent-secondary: rgb(130 173 255 / 0.1);
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35);
   --shadow-md: 0 1rem 3rem rgb(0 0 0 / 0.4);
   --shadow-action: 0 0.5rem 1.25rem rgb(255 75 51 / 0.14);
@@ -257,18 +230,6 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   background-color: var(--color-background);
-  background-image:
-    radial-gradient(
-      circle at 8% -12%,
-      var(--color-canvas-accent-primary),
-      transparent 30rem
-    ),
-    radial-gradient(
-      circle at 94% 8%,
-      var(--color-canvas-accent-secondary),
-      transparent 34rem
-    );
-  background-repeat: no-repeat;
   color: var(--color-text);
   font-family: var(--font-sans);
   font-size: var(--text-base);
@@ -371,17 +332,13 @@ a:hover {
     --color-glass-surface: var(--color-surface);
     --color-glass-strong: var(--color-surface-raised);
     --color-glass-soft: var(--color-surface-soft);
-    --color-navigation-surface: #0c1119;
+    --color-navigation-surface: #000000;
     --glass-filter: none;
     --glass-filter-compact: none;
   }
 }
 
 @media (forced-colors: active) {
-  body {
-    background-image: none;
-  }
-
   :focus-visible {
     outline-color: Highlight;
   }
