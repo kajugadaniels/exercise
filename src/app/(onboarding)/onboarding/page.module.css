@@ -11,7 +11,7 @@
   display: grid;
   align-content: start;
   gap: var(--space-6);
-  inline-size: min(100%, 42rem);
+  inline-size: min(100%, 56rem);
   margin-block: auto;
 }
 
