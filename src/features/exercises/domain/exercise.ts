@@ -65,7 +65,7 @@ export type ExerciseMedia =
       displayStatus: "blocked";
     }
   | {
-      kind: "gif" | "video";
+      kind: "gif" | "image" | "video";
       displayUrl: string;
       posterUrl?: string;
       rightsStatus: "verified";
@@ -93,6 +93,25 @@ export type Exercise = {
   media?: ExerciseMedia;
   source: ExerciseSource;
 };
+
+export type ExerciseSummary = {
+  id: string;
+  image: {
+    alt: string;
+    url: string;
+  } | null;
+  name: string;
+};
+
+export type ExerciseSummaryPage = {
+  items: ExerciseSummary[];
+  page: number;
+  pageCount: number;
+  pageSize: number;
+  total: number;
+};
+
+export const EXERCISE_PAGE_SIZE = 24;
 
 export type ExerciseQuery = {
   search?: string;
