@@ -122,6 +122,40 @@
   }
 }
 
+@media (max-width: 39.99rem) {
+  .navbar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0;
+    inline-size: calc(100% - (var(--space-3) * 2));
+  }
+
+  .brand {
+    min-inline-size: 2.5rem;
+    padding-inline: var(--space-1) var(--space-2);
+  }
+
+  .navigation {
+    justify-content: safe center;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  .navigation::-webkit-scrollbar {
+    display: none;
+  }
+
+  .link {
+    padding-inline: var(--space-2);
+    font-size: var(--text-xs);
+  }
+
+  .account {
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+  }
+}
+
 @media (min-width: 40rem) {
   .navbar {
     gap: var(--space-4);
