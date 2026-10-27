@@ -9,6 +9,7 @@ type InputProps = Omit<ComponentPropsWithoutRef<"input">, "size"> & {
   icon: IconSvgElement;
   id: string;
   label: string;
+  tone?: "danger" | "info" | "success" | "warning";
 };
 
 function describedBy(
@@ -27,6 +28,7 @@ export function Input({
   icon,
   id,
   label,
+  tone,
   ...props
 }: InputProps) {
   const hintId = hint ? `${id}-hint` : undefined;
@@ -35,7 +37,11 @@ export function Input({
   return (
     <label className={styles.field} htmlFor={id}>
       <span className={styles.label}>{label}</span>
-      <span className={styles.control} data-invalid={Boolean(error)}>
+      <span
+        className={styles.control}
+        data-invalid={Boolean(error)}
+        data-tone={tone}
+      >
         <span className={styles.icon} aria-hidden="true">
           <Icon icon={icon} size={20} />
         </span>
