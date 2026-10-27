@@ -3,20 +3,31 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import {
   bodyPartIds,
+  equipmentIds,
   exerciseCategoryIds,
+  muscleIds,
 } from "@/features/exercises/domain/exercise";
 import { getExerciseCatalogPage } from "@/features/exercises/server/exercise-catalog";
 import { ExerciseProviderError } from "@/features/exercises/providers/exercise-provider";
 import { getProfileForClerkUser } from "@/features/profile/server/profile-service";
 
 const noStoreHeaders = { "Cache-Control": "private, no-store" };
-const allowedQueryKeys = new Set(["bodyPart", "category", "page", "search"]);
+const allowedQueryKeys = new Set([
+  "bodyPart",
+  "category",
+  "equipment",
+  "muscle",
+  "page",
+  "search",
+]);
 const MAX_QUERY_LENGTH = 256;
 
 const catalogQuerySchema = z
   .object({
     bodyPart: z.enum(bodyPartIds).optional(),
     category: z.enum(exerciseCategoryIds).optional(),
+    equipment: z.enum(equipmentIds).optional(),
+    muscle: z.enum(muscleIds).optional(),
     page: z.coerce.number().int().min(1).max(100).default(1),
     search: z.preprocess(
       (value) =>
@@ -49,6 +60,8 @@ function readCatalogQuery(request: Request) {
   const result = catalogQuerySchema.safeParse({
     bodyPart: searchParams.get("bodyPart") ?? undefined,
     category: searchParams.get("category") ?? undefined,
+    equipment: searchParams.get("equipment") ?? undefined,
+    muscle: searchParams.get("muscle") ?? undefined,
     page: searchParams.get("page") ?? undefined,
     search: searchParams.get("search") ?? undefined,
   });
@@ -88,7 +101,7 @@ export async function GET(request: Request) {
     return errorResponse(
       400,
       "invalid_query",
-      "Use a valid body part, category, search term of at least 3 characters, and page number.",
+      "Use valid exercise filters, a search term of at least 3 characters, and a supported page number.",
     );
   }
 
