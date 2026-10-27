@@ -175,26 +175,6 @@
   }
 }
 
-@media (min-width: 40rem) {
-  .content {
-    grid-template-columns: minmax(15rem, 0.9fr) minmax(0, 1.1fr);
-  }
-
-  .legend {
-    border-block-start: 0;
-  }
-}
-
-@media (min-width: 64rem) {
-  .content {
-    grid-template-columns: 1fr;
-  }
-
-  .legend {
-    border-block-start: 1px solid var(--color-glass-border);
-  }
-}
-
 @media (forced-colors: active) {
   .root,
   .viewSwitch,
