@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { ExerciseCard } from "@/features/exercises/components/ExerciseCard/ExerciseCard";
+import { ExerciseCategoryRail } from "@/features/exercises/components/ExerciseCategoryRail/ExerciseCategoryRail";
 import { ExerciseFilterSidebar } from "@/features/exercises/components/ExerciseFilterSidebar/ExerciseFilterSidebar";
 import { ExercisePagination } from "@/features/exercises/components/ExercisePagination/ExercisePagination";
 import { ExerciseSearch } from "@/features/exercises/components/ExerciseSearch/ExerciseSearch";
@@ -28,9 +29,12 @@ async function loadExerciseCatalogPage(query: ExerciseQuery) {
 function CatalogFallback() {
   return (
     <section className={styles.catalog} aria-label="Loading exercises">
-      <div className={styles.searchPlaceholder} aria-hidden="true">
-        <span />
-        <span />
+      <div className={styles.controlBar} aria-hidden="true">
+        <div className={styles.categoryPlaceholder} />
+        <div className={styles.searchPlaceholder}>
+          <span />
+          <span />
+        </div>
       </div>
       <div className={styles.libraryLayout}>
         <div className={styles.filterPlaceholder} />
@@ -75,11 +79,14 @@ async function ExerciseCatalog({
         Exercise catalog
       </h2>
 
-      <ExerciseSearch
-        clearSearchHref={buildExerciseLibraryUrl(query, 1, { search: null })}
-        key={query.search ?? "closed"}
-        query={query}
-      />
+      <div className={styles.controlBar}>
+        <ExerciseCategoryRail query={query} />
+        <ExerciseSearch
+          clearSearchHref={buildExerciseLibraryUrl(query, 1, { search: null })}
+          key={query.search ?? "closed"}
+          query={query}
+        />
+      </div>
 
       <div className={styles.libraryLayout}>
         <ExerciseFilterSidebar query={query} />
