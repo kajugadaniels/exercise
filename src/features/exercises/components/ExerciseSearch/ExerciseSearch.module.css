@@ -20,7 +20,6 @@
   cursor: pointer;
   text-decoration: none;
   transition:
-    border-color var(--duration-fast) var(--ease-standard),
     background-color var(--duration-fast) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard);
 }
@@ -86,10 +85,10 @@
 
 .roundButton:focus-visible,
 .searchSubmit:focus-visible,
-.closeButton:focus-visible,
-.searchInput:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 3px;
+.closeButton:focus-visible {
+  outline: 0;
+  background-color: var(--color-surface-soft);
+  color: var(--color-primary-text);
 }
 
 .visuallyHidden {
@@ -108,7 +107,6 @@
   .roundButton:hover,
   .searchSubmit:hover,
   .closeButton:hover {
-    border-color: var(--color-primary);
     background-color: var(--color-surface-soft);
     color: var(--color-primary-text);
   }
