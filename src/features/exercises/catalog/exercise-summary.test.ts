@@ -12,7 +12,8 @@ const exercise: Exercise = {
   instructions: ["Provider instruction that must not enter list responses."],
   media: {
     kind: "gif",
-    providerUrl: "https://cdn.example/biceps/barbell-curl.gif",
+    providerUrl:
+      "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/barbell-curl.gif",
     rightsStatus: "restricted",
     displayStatus: "blocked",
   },
@@ -24,12 +25,31 @@ const exercise: Exercise = {
   },
 };
 
-test("returns only card-safe fields and withholds restricted media", () => {
+test("uses the pinned provider GIF when a static image is unavailable", () => {
   assert.deepEqual(toExerciseSummary(exercise), {
     id: "biceps/barbell-curl",
-    image: null,
+    image: {
+      alt: "Barbell Curl animated exercise preview",
+      kind: "gif",
+      url: "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/barbell-curl.gif",
+    },
     name: "Barbell Curl",
   });
+});
+
+test("rejects a GIF outside the pinned provider path", () => {
+  assert.equal(
+    toExerciseSummary({
+      ...exercise,
+      media: {
+        kind: "gif",
+        providerUrl: "https://cdn.example/biceps/barbell-curl.gif",
+        rightsStatus: "restricted",
+        displayStatus: "blocked",
+      },
+    }).image,
+    null,
+  );
 });
 
 test("keeps a verified HTTPS static image", () => {
@@ -45,6 +65,7 @@ test("keeps a verified HTTPS static image", () => {
     }).image,
     {
       alt: "Barbell Curl exercise preview",
+      kind: "image",
       url: "https://images.example/barbell-curl.webp",
     },
   );
