@@ -105,11 +105,16 @@ export function buildExerciseLibraryUrl(
   query: ExerciseQuery,
   page: number,
   overrides?: Readonly<{
+    bodyPart?: ExerciseQuery["bodyPart"] | null;
     category?: ExerciseQuery["category"] | null;
     search?: string | null;
   }>,
 ): string {
   const params = new URLSearchParams();
+  const bodyPart =
+    overrides && "bodyPart" in overrides
+      ? (overrides.bodyPart ?? undefined)
+      : query.bodyPart;
   const category =
     overrides && "category" in overrides
       ? (overrides.category ?? undefined)
@@ -121,7 +126,7 @@ export function buildExerciseLibraryUrl(
 
   if (search) params.set("search", search);
   if (query.muscle) params.set("muscle", query.muscle);
-  if (query.bodyPart) params.set("bodyPart", query.bodyPart);
+  if (bodyPart) params.set("bodyPart", bodyPart);
   if (query.equipment) params.set("equipment", query.equipment);
   if (category) params.set("category", category);
   if (page > 1) params.set("page", String(page));
