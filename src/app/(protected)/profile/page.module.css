@@ -1,0 +1,43 @@
+.page {
+  display: grid;
+  gap: var(--space-6);
+  inline-size: min(100%, 62rem);
+  margin-inline: auto;
+}
+
+.header {
+  display: grid;
+  gap: var(--space-3);
+  max-inline-size: var(--reading-max);
+}
+
+.eyebrow {
+  color: var(--color-primary-text);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+}
+
+.title {
+  font-size: var(--text-xl);
+}
+
+.summary {
+  color: var(--color-text-muted);
+}
+
+.formCard {
+  min-inline-size: 0;
+  padding: clamp(1rem, 4vw, 2rem);
+  border: 1px solid var(--color-glass-border-strong);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-glass-surface);
+  box-shadow: var(--shadow-glass-inset);
+  backdrop-filter: var(--glass-filter);
+}
+
+@media (forced-colors: active) {
+  .formCard {
+    border-color: CanvasText;
+    background-color: Canvas;
+  }
+}
