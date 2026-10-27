@@ -46,7 +46,6 @@
   min-inline-size: 0;
 }
 
-.libraryLayout,
 .results {
   display: grid;
   gap: var(--space-5);
@@ -54,8 +53,10 @@
 }
 
 .controlBar {
-  display: grid;
-  gap: var(--space-3);
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: flex-end;
   min-inline-size: 0;
 }
 
@@ -120,29 +121,21 @@
   outline-offset: 3px;
 }
 
-.filterPlaceholder,
 .toolbarPlaceholder,
 .cardPlaceholder,
-.categoryPlaceholder,
-.searchPlaceholder span {
+.searchPlaceholder,
+.filterTriggerPlaceholder {
   border-radius: var(--radius-lg);
   background-color: var(--color-surface-raised);
 }
 
-.categoryPlaceholder {
-  inline-size: 100%;
-  min-block-size: var(--control-height);
+.searchPlaceholder {
+  inline-size: var(--control-height);
+  block-size: var(--control-height);
   border-radius: var(--radius-full);
 }
 
-.searchPlaceholder {
-  display: flex;
-  gap: var(--space-2);
-  justify-content: flex-end;
-  inline-size: 100%;
-}
-
-.searchPlaceholder span {
+.filterTriggerPlaceholder {
   inline-size: var(--control-height);
   block-size: var(--control-height);
   border-radius: var(--radius-full);
@@ -151,11 +144,6 @@
 .toolbarPlaceholder {
   inline-size: 12rem;
   block-size: 1rem;
-}
-
-.filterPlaceholder {
-  inline-size: 100%;
-  block-size: 11rem;
 }
 
 .cardPlaceholder {
@@ -190,33 +178,17 @@
   .header {
     grid-template-columns: minmax(0, 1fr) auto;
   }
-
-  .controlBar {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-  }
 }
 
 @media (min-width: 64rem) {
-  .libraryLayout {
-    grid-template-columns: minmax(11rem, 13rem) minmax(0, 1fr);
-    gap: var(--space-6);
-    align-items: start;
-  }
-
-  .filterPlaceholder {
-    block-size: 34rem;
-  }
-
   .exerciseGrid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
 @media (forced-colors: active) {
-  .filterPlaceholder,
-  .categoryPlaceholder,
-  .searchPlaceholder span,
+  .searchPlaceholder,
+  .filterTriggerPlaceholder,
   .emptyState,
   .errorState,
   .cardPlaceholder {
