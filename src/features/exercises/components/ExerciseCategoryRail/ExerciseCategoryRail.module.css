@@ -1,0 +1,154 @@
+.rail,
+.viewport {
+  min-inline-size: 0;
+  inline-size: 100%;
+}
+
+.rail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.viewport {
+  overflow: hidden;
+  overscroll-behavior-inline: contain;
+}
+
+.track {
+  display: flex;
+  inline-size: max-content;
+  animation: categoryRailSlide 24s linear infinite;
+}
+
+.list {
+  display: flex;
+  flex: 0 0 auto;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0 var(--space-2) 0 0;
+  list-style: none;
+}
+
+.item {
+  flex: 0 0 auto;
+}
+
+.link {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-block-size: var(--control-height);
+  padding-inline: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-raised);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.active {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-text);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+.motionToggle {
+  display: grid;
+  inline-size: var(--control-height);
+  block-size: var(--control-height);
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  place-items: center;
+  background-color: var(--color-background);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.motionToggle:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.rail:focus-within .track {
+  animation: none;
+}
+
+.rail[data-paused="true"] .track {
+  animation-play-state: paused;
+}
+
+@keyframes categoryRailSlide {
+  to {
+    transform: translateX(-25%);
+  }
+}
+
+@media (hover: hover) {
+  .rail:hover .track {
+    animation-play-state: paused;
+  }
+
+  .link:hover {
+    background-color: var(--color-surface-soft);
+    color: var(--color-text);
+  }
+
+  .active:hover {
+    background-color: var(--color-primary-soft);
+    color: var(--color-primary-text);
+  }
+
+  .motionToggle:hover {
+    background-color: var(--color-surface-soft);
+    color: var(--color-primary-text);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewport {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .track {
+    animation: none;
+  }
+
+  .duplicate {
+    display: none;
+  }
+
+  .motionToggle {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .link,
+  .motionToggle {
+    border-color: ButtonText;
+  }
+
+  .active {
+    border-color: Highlight;
+    color: Highlight;
+  }
+}
