@@ -5,9 +5,10 @@
   justify-items: center;
   gap: var(--space-3);
   padding: var(--space-5);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-glass-border-strong);
   border-radius: var(--radius-md);
-  background-color: var(--color-surface-soft);
+  background-color: var(--color-glass-soft);
+  box-shadow: var(--shadow-glass-inset);
   color: var(--color-text-muted);
   text-align: center;
 }
@@ -58,9 +59,10 @@
   min-inline-size: 0;
   min-block-size: 16rem;
   overflow: hidden;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-glass-border-strong);
   border-radius: var(--radius-md);
-  background-color: var(--color-surface-soft);
+  background-color: var(--color-glass-soft);
+  box-shadow: var(--shadow-glass-inset);
 }
 
 .approvedFrame.compact {
@@ -94,18 +96,9 @@
   font-size: var(--text-sm);
 }
 
-.mediaControl {
+.mediaAction {
   justify-self: center;
-  min-block-size: var(--control-height);
   margin: var(--space-3);
-  padding: var(--space-2) var(--space-4);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-full);
-  background-color: var(--color-surface-raised);
-  color: var(--color-text);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
-  cursor: pointer;
 }
 
 .attribution {
@@ -114,16 +107,8 @@
   font-size: var(--text-xs);
 }
 
-@media (hover: hover) {
-  .mediaControl:hover {
-    border-color: var(--color-secondary);
-    background-color: var(--color-surface);
-  }
-}
-
 @media (forced-colors: active) {
-  .mark,
-  .mediaControl {
+  .mark {
     border-color: ButtonText;
   }
 }
