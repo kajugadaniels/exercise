@@ -30,7 +30,7 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | Next.js responsive web foundation | Phase 1 scaffold present, unverified | Next.js 16.4.3, React 19.3.0, strict TypeScript; no build/test execution claimed |
 | Exercise provider adapter and validated catalog | MVP | Read-only catalog from verified provider fields |
 | Browse, search, filter, detail pages | MVP | Body part, muscle, equipment, category; graceful missing media |
-| Clerk sign-up/sign-in/account | MVP | Final public/private route matrix requires confirmation |
+| Clerk sign-up/sign-in/account | Implemented in code, unverified | Authenticated-first route policy; Clerk tenant and runtime verification remain developer-owned |
 | Post-registration profile onboarding | MVP | Minimal non-sensitive preferences only |
 | Muscle highlighter on detail pages | MVP after dependency approval | Local React SVG package; explicit normalization |
 | Interactive muscle explorer | Future | Select muscle, filter catalog, open detail |
@@ -42,12 +42,12 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 
 ## 4. Expected MVP journey
 
-1. A visitor opens the exercise library on a phone or desktop.
-2. They search or filter verified exercise records.
+1. A visitor opens the application and signs in or creates an account through Clerk.
+2. After authentication, they enter the exercise library on a phone or desktop and search or filter verified records.
 3. A result shows supported metadata and an animation only when lawful and available.
 4. The detail page explains supported instructions and muscles without inventing difficulty or safety claims.
 5. An SVG diagram highlights normalized primary/secondary muscles.
-6. A user may authenticate with Clerk and complete minimal onboarding. Personalized persistence follows only after database approval.
+6. Future profile onboarding and personalized persistence follow only after their separate approvals.
 
 ## 5. Explicit exclusions until approved
 
@@ -80,7 +80,7 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | ORM/query layer | Unresolved |
 | Dependency installation | Clerk, Zod, Hugeicons, and React Muscle Highlighter versions are approved; developer installation/output pending |
 | Styling architecture | Plain CSS with semantic tokens and colocated CSS Modules is approved; Tailwind/CSS-in-JS/UI kits require a future stack-change approval |
-| Public/private route matrix | Library likely public; saved/personal areas private; confirm |
+| Account onboarding scope | Authentication is approved; profile fields and onboarding remain unresolved pending a specific privacy review |
 | Media commercial rights and alternative licensed provider | Blocking public use of ExerciseGymGifsDB GIFs |
 | Native framework | Unresolved |
 | Monetization | Unresolved |
