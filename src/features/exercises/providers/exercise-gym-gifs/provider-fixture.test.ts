@@ -3,7 +3,11 @@ import test from "node:test";
 import type { ExerciseQuery } from "../../domain/exercise";
 import { ExerciseProviderError } from "../exercise-provider";
 import { createExerciseGymGifsAdapter } from "./adapter";
-import { filterExercises, parseExerciseQuery } from "./filters";
+import {
+  buildExerciseLibraryUrl,
+  filterExercises,
+  parseExerciseQuery,
+} from "./filters";
 import { normalizeProviderExercise } from "./mapping";
 import {
   providerExerciseCatalogSchema,
@@ -100,16 +104,39 @@ test("filters normalized exercises with AND semantics", () => {
 test("bounds and normalizes URL filter input", () => {
   assert.deepEqual(
     parseExerciseQuery({
+      category: "cardio",
       search: "  curl  ",
       muscle: "biceps",
       equipment: "not-supported",
       page: "999",
     }),
     {
+      category: "cardio",
       search: "curl",
       muscle: "biceps",
       page: 1,
     },
+  );
+});
+
+test("changes category filters while preserving search and resetting pagination", () => {
+  const query: ExerciseQuery = {
+    category: "strength",
+    page: 4,
+    search: "press",
+  };
+
+  assert.equal(
+    buildExerciseLibraryUrl(query, 1, { category: "cardio" }),
+    "/exercises?search=press&category=cardio",
+  );
+  assert.equal(
+    buildExerciseLibraryUrl(query, 1, { category: null }),
+    "/exercises?search=press",
+  );
+  assert.equal(
+    buildExerciseLibraryUrl(query, 1, { search: null }),
+    "/exercises?category=strength",
   );
 });
 
