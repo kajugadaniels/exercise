@@ -94,45 +94,59 @@ async function ExerciseDetail({ params }: ExerciseDetailPageProps) {
         <figure className={styles.mediaPanel}>
           <div className={styles.mediaFrame}>
             <ExerciseThumbnail image={summary.image} size="detail" />
-            <dl className={styles.mediaBadges} aria-label="Training overview">
-              <div className={styles.mediaBadge}>
-                <dt>
+            <ul className={styles.mediaBadges} aria-label="Training overview">
+              <li className={styles.mediaBadge}>
+                <span className={styles.badgeIcon} aria-hidden="true">
                   <Icon icon={Target01Icon} size={18} />
-                  <span>Muscle</span>
-                </dt>
-                <dd>{primaryMuscle}</dd>
-              </div>
+                </span>
+                <span className={styles.badgeContent}>
+                  <span className={styles.badgeLabel}>Primary muscle</span>
+                  <strong className={styles.badgeValue}>{primaryMuscle}</strong>
+                </span>
+              </li>
 
               {exercise.bodyPart && (
-                <div className={styles.mediaBadge}>
-                  <dt>
+                <li className={styles.mediaBadge}>
+                  <span className={styles.badgeIcon} aria-hidden="true">
                     <Icon icon={BodyPartMuscleIcon} size={18} />
-                    <span>Body part</span>
-                  </dt>
-                  <dd>{formatExerciseValue(exercise.bodyPart)}</dd>
-                </div>
+                  </span>
+                  <span className={styles.badgeContent}>
+                    <span className={styles.badgeLabel}>Body part</span>
+                    <strong className={styles.badgeValue}>
+                      {formatExerciseValue(exercise.bodyPart)}
+                    </strong>
+                  </span>
+                </li>
               )}
 
               {exercise.equipment && (
-                <div className={styles.mediaBadge}>
-                  <dt>
+                <li className={styles.mediaBadge}>
+                  <span className={styles.badgeIcon} aria-hidden="true">
                     <Icon icon={EquipmentGym01Icon} size={18} />
-                    <span>Equipment</span>
-                  </dt>
-                  <dd>{formatExerciseValue(exercise.equipment)}</dd>
-                </div>
+                  </span>
+                  <span className={styles.badgeContent}>
+                    <span className={styles.badgeLabel}>Equipment</span>
+                    <strong className={styles.badgeValue}>
+                      {formatExerciseValue(exercise.equipment)}
+                    </strong>
+                  </span>
+                </li>
               )}
 
               {exercise.category && (
-                <div className={styles.mediaBadge}>
-                  <dt>
+                <li className={styles.mediaBadge}>
+                  <span className={styles.badgeIcon} aria-hidden="true">
                     <Icon icon={Activity03Icon} size={18} />
-                    <span>Category</span>
-                  </dt>
-                  <dd>{formatExerciseValue(exercise.category)}</dd>
-                </div>
+                  </span>
+                  <span className={styles.badgeContent}>
+                    <span className={styles.badgeLabel}>Category</span>
+                    <strong className={styles.badgeValue}>
+                      {formatExerciseValue(exercise.category)}
+                    </strong>
+                  </span>
+                </li>
               )}
-            </dl>
+            </ul>
           </div>
           <figcaption className={styles.mediaCaption}>
             <span className={styles.captionDot} aria-hidden="true" />
