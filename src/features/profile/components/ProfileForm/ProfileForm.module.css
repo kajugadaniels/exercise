@@ -3,6 +3,10 @@
   gap: var(--space-6);
 }
 
+.form[data-mode="onboarding"] {
+  gap: var(--space-5);
+}
+
 .formError {
   padding: var(--space-3) var(--space-4);
   border: 1px solid var(--color-danger);
@@ -22,6 +26,15 @@
 
 .fieldset:disabled {
   opacity: 0.66;
+}
+
+.visuallyHidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .legend {
@@ -62,6 +75,17 @@
   box-shadow: var(--shadow-glass-inset);
 }
 
+.form[data-mode="onboarding"] .bmiCard {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: center;
+  min-block-size: 0;
+  padding: var(--space-3) var(--space-4);
+  border-color: var(--color-border);
+  background-color: var(--color-surface);
+  box-shadow: none;
+}
+
 .bmiLabel {
   color: var(--color-primary-text);
   font-size: var(--text-xs);
@@ -72,6 +96,11 @@
   color: var(--color-text);
   font-size: var(--text-xl);
   line-height: 1;
+}
+
+.form[data-mode="onboarding"] .bmiValue {
+  color: var(--color-primary-text);
+  font-size: var(--text-lg);
 }
 
 .bmiCopy {
@@ -85,6 +114,21 @@
   gap: var(--space-3);
   padding-block-start: var(--space-2);
   border-block-start: 1px solid var(--color-border);
+}
+
+.form[data-mode="onboarding"] .actions {
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+.privacyNote {
+  margin-block-start: calc(var(--space-2) * -1);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.primaryAction {
+  inline-size: 100%;
 }
 
 @media (min-width: 40rem) {
@@ -102,6 +146,10 @@
   .measurementLayout {
     grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.55fr);
     align-items: stretch;
+  }
+
+  .form[data-mode="onboarding"] .measurementLayout {
+    grid-template-columns: 1fr;
   }
 }
 
