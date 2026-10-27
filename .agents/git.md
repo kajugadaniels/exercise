@@ -15,13 +15,35 @@ Never overwrite or revert unrelated working-tree changes. Treat unfamiliar chang
 
 Recommend one commit per changed file, in dependency order. This deliberately favors granular review and rollback even when several documentation files form one foundation. Every suggested command names exactly one explicit path—never `git add .`. A file containing inseparable implementation and test concerns should be split into appropriately owned files rather than bundled into a broad commit.
 
-Use Conventional Commit-style messages:
+Every commit suggestion must be presented as an executable two-command block. The first command stages exactly one explicit file. The second command uses a lowercase, imperative message in the exact `(type): description` format:
 
-```text
-docs(governance): establish fitness engineering rulebook
-feat(exercises): add normalized provider adapter
-test(exercises): cover provider normalization failures
-fix(auth): enforce owner scope in workout action
+```bash
+git add src/features/exercises/providers/exercise-gym-gifs/adapter.ts
+git commit -m "(feat): add pinned provider adapter"
+```
+
+Use the narrowest applicable type: `feat`, `fix`, `refactor`, `style`, `docs`, `test`, `perf`, or `chore`. Keep the description concise, lowercase, and action-oriented. Do not add a scope inside the type, omit the parentheses, combine multiple files in one staging command, or provide only a message without its matching `git add` command.
+
+Examples:
+
+```bash
+git add .agents/README.md
+git commit -m "(docs): establish fitness engineering rulebook"
+```
+
+```bash
+git add src/features/exercises/providers/exercise-gym-gifs/adapter.ts
+git commit -m "(feat): add normalized provider adapter"
+```
+
+```bash
+git add src/features/exercises/providers/exercise-gym-gifs/provider-fixture.test.ts
+git commit -m "(test): cover provider normalization failures"
+```
+
+```bash
+git add src/features/auth/actions/save-workout.ts
+git commit -m "(fix): enforce workout owner scope"
 ```
 
 ## 3. Content rules
