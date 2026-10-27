@@ -3,9 +3,11 @@
   gap: var(--space-5);
   min-inline-size: 0;
   padding: var(--space-5);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-glass-border-strong);
   border-radius: var(--radius-lg);
-  background-color: var(--color-surface);
+  background-color: var(--color-glass-strong);
+  box-shadow: var(--shadow-glass-inset), var(--shadow-glass);
+  backdrop-filter: var(--glass-filter);
 }
 
 .headingRow {
@@ -36,9 +38,10 @@
   grid-template-columns: repeat(2, 1fr);
   min-inline-size: 10rem;
   padding: var(--space-1);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-glass-border);
   border-radius: var(--radius-full);
-  background-color: var(--color-surface-soft);
+  background-color: var(--color-glass-soft);
+  box-shadow: var(--shadow-glass-inset);
 }
 
 .viewButton {
@@ -54,7 +57,7 @@
 }
 
 .viewButton[aria-pressed="true"] {
-  background-color: var(--color-surface-raised);
+  background-color: var(--color-glass-strong);
   color: var(--color-text);
   box-shadow: var(--shadow-sm);
 }
@@ -82,8 +85,10 @@
   min-block-size: 22rem;
   padding: var(--space-4);
   overflow: hidden;
+  border: 1px solid var(--color-glass-border);
   border-radius: var(--radius-md);
-  background-color: var(--color-surface-soft);
+  background-color: var(--color-glass-soft);
+  box-shadow: var(--shadow-glass-inset);
   pointer-events: none;
 }
 
@@ -152,9 +157,10 @@
   inline-size: 100%;
   min-block-size: var(--control-height);
   padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-glass-border-strong);
   border-radius: var(--radius-sm);
-  background-color: var(--color-surface-raised);
+  background-color: var(--color-glass-surface);
+  box-shadow: var(--shadow-glass-inset);
   text-align: start;
 }
 
