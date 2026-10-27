@@ -104,16 +104,28 @@ export function createExerciseFacets(
 export function buildExerciseLibraryUrl(
   query: ExerciseQuery,
   page: number,
+  overrides?: Readonly<{
+    category?: ExerciseQuery["category"] | null;
+    search?: string | null;
+  }>,
 ): string {
   const params = new URLSearchParams();
+  const category =
+    overrides && "category" in overrides
+      ? (overrides.category ?? undefined)
+      : query.category;
+  const search =
+    overrides && "search" in overrides
+      ? (overrides.search ?? undefined)
+      : query.search;
 
-  if (query.search) params.set("search", query.search);
+  if (search) params.set("search", search);
   if (query.muscle) params.set("muscle", query.muscle);
   if (query.bodyPart) params.set("bodyPart", query.bodyPart);
   if (query.equipment) params.set("equipment", query.equipment);
-  if (query.category) params.set("category", query.category);
+  if (category) params.set("category", category);
   if (page > 1) params.set("page", String(page));
 
-  const search = params.toString();
-  return search ? `/exercises?${search}` : "/exercises";
+  const queryString = params.toString();
+  return queryString ? `/exercises?${queryString}` : "/exercises";
 }
