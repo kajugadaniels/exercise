@@ -1,0 +1,158 @@
+.page {
+  display: grid;
+  min-block-size: 100vh;
+  min-block-size: 100dvh;
+  place-items: center;
+  padding: var(--space-4) var(--gutter);
+}
+
+.shell {
+  display: grid;
+  inline-size: min(100%, 68rem);
+  overflow: hidden;
+  border: 1px solid var(--color-glass-border-strong);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-glass-surface);
+  box-shadow: var(--shadow-glass-inset), var(--shadow-glass);
+  backdrop-filter: var(--glass-filter);
+}
+
+.story {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: var(--space-6);
+  align-content: space-between;
+  min-inline-size: 0;
+  padding: var(--space-5);
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 86% 8%,
+      color-mix(in srgb, var(--color-primary) 72%, transparent),
+      transparent 14rem
+    ),
+    var(--color-secondary);
+  color: var(--color-on-secondary);
+}
+
+.story::after {
+  position: absolute;
+  inset-inline-end: -5rem;
+  inset-block-end: -7rem;
+  z-index: -1;
+  inline-size: 16rem;
+  block-size: 16rem;
+  border: 2rem solid color-mix(in srgb, currentColor 8%, transparent);
+  border-radius: var(--radius-full);
+  content: "";
+}
+
+.brand {
+  display: inline-flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-self: start;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+}
+
+.brandMark {
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  object-fit: contain;
+}
+
+.copy {
+  display: grid;
+  gap: var(--space-3);
+  max-inline-size: 34rem;
+}
+
+.context {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.title {
+  max-inline-size: 14ch;
+  font-size: var(--text-xl);
+}
+
+.description,
+.privacyNote {
+  color: color-mix(in srgb, currentColor 82%, transparent);
+}
+
+.description {
+  max-inline-size: 52ch;
+}
+
+.privacyNote {
+  max-inline-size: 52ch;
+  font-size: var(--text-xs);
+}
+
+.authPanel {
+  display: grid;
+  min-inline-size: 0;
+  min-block-size: 34rem;
+  place-items: center;
+  padding: var(--space-4);
+  background-color: var(--color-glass-strong);
+}
+
+.loading {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: center;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.loadingMark {
+  inline-size: 2rem;
+  block-size: 2rem;
+  border: 3px solid var(--color-primary-soft);
+  border-block-start-color: var(--color-primary);
+  border-radius: var(--radius-full);
+  animation: authLoadingSpin 700ms linear infinite;
+}
+
+@keyframes authLoadingSpin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (min-width: 48rem) {
+  .page {
+    padding-block: var(--space-7);
+  }
+
+  .shell {
+    grid-template-columns: minmax(18rem, 0.9fr) minmax(24rem, 1.1fr);
+    min-block-size: 42rem;
+  }
+
+  .story {
+    padding: var(--space-7);
+  }
+
+  .authPanel {
+    min-block-size: 42rem;
+    padding: var(--space-6);
+  }
+}
+
+@media (forced-colors: active) {
+  .story,
+  .authPanel {
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  .story::after {
+    display: none;
+  }
+}
