@@ -164,6 +164,42 @@ test("changes body-part filters while preserving category and search", () => {
   );
 });
 
+test("changes muscle filters while preserving the other active filters", () => {
+  const query: ExerciseQuery = {
+    bodyPart: "arms",
+    equipment: "barbell",
+    muscle: "biceps",
+    page: 2,
+  };
+
+  assert.equal(
+    buildExerciseLibraryUrl(query, 1, { muscle: "forearms" }),
+    "/exercises?muscle=forearms&bodyPart=arms&equipment=barbell",
+  );
+  assert.equal(
+    buildExerciseLibraryUrl(query, 1, { muscle: null }),
+    "/exercises?bodyPart=arms&equipment=barbell",
+  );
+});
+
+test("changes equipment filters while preserving the other active filters", () => {
+  const query: ExerciseQuery = {
+    category: "strength",
+    equipment: "barbell",
+    muscle: "biceps",
+    page: 2,
+  };
+
+  assert.equal(
+    buildExerciseLibraryUrl(query, 1, { equipment: "dumbbell" }),
+    "/exercises?muscle=biceps&equipment=dumbbell&category=strength",
+  );
+  assert.equal(
+    buildExerciseLibraryUrl(query, 1, { equipment: null }),
+    "/exercises?muscle=biceps&category=strength",
+  );
+});
+
 test("resolves exercise details through the normalized provider contract", async () => {
   const adapter = createExerciseGymGifsAdapter(async (path) => {
     assert.equal(path, "exercises/biceps/barbell-curl.json");
