@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Search01Icon } from "@hugeicons/core-free-icons";
 import { Icon } from "@/components/ui/Icon/Icon";
+import { Button } from "@/components/ui/Button/Button";
+import { Input, Select } from "@/components/ui/Field/Field";
 import {
   formatExerciseValue,
   type ExerciseFacetOption,
@@ -28,17 +30,19 @@ function FilterSelect({
   value,
 }: FilterSelectProps) {
   return (
-    <label className={styles.field}>
-      <span>{label}</span>
-      <select name={name} defaultValue={value ?? ""}>
-        <option value="">All {label.toLocaleLowerCase("en")}</option>
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </label>
+    <Select
+      id={`filter-${name}`}
+      label={label}
+      name={name}
+      defaultValue={value ?? ""}
+    >
+      <option value="">All {label.toLocaleLowerCase("en")}</option>
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </Select>
   );
 }
 
@@ -67,22 +71,19 @@ export function ExerciseFilters({ facets, query }: ExerciseFiltersProps) {
   return (
     <form className={styles.form} action="/exercises" method="get">
       <div className={styles.searchRow}>
-        <label className={styles.searchField}>
-          <span>Search exercises</span>
-          <div className={styles.searchControl}>
-            <Icon icon={Search01Icon} size={20} />
-            <input
-              type="search"
-              name="search"
-              maxLength={80}
-              defaultValue={query.search ?? ""}
-              placeholder="Try Barbell Curl"
-            />
-          </div>
-        </label>
-        <button className={styles.submitButton} type="submit">
+        <Input
+          id="exercise-search"
+          label="Search exercises"
+          type="search"
+          name="search"
+          maxLength={80}
+          defaultValue={query.search ?? ""}
+          placeholder="Try Barbell Curl"
+          leadingIcon={<Icon icon={Search01Icon} size={20} />}
+        />
+        <Button className={styles.submitButton} type="submit">
           Apply filters
-        </button>
+        </Button>
       </div>
 
       <fieldset className={styles.filterGroup}>
