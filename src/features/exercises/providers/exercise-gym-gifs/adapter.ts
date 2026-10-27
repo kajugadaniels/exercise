@@ -1,9 +1,10 @@
 import { z } from "zod";
-import type {
-  Exercise,
-  ExerciseFacets,
-  ExercisePage,
-  ExerciseQuery,
+import {
+  EXERCISE_PAGE_SIZE,
+  type Exercise,
+  type ExerciseFacets,
+  type ExercisePage,
+  type ExerciseQuery,
 } from "../../domain/exercise";
 import {
   ExerciseProviderError,
@@ -20,7 +21,6 @@ import {
   providerExerciseSchema,
 } from "./schema";
 
-const PAGE_SIZE = 24;
 const MAX_RESPONSE_BYTES = 8_000_000;
 const REQUEST_TIMEOUT_MS = 8_000;
 
@@ -178,15 +178,18 @@ export function createExerciseGymGifsAdapter(
   return {
     async list(query: ExerciseQuery): Promise<ExercisePage> {
       const exercises = filterExercises(await loadCatalog(), query);
-      const pageCount = Math.max(1, Math.ceil(exercises.length / PAGE_SIZE));
+      const pageCount = Math.max(
+        1,
+        Math.ceil(exercises.length / EXERCISE_PAGE_SIZE),
+      );
       const page = Math.min(query.page, pageCount);
-      const start = (page - 1) * PAGE_SIZE;
+      const start = (page - 1) * EXERCISE_PAGE_SIZE;
 
       return {
-        exercises: exercises.slice(start, start + PAGE_SIZE),
+        exercises: exercises.slice(start, start + EXERCISE_PAGE_SIZE),
         total: exercises.length,
         page,
-        pageSize: PAGE_SIZE,
+        pageSize: EXERCISE_PAGE_SIZE,
         pageCount,
       };
     },
