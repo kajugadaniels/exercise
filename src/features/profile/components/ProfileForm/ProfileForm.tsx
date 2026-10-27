@@ -334,7 +334,6 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
             placeholder="—"
             icon={Calculator01Icon}
             value={bmi === null ? "" : String(bmi)}
-            hint={bmiStatus}
             tone={bmiTone}
             aria-live="polite"
             readOnly
@@ -342,7 +341,8 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
         </div>
 
         <p className={styles.bmiNote}>
-          BMI is a general screening guide, not a medical diagnosis.
+          BMI status: {bmiStatus}. This is a general screening guide, not a
+          medical diagnosis.
         </p>
       </section>
 
