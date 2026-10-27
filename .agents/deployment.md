@@ -21,7 +21,7 @@ Use distinct local, preview, and production Clerk/configuration environments. Ne
 | Server secrets | Clerk secret/webhook keys, future database URL, RapidAPI key | Server only |
 | Non-secret server config | Pinned exercise provider base/ref | Prefer server-owned; safe to document |
 
-The committed templates are `.env.local.example` and `.env.production.example`. They define `NEXT_PUBLIC_APP_URL`, Clerk publishable/server/webhook placeholders, and the pinned exercise-provider base/version. Copy names—not example values—into the intended environment. Hosting dashboards hold production secrets; real `.env*` files remain ignored.
+The committed templates are `.env.local.example` and `.env.production.example`. They define `NEXT_PUBLIC_APP_URL`, Clerk publishable/server/webhook placeholders, same-origin Clerk sign-in/sign-up and fallback routes, and the pinned exercise-provider base/version. Copy names—not example values—into the intended environment. Hosting dashboards hold production secrets; real `.env*` files remain ignored.
 
 Do not add database, RapidAPI, analytics, or storage variables until those integrations are approved. When a vendor version changes, re-check its official variable names and update both templates together.
 
