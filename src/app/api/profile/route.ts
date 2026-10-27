@@ -8,8 +8,6 @@ import {
   saveProfileForClerkUser,
 } from "@/features/profile/server/profile-service";
 
-export const dynamic = "force-dynamic";
-
 const MAX_PROFILE_BODY_BYTES = 16_384;
 const noStoreHeaders = { "Cache-Control": "no-store" };
 
