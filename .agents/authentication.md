@@ -15,10 +15,10 @@ Authentication answers “who has a valid session?” Authorization answers “m
 
 - Sign up and sign in through Clerk-supported components or documented custom flows.
 - Account/session management through Clerk-supported UI where it fits product design.
-- Post-registration onboarding for a minimal platform profile.
-- Future saved exercises, workouts, and history scoped to the authenticated user after persistence approval.
+- Required post-registration onboarding for the approved platform profile.
+- Future saved exercises, workouts, and history scoped to the authenticated application user.
 
-Do not implement profile persistence until a database is approved. Do not collect age, body measurements, diagnoses, injuries, or health history merely to complete onboarding.
+Do not collect age, diagnoses, injuries, medical history, or additional body measurements. Gender, height, weight, country, and derived BMI are the specifically approved onboarding fields.
 
 ## 3. Route policy
 
@@ -26,7 +26,7 @@ The developer confirmed an authenticated-first application on 2026-10-27. The ro
 
 | Surface | Access |
 | --- | --- |
-| Root `/` | Session gate; signed-out users go to `/sign-in`, signed-in users go to `/exercises` |
+| Root `/` | Session gate; signed-out users go to `/sign-in`, signed-in users enter the profile gate |
 | Sign-in/sign-up | Public Clerk catch-all routes; authenticated users redirect safely |
 | Exercise browse/detail | Authenticated |
 | Profile/account/onboarding | Authenticated |
@@ -49,7 +49,9 @@ Client auth state may improve navigation and presentation but never authorizes a
 
 ## 6. Onboarding
 
-Onboarding state must be explicit, server-derived, resumable, and idempotent. Collect only fields required by an approved feature. Fitness goals/preferences are future and require a privacy review; use non-medical wording and allow editing/deletion.
+Onboarding state is the existence of a valid persisted profile for the current Clerk-linked application user. The protected route-group layout checks it on the server and redirects incomplete users to `/onboarding`; the onboarding route redirects completed users to `/home`. Profile writes are idempotent, editable, and deletable.
+
+BMI is calculated from the current height and weight and is not stored as an independent value. It is displayed as informational fitness context, not a diagnosis, score, or eligibility decision.
 
 ## 7. Webhooks and synchronization
 
