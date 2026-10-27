@@ -1,17 +1,21 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { exerciseCategoryIds } from "@/features/exercises/domain/exercise";
+import {
+  bodyPartIds,
+  exerciseCategoryIds,
+} from "@/features/exercises/domain/exercise";
 import { getExerciseCatalogPage } from "@/features/exercises/server/exercise-catalog";
 import { ExerciseProviderError } from "@/features/exercises/providers/exercise-provider";
 import { getProfileForClerkUser } from "@/features/profile/server/profile-service";
 
 const noStoreHeaders = { "Cache-Control": "private, no-store" };
-const allowedQueryKeys = new Set(["category", "page", "search"]);
+const allowedQueryKeys = new Set(["bodyPart", "category", "page", "search"]);
 const MAX_QUERY_LENGTH = 256;
 
 const catalogQuerySchema = z
   .object({
+    bodyPart: z.enum(bodyPartIds).optional(),
     category: z.enum(exerciseCategoryIds).optional(),
     page: z.coerce.number().int().min(1).max(100).default(1),
     search: z.preprocess(
@@ -43,6 +47,7 @@ function readCatalogQuery(request: Request) {
   }
 
   const result = catalogQuerySchema.safeParse({
+    bodyPart: searchParams.get("bodyPart") ?? undefined,
     category: searchParams.get("category") ?? undefined,
     page: searchParams.get("page") ?? undefined,
     search: searchParams.get("search") ?? undefined,
@@ -83,7 +88,7 @@ export async function GET(request: Request) {
     return errorResponse(
       400,
       "invalid_query",
-      "Use a valid category, search term, and page number.",
+      "Use a valid body part, category, search term, and page number.",
     );
   }
 
