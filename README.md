@@ -4,7 +4,7 @@
 
 ## Project status
 
-**The exercise-library vertical slice is implemented in code but remains unverified.** The repository contains a Next.js 16.4.3/React 19.3.0 application shell, the logo/favicon, Outfit typography, semantic light/dark tokens, a pinned exercise-provider adapter, responsive catalog/detail routes, and an accessible React Muscle Highlighter wrapper. No test, lint, type-check, build, live provider runtime, Clerk tenant, database, or deployment result is claimed to work.
+**The authenticated exercise-library vertical slice is implemented in code but remains unverified.** The repository contains a Next.js 16.4.3/React 19.3.0 application shell, Clerk sign-in/sign-up and protected routes, the logo/favicon, Outfit typography, semantic light/dark tokens, a pinned exercise-provider adapter, responsive catalog/detail routes, and an accessible React Muscle Highlighter wrapper. No test, lint, type-check, build, live provider runtime, Clerk tenant, database, or deployment result is claimed to work.
 
 | Capability | Status |
 | --- | --- |
@@ -13,7 +13,7 @@
 | Responsive Next.js foundation | Implemented in code; not built or run by an agent |
 | Exercise catalog integration | Pinned adapter, Zod validation, normalization, search, filtering, pagination, and detail lookup written |
 | Exercise GIF use | **Blocked for public/commercial release pending rights verification** |
-| Clerk authentication | Approved approach, not configured |
+| Clerk authentication | Provider, custom routes, session gate, resource checks, and account control written; tenant verification pending |
 | Muscle visualization | Typed mapping and accessible front/back detail component written; not browser-verified |
 | Database and persistence | Pending developer decision |
 | Deployment | Not configured or verified |
@@ -56,8 +56,8 @@ The platform provides general fitness information, not medical advice, diagnosis
 - Clerk sign-up, sign-in, sessions, account management, and minimal profile onboarding
 - Source attribution and provider failure handling
 
-The catalog-to-detail flow above is now present in code. Authentication and any
-account-dependent capabilities remain outside this integration task.
+The sign-in-to-catalog-to-detail flow above is now present in code. Profile
+onboarding and persisted account-dependent capabilities remain future work.
 
 ### Future
 
@@ -72,7 +72,7 @@ account-dependent capabilities remain outside this integration task.
 ### Pending approval
 
 - Database and ORM
-- Final route access matrix
+- Account onboarding fields and flow
 - Any paid/RapidAPI integration
 - Media licensing solution
 - Analytics, notifications, storage, monetization, and hosting beyond the web plan
@@ -81,16 +81,17 @@ account-dependent capabilities remain outside this integration task.
 
 ```mermaid
 flowchart LR
-  A[Open exercise library] --> B[Search or filter]
+  S[Sign in with Clerk] --> A[Open exercise library]
+  A --> B[Search or filter]
   B --> C[Review verified result]
   C --> D[Open exercise details]
   D --> E[Read instructions]
   D --> F[View targeted muscles]
   D --> G[Watch licensed media when available]
-  H[Sign in with Clerk] -. future personalization .-> I[Save or organize workouts]
+  S -. future personalization .-> I[Save or organize workouts]
 ```
 
-Exercise discovery should remain useful when the provider, animation, account service, or a future personalization service is unavailable.
+Exercise discovery should degrade safely when the provider or animation is unavailable. Because the developer selected an authenticated-first route policy, a Clerk outage prevents application access and must never expose protected content.
 
 ## 6. Technology direction
 
@@ -99,7 +100,7 @@ Exercise discovery should remain useful when the provider, animation, account se
 | Framework | Next.js 16.4.3 App Router |
 | UI | React 19.3.0 |
 | Language | TypeScript with strict settings |
-| Authentication | Clerk `@clerk/nextjs@^7.9.21` declared; tenant/configuration pending |
+| Authentication | Clerk `@clerk/nextjs@^7.9.21`; authenticated-first routes implemented, tenant verification pending |
 | Exercise source | Exercise Gym GIFs DB behind a provider abstraction |
 | Validation | Zod `^4.6.7` declared and used at the provider boundary |
 | Muscle anatomy | React Muscle Highlighter `^1.2.0` declared and wrapped in the detail feature |
@@ -213,9 +214,9 @@ produces that verified state, so it cannot enable the blocked collection.
 
 ## 12. Authentication
 
-Clerk will manage sign-up, sign-in, sessions, and account UI. The installed Clerk version's official App Router documentation must be consulted during implementation.
+Clerk manages sign-up, sign-in, sessions, and account UI. `/sign-in` and `/sign-up` are public catch-all routes. The root route checks the session, sending signed-out users to sign in and authenticated users to `/exercises`; exercise browse and detail resources independently require authentication.
 
-The recommended route policy keeps exercise discovery public and protects profile, favorites, workouts, and history, but the developer must confirm it. Middleware redirects are not sufficient authorization: every private server operation derives the actor from the Clerk session and owner-scopes access. Profile onboarding stays minimal and avoids unnecessary health data.
+`clerkMiddleware()` supplies Clerk request integration but is not the authorization boundary. Every protected resource performs its own server-side check, and future private operations must derive the actor from the Clerk session and owner-scope access. Profile onboarding remains unimplemented and must stay minimal after a separate privacy review.
 
 ## 13. Repository structure
 
@@ -274,6 +275,10 @@ NEXT_PUBLIC_APP_URL=http://localhost:4000
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_REPLACE_ME
 CLERK_SECRET_KEY=sk_test_REPLACE_ME
 CLERK_WEBHOOK_SIGNING_SECRET=whsec_REPLACE_ME
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/exercises
+NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/exercises
 EXERCISE_PROVIDER_BASE_URL=https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0
 EXERCISE_PROVIDER_VERSION=v1.1.0
 ```
@@ -312,8 +317,8 @@ approved component-test harness exists yet, so they have not been executed.
 Still required after test-tool approval:
 
 - component interaction tests for accessible filters, media fallback, and the diagram wrapper;
-- integration tests for provider success/failure and Clerk-protected owner scope;
-- end-to-end tests for browse→filter→detail and later authentication/personal workflows;
+- integration tests for provider success/failure and Clerk-protected routes;
+- end-to-end tests for sign-in→browse→filter→detail, sign-up, and sign-out;
 - manual keyboard, screen-reader, contrast, motion, mobile, and media checks.
 
 Tests use small synthetic/sanitized fixtures rather than live APIs or copied GIF collections. Agents may write tests but may not execute tests, builds, lint, formatters, or type checks under [`.agents/workflow.md`](.agents/workflow.md).
@@ -322,14 +327,16 @@ Tests use small synthetic/sanitized fixtures rather than live APIs or copied GIF
 
 After installing dependencies, run the developer commands below and then verify:
 
-1. Open `/exercises` at 320px, tablet, and desktop widths.
-2. Search for `Barbell Curl`; combine muscle, body area, equipment, and category filters; confirm the URL preserves the state.
-3. Move between result pages and open `/exercises/biceps/barbell-curl`.
-4. Confirm no provider GIF request appears in the browser network panel.
-5. Switch front/back anatomy views and operate each supported muscle label with keyboard only.
-6. Confirm unsupported muscles remain in the text list with “diagram unavailable.”
-7. Check light, system dark, 200% zoom, reduced motion, and forced-colors modes.
-8. Temporarily use an invalid provider base in a disposable local environment and confirm the safe retry state; restore the pinned base afterward.
+1. While signed out, open `/` and `/exercises`; confirm both routes redirect to `/sign-in` without displaying exercise content.
+2. Complete sign-in and sign-up separately; confirm each successful flow lands on `/exercises` and an authenticated visit to `/sign-in` redirects safely.
+3. Open `/exercises` at 320px, tablet, and desktop widths; use the account control to sign out and confirm protected routes become inaccessible.
+4. Search for `Barbell Curl`; combine muscle, body area, equipment, and category filters; confirm the URL preserves the state.
+5. Move between result pages and open `/exercises/biceps/barbell-curl`.
+6. Confirm no provider GIF request appears in the browser network panel.
+7. Switch front/back anatomy views and operate each supported muscle label with keyboard only.
+8. Confirm unsupported muscles remain in the text list with “diagram unavailable.”
+9. Check authentication and exercise screens in light mode, system dark mode, 200% zoom, reduced motion, and forced-colors mode.
+10. Temporarily use an invalid provider base in a disposable local environment and confirm the safe retry state; restore the pinned base afterward.
 
 Developer verification commands:
 
@@ -357,7 +364,7 @@ Production release requires developer-run quality checks, Clerk production verif
 | 0 — Foundation | Rulebook, architecture, source/licensing research — **documented** |
 | 1 — Web shell and vertical slice | Implemented in code; developer verification pending |
 | 2 — Provider integration | Initial runtime schemas, pinned adapter, normalized search/filter/detail, cache/error policy implemented; legal review still blocks release |
-| 3 — Accounts | Clerk integration, route policy, minimal onboarding |
+| 3 — Accounts | Clerk authentication and route policy written; tenant verification and minimal onboarding remain |
 | 4 — Anatomy | Initial dependency wrapper, exhaustive mapping, and accessible detail integration implemented; browser verification pending |
 | 5 — Persistence decision | Select database/ORM after requirements and privacy review |
 | 6 — Personal workouts | Favorites, plans, sets/reps/rest after persistence approval |
