@@ -31,7 +31,7 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | Exercise provider adapter and validated catalog | MVP | Read-only catalog from verified provider fields |
 | Browse, search, filter, detail pages | MVP | Body part, muscle, equipment, category; graceful missing media |
 | Clerk sign-up/sign-in/account | Implemented in code, unverified | Authenticated-first route policy; Clerk tenant and runtime verification remain developer-owned |
-| Post-registration profile onboarding | MVP, approved 2026-10-27 | Mandatory gender, height, weight, derived BMI, and country profile before protected product use |
+| Post-registration profile onboarding | MVP, approved 2026-10-27 | Mandatory male/female gender selection, height, weight, derived BMI, and country before protected product use |
 | Muscle highlighter on detail pages | MVP after dependency approval | Local React SVG package; explicit normalization |
 | Interactive muscle explorer | Future | Select muscle, filter catalog, open detail |
 | Favorites and workout plans | Future | Persist only after their product model is approved |
@@ -81,7 +81,7 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | ORM/query layer | Prisma ORM 7 approved; pin the stable major and use migrations without a shadow database |
 | Dependency installation | Clerk, Zod, Hugeicons, and React Muscle Highlighter versions are approved; developer installation/output pending |
 | Styling architecture | Plain CSS with semantic tokens and colocated CSS Modules is approved; Tailwind/CSS-in-JS/UI kits require a future stack-change approval |
-| Account onboarding scope | Mandatory gender, height, weight, country, and derived BMI approved on 2026-10-27; correction and deletion are required |
+| Account onboarding scope | Mandatory male/female gender selection, height, weight, country, and derived BMI approved on 2026-10-27; correction and deletion are required |
 | Media commercial rights and alternative licensed provider | Blocking public use of ExerciseGymGifsDB GIFs |
 | Native framework | Unresolved |
 | Monetization | Unresolved |
