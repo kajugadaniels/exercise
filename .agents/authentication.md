@@ -22,17 +22,18 @@ Do not implement profile persistence until a database is approved. Do not collec
 
 ## 3. Route policy
 
-The exact route matrix requires developer confirmation. The recommended default is:
+The developer confirmed an authenticated-first application on 2026-10-27. The route matrix is:
 
-| Surface | Recommended access |
+| Surface | Access |
 | --- | --- |
-| Marketing, exercise browse/detail | Public |
-| Sign-in/sign-up | Public; redirect authenticated users safely |
+| Root `/` | Session gate; signed-out users go to `/sign-in`, signed-in users go to `/exercises` |
+| Sign-in/sign-up | Public Clerk catch-all routes; authenticated users redirect safely |
+| Exercise browse/detail | Authenticated |
 | Profile/account/onboarding | Authenticated |
 | Favorites, plans, history, progress | Authenticated and owner-scoped |
 | Internal callbacks/webhooks | Signature-verified server endpoints, not user sessions |
 
-Do not treat middleware/proxy redirects as the only protection. Each Server Action, Route Handler, and server data function enforces its own policy.
+Keep `clerkMiddleware()` configured for Clerk request integration, but do not treat proxy redirects as authorization. Each protected page, Server Action, Route Handler, and server data function enforces its own policy with the installed Clerk server API.
 
 ## 4. Server-side identity
 
