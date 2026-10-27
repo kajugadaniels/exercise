@@ -11,7 +11,7 @@ Treat browser input, URLs, query parameters, provider JSON, remote media, webhoo
 
 ## 2. Authentication and authorization
 
-- Public catalog reads may be unauthenticated only where the approved route matrix permits.
+- The confirmed route matrix requires authentication for catalog pages. Any future public read exception requires an explicit route-policy change and must not expose private or personalized data.
 - Private operations authenticate server-side and authorize against the specific resource.
 - Actor and ownership identifiers come from the verified session/server record, not request bodies.
 - Deny by default. Client route hiding, Clerk UI state, and middleware redirects are defense-in-depth only.
