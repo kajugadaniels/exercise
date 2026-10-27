@@ -23,8 +23,7 @@ export function NavbarLinks() {
             href={link.href}
             key={link.href}
           >
-            <span className={styles.linkSignal} aria-hidden="true" />
-            <span>{link.label}</span>
+            {link.label}
           </Link>
         );
       })}
