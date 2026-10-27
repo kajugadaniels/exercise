@@ -1,0 +1,110 @@
+.page {
+  display: grid;
+  gap: var(--space-7);
+  inline-size: min(100%, 76rem);
+  min-block-size: 100vh;
+  min-block-size: 100dvh;
+  margin-inline: auto;
+  padding: max(var(--space-5), env(safe-area-inset-top)) var(--gutter)
+    max(var(--space-6), env(safe-area-inset-bottom));
+}
+
+.introduction {
+  display: grid;
+  align-content: center;
+  gap: var(--space-4);
+  max-inline-size: 36rem;
+}
+
+.logo {
+  inline-size: 3rem;
+  block-size: 3rem;
+  object-fit: contain;
+}
+
+.eyebrow,
+.progressRow {
+  color: var(--color-primary-text);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+}
+
+.title {
+  max-inline-size: 13ch;
+  font-size: var(--text-display);
+}
+
+.summary {
+  max-inline-size: 55ch;
+  color: var(--color-text-muted);
+}
+
+.promiseList {
+  display: grid;
+  gap: var(--space-4);
+  margin-block-start: var(--space-3);
+}
+
+.promiseList div {
+  display: grid;
+  gap: var(--space-1);
+  padding-inline-start: var(--space-4);
+  border-inline-start: 2px solid var(--color-primary);
+}
+
+.promiseList dt {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.promiseList dd {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.formCard {
+  display: grid;
+  gap: var(--space-5);
+  align-self: center;
+  min-inline-size: 0;
+  padding: clamp(1rem, 4vw, 2rem);
+  border: 1px solid var(--color-glass-border-strong);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-glass-surface);
+  box-shadow: var(--shadow-glass), var(--shadow-glass-inset);
+  backdrop-filter: var(--glass-filter);
+}
+
+.progressRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.progressTrack {
+  block-size: 0.2rem;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-soft);
+}
+
+.progressTrack span {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  background-color: var(--color-primary);
+}
+
+@media (min-width: 64rem) {
+  .page {
+    grid-template-columns: minmax(18rem, 0.75fr) minmax(32rem, 1.25fr);
+    align-items: center;
+  }
+}
+
+@media (forced-colors: active) {
+  .formCard {
+    border-color: CanvasText;
+    background-color: Canvas;
+  }
+}
