@@ -69,7 +69,7 @@ The platform provides general fitness information, not medical advice, diagnosis
 ### Pending approval
 
 - Database and ORM
-- Exact framework/package versions and styling approach (Tailwind CSS is proposed)
+- Exact framework/package versions; CSS Modules are approved, while final brand tokens remain open
 - Final route access matrix
 - Any paid/RapidAPI integration
 - Media licensing solution
@@ -100,7 +100,7 @@ Exercise discovery should remain useful when the provider, animation, account se
 | Authentication | Clerk |
 | Exercise source | Exercise Gym GIFs DB behind a provider abstraction |
 | Muscle anatomy | React Muscle Highlighter, proposed; MIT code license verified at repository v1.2.0 |
-| Styling | Token-driven responsive design; Tailwind CSS proposed, not yet approved |
+| Styling | Plain CSS, semantic tokens, and colocated CSS Modules; Tailwind/CSS-in-JS/UI kits are not approved |
 | Database/ORM | Not selected |
 | Deployment | Vercel-compatible; not configured |
 | Optional image API | RapidAPI Muscle Group Image Generator; disabled unless separately approved |
@@ -262,7 +262,7 @@ Read [`.agents/security.md`](.agents/security.md), [`.agents/privacy.md`](.agent
 
 The target is WCAG 2.2 AA. Core flows must work with keyboard, touch, zoom/reflow, reduced motion, forced colors, and assistive technology. Animated exercise content requires available written instruction; the anatomy diagram requires a text equivalent. Loading, empty, provider error, malformed data, and missing-media states are first-class product states.
 
-Final visual brand choices remain open. The implementation will use semantic tokens for color, typography, spacing, shape, elevation, and motion, with light/dark compatibility. See [`.agents/design.md`](.agents/design.md) and [`.agents/accessibility.md`](.agents/accessibility.md).
+Final visual brand choices remain open. The implementation uses a small global token/reset layer, route-owned `page.module.css`/`layout.module.css` files for composition, and same-name colocated CSS Modules for shared and feature components. Components consume semantic tokens for color, typography, spacing, shape, elevation, and motion, with light/dark compatibility. See [`.agents/design.md`](.agents/design.md) and [`.agents/accessibility.md`](.agents/accessibility.md).
 
 ## 17. Testing and quality control
 
@@ -300,7 +300,7 @@ Production release requires developer-run quality checks, Clerk production verif
 - Final name, branding, typography, and palette are not selected.
 - The current workspace is not initialized as a Git repository, so status and diff history are unavailable.
 - No application code, dependency manifest, runtime, test harness, or deployment exists.
-- Exact package versions and styling solution are undecided.
+- Exact package versions remain undecided; the styling architecture is plain CSS with CSS Modules, while brand values remain unresolved.
 - The exercise provider's documented schema was inspected, but integration behavior has not been implemented or runtime-validated here.
 - Exercise Gym GIF media provenance and commercial rights are unresolved and blocking.
 - React Muscle Highlighter accessibility and visuals have not been tested in this project.
