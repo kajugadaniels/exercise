@@ -29,11 +29,6 @@
   background-color: var(--color-background);
 }
 
-.roundButton[data-active="true"] {
-  border-color: var(--color-primary);
-  color: var(--color-primary-text);
-}
-
 .searchForm {
   display: grid;
   grid-template-columns: var(--control-height) minmax(0, 1fr) var(--control-height);
