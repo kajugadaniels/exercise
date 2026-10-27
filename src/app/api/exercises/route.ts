@@ -21,7 +21,7 @@ const catalogQuerySchema = z
     search: z.preprocess(
       (value) =>
         typeof value === "string" && value.trim() === "" ? undefined : value,
-      z.string().trim().min(1).max(80).optional(),
+      z.string().trim().min(3).max(80).optional(),
     ),
   })
   .strict();
@@ -88,7 +88,7 @@ export async function GET(request: Request) {
     return errorResponse(
       400,
       "invalid_query",
-      "Use a valid body part, category, search term, and page number.",
+      "Use a valid body part, category, search term of at least 3 characters, and page number.",
     );
   }
 
