@@ -104,6 +104,12 @@
   }
 }
 
+@media (min-width: 64rem) {
+  .previewList {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (forced-colors: active) {
   .primaryLink {
     border: 1px solid ButtonText;
