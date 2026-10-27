@@ -1,0 +1,44 @@
+.frame {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  place-items: center;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+}
+
+.frame[data-size="detail"] {
+  aspect-ratio: 16 / 11;
+  border-radius: var(--radius-lg);
+}
+
+.image {
+  object-fit: cover;
+}
+
+.unavailable {
+  display: grid;
+  gap: var(--space-2);
+  place-items: center;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  text-align: center;
+}
+
+.icon {
+  display: grid;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  color: var(--color-primary-text);
+}
+
+@media (forced-colors: active) {
+  .frame,
+  .icon {
+    border: 1px solid CanvasText;
+  }
+}
