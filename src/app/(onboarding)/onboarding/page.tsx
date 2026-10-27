@@ -20,48 +20,26 @@ export default async function OnboardingPage() {
 
   return (
     <main className={styles.page} id="main-content">
-      <section className={styles.introduction} aria-labelledby="profile-title">
-        <Image
-          className={styles.logo}
-          src="/logo.png"
-          alt=""
-          width={56}
-          height={56}
-          priority
-        />
-        <p className={styles.eyebrow}>One-time setup</p>
-        <h1 className={styles.title} id="profile-title">
-          Build your training profile
-        </h1>
-        <p className={styles.summary}>
-          Your profile gives every future session, measurement, and progress
-          entry a secure home under your account.
-        </p>
+      <section className={styles.content} aria-labelledby="profile-title">
+        <header className={styles.header}>
+          <Image
+            className={styles.logo}
+            src="/logo.png"
+            alt=""
+            width={44}
+            height={44}
+            priority
+          />
+          <div className={styles.heading}>
+            <h1 className={styles.title} id="profile-title">
+              Complete your profile
+            </h1>
+            <p className={styles.summary}>
+              Set your baseline to start tracking progress.
+            </p>
+          </div>
+        </header>
 
-        <dl className={styles.promiseList}>
-          <div>
-            <dt>Private by default</dt>
-            <dd>Your Clerk identity is resolved securely on the server.</dd>
-          </div>
-          <div>
-            <dt>Always editable</dt>
-            <dd>Update or delete this profile from your profile page.</dd>
-          </div>
-          <div>
-            <dt>No hidden score</dt>
-            <dd>BMI is informational and never used as a diagnosis.</dd>
-          </div>
-        </dl>
-      </section>
-
-      <section className={styles.formCard} aria-label="Training profile form">
-        <div className={styles.progressRow}>
-          <span>Profile setup</span>
-          <span>Step 1 of 1</span>
-        </div>
-        <div className={styles.progressTrack} aria-hidden="true">
-          <span />
-        </div>
         <ProfileForm mode="onboarding" />
       </section>
     </main>
