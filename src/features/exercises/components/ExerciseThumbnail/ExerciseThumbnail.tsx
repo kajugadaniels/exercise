@@ -26,9 +26,14 @@ export function ExerciseThumbnail({
               : "(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw"
           }
           src={image.url}
+          unoptimized={image.kind === "gif"}
         />
       ) : (
-        <div className={styles.unavailable} role="img" aria-label="Preview unavailable">
+        <div
+          className={styles.unavailable}
+          role="img"
+          aria-label="Preview unavailable"
+        >
           <span className={styles.icon} aria-hidden="true">
             <Icon icon={ImageNotFound01Icon} size={24} />
           </span>
