@@ -88,7 +88,7 @@ A chat request alone does not relax level-one restrictions. Give the developer t
 | Secondary muscle | Provider-supported supporting target; may be absent. |
 | Muscle slug | Application identifier mapped explicitly to visualization identifiers. |
 | Exercise media | Third-party GIF/video referenced by a normalized record. Availability is not a usage license. |
-| Public catalog | Exercise discovery pages that do not require an account. Final route policy is pending product approval. |
+| Protected catalog | Exercise discovery pages that require a verified Clerk session under the confirmed authenticated-first route policy. |
 | Personal workout | User-owned saved routine. Planned, not part of the initial catalog MVP and not persisted until a database is approved. |
 
 ## 8. Changelog
