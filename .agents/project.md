@@ -27,7 +27,7 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | Area | Status | Boundary |
 | --- | --- | --- |
 | Engineering governance and documentation | Implemented in Phase 0 | No application scaffold or runtime proof yet |
-| Next.js responsive web foundation | MVP / Phase 1 | App Router, React, strict TypeScript; exact versions selected during scaffold approval |
+| Next.js responsive web foundation | Phase 1 scaffold present, unverified | Next.js 16.4.3, React 19.3.0, strict TypeScript; no build/test execution claimed |
 | Exercise provider adapter and validated catalog | MVP | Read-only catalog from verified provider fields |
 | Browse, search, filter, detail pages | MVP | Body part, muscle, equipment, category; graceful missing media |
 | Clerk sign-up/sign-in/account | MVP | Final public/private route matrix requires confirmation |
@@ -75,10 +75,10 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 
 | Decision | Current state |
 | --- | --- |
-| Product name, visual brand, tone | Unresolved |
+| Product identity | Final name and voice remain unresolved; logo mark, Outfit, coral primary, and navy secondary are approved |
 | Database and hosting | Unresolved |
 | ORM/query layer | Unresolved |
-| Exact Next.js, React, Clerk, and styling versions | Select during approved scaffold |
+| Dependency installation | Clerk, Zod, Hugeicons, and React Muscle Highlighter versions are approved; developer installation/output pending |
 | Styling architecture | Plain CSS with semantic tokens and colocated CSS Modules is approved; Tailwind/CSS-in-JS/UI kits require a future stack-change approval |
 | Public/private route matrix | Library likely public; saved/personal areas private; confirm |
 | Media commercial rights and alternative licensed provider | Blocking public use of ExerciseGymGifsDB GIFs |
