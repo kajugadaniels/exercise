@@ -1,8 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { ExerciseCard } from "@/features/exercises/components/ExerciseCard/ExerciseCard";
-import { ExerciseCategoryRail } from "@/features/exercises/components/ExerciseCategoryRail/ExerciseCategoryRail";
-import { ExerciseFilterSidebar } from "@/features/exercises/components/ExerciseFilterSidebar/ExerciseFilterSidebar";
+import { ExerciseFilterSheet } from "@/features/exercises/components/ExerciseFilterSheet/ExerciseFilterSheet";
 import { ExercisePagination } from "@/features/exercises/components/ExercisePagination/ExercisePagination";
 import { ExerciseSearch } from "@/features/exercises/components/ExerciseSearch/ExerciseSearch";
 import type { ExerciseQuery } from "@/features/exercises/domain/exercise";
@@ -30,21 +29,15 @@ function CatalogFallback() {
   return (
     <section className={styles.catalog} aria-label="Loading exercises">
       <div className={styles.controlBar} aria-hidden="true">
-        <div className={styles.categoryPlaceholder} />
-        <div className={styles.searchPlaceholder}>
-          <span />
-          <span />
-        </div>
+        <div className={styles.searchPlaceholder} />
+        <div className={styles.filterTriggerPlaceholder} />
       </div>
-      <div className={styles.libraryLayout}>
-        <div className={styles.filterPlaceholder} />
-        <div className={styles.results}>
-          <div className={styles.toolbarPlaceholder} />
-          <div className={styles.exerciseGrid} aria-hidden="true">
-            {Array.from({ length: 8 }, (_, index) => (
-              <div className={styles.cardPlaceholder} key={index} />
-            ))}
-          </div>
+      <div className={styles.results}>
+        <div className={styles.toolbarPlaceholder} />
+        <div className={styles.exerciseGrid} aria-hidden="true">
+          {Array.from({ length: 8 }, (_, index) => (
+            <div className={styles.cardPlaceholder} key={index} />
+          ))}
         </div>
       </div>
     </section>
@@ -80,54 +73,58 @@ async function ExerciseCatalog({
       </h2>
 
       <div className={styles.controlBar}>
-        <ExerciseCategoryRail query={query} />
         <ExerciseSearch
           clearSearchHref={buildExerciseLibraryUrl(query, 1, { search: null })}
           key={query.search ?? "closed"}
           query={query}
         />
+        <ExerciseFilterSheet
+          key={[
+            query.bodyPart,
+            query.category,
+            query.muscle,
+            query.equipment,
+          ].join(":")}
+          query={query}
+        />
       </div>
 
-      <div className={styles.libraryLayout}>
-        <ExerciseFilterSidebar query={query} />
-
-        <div className={styles.results}>
-          <div className={styles.toolbar}>
-            <p className={styles.resultCount} aria-live="polite">
-              {result.total === 0
-                ? "No exercises found"
-                : `Showing ${firstResult}–${lastResult} of ${result.total}`}
-            </p>
-            <p className={styles.pageStatus}>
-              Page {result.page} of {result.pageCount}
-            </p>
-          </div>
-
-          {result.items.length > 0 ? (
-            <>
-              <ul className={styles.exerciseGrid}>
-                {result.items.map((exercise) => (
-                  <li key={exercise.id}>
-                    <ExerciseCard exercise={exercise} />
-                  </li>
-                ))}
-              </ul>
-              <ExercisePagination
-                page={result.page}
-                pageCount={result.pageCount}
-                query={query}
-              />
-            </>
-          ) : (
-            <div className={styles.emptyState}>
-              <h3>No matching exercises</h3>
-              <p>Try a shorter name or choose another filter.</p>
-              <Link className={styles.stateAction} href="/exercises">
-                View all exercises
-              </Link>
-            </div>
-          )}
+      <div className={styles.results}>
+        <div className={styles.toolbar}>
+          <p className={styles.resultCount} aria-live="polite">
+            {result.total === 0
+              ? "No exercises found"
+              : `Showing ${firstResult}–${lastResult} of ${result.total}`}
+          </p>
+          <p className={styles.pageStatus}>
+            Page {result.page} of {result.pageCount}
+          </p>
         </div>
+
+        {result.items.length > 0 ? (
+          <>
+            <ul className={styles.exerciseGrid}>
+              {result.items.map((exercise) => (
+                <li key={exercise.id}>
+                  <ExerciseCard exercise={exercise} />
+                </li>
+              ))}
+            </ul>
+            <ExercisePagination
+              page={result.page}
+              pageCount={result.pageCount}
+              query={query}
+            />
+          </>
+        ) : (
+          <div className={styles.emptyState}>
+            <h3>No matching exercises</h3>
+            <p>Try a shorter name or choose another filter.</p>
+            <Link className={styles.stateAction} href="/exercises">
+              View all exercises
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );
