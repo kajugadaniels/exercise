@@ -11,7 +11,7 @@ import {
 } from "../../domain/exercise";
 
 const searchParamsSchema = z.object({
-  search: z.string().trim().max(80).optional().catch(undefined),
+  search: z.string().trim().min(3).max(80).optional().catch(undefined),
   muscle: z.enum(muscleIds).optional().catch(undefined),
   bodyPart: z.enum(bodyPartIds).optional().catch(undefined),
   equipment: z.enum(equipmentIds).optional().catch(undefined),
