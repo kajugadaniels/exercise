@@ -1,69 +1,149 @@
+import { Suspense } from "react";
+import Link from "next/link";
+import { Search02Icon } from "@hugeicons/core-free-icons";
+import { Button } from "@/components/ui/Button/Button";
+import { Icon } from "@/components/ui/Icon/Icon";
+import { ExerciseCard } from "@/features/exercises/components/ExerciseCard/ExerciseCard";
+import { ExercisePagination } from "@/features/exercises/components/ExercisePagination/ExercisePagination";
+import {
+  parseExerciseQuery,
+  type ExerciseSearchParams,
+} from "@/features/exercises/providers/exercise-gym-gifs/filters";
+import { getExerciseCatalogPage } from "@/features/exercises/server/exercise-catalog";
 import styles from "./page.module.css";
 
-const demoExercises = [
-  {
-    id: "demo-movement-01",
-    name: "Sample movement 01",
-    category: "Strength placeholder",
-    equipment: "Equipment pending",
-  },
-  {
-    id: "demo-movement-02",
-    name: "Sample movement 02",
-    category: "Mobility placeholder",
-    equipment: "Equipment pending",
-  },
-  {
-    id: "demo-movement-03",
-    name: "Sample movement 03",
-    category: "Conditioning placeholder",
-    equipment: "Equipment pending",
-  },
-] as const;
+type ExercisesPageProps = Readonly<{
+  searchParams: Promise<ExerciseSearchParams>;
+}>;
 
-export default function ExercisesPage() {
+function CatalogFallback() {
+  return (
+    <section className={styles.catalog} aria-label="Loading exercises">
+      <div className={styles.searchPlaceholder} />
+      <div className={styles.toolbarPlaceholder} />
+      <div className={styles.exerciseGrid} aria-hidden="true">
+        {Array.from({ length: 8 }, (_, index) => (
+          <div className={styles.cardPlaceholder} key={index} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+async function ExerciseCatalog({
+  searchParams,
+}: Pick<ExercisesPageProps, "searchParams">) {
+  const query = parseExerciseQuery(await searchParams);
+
+  try {
+    const result = await getExerciseCatalogPage(query);
+    const firstResult =
+      result.total === 0 ? 0 : (result.page - 1) * result.pageSize + 1;
+    const lastResult = Math.min(result.page * result.pageSize, result.total);
+
+    return (
+      <section className={styles.catalog} aria-labelledby="catalog-title">
+        <h2 className={styles.visuallyHidden} id="catalog-title">
+          Exercise catalog
+        </h2>
+
+        <form className={styles.searchForm} action="/exercises">
+          <label className={styles.visuallyHidden} htmlFor="exercise-search">
+            Search exercises by name
+          </label>
+          <span className={styles.searchControl}>
+            <span className={styles.searchIcon} aria-hidden="true">
+              <Icon icon={Search02Icon} size={20} />
+            </span>
+            <input
+              className={styles.searchInput}
+              defaultValue={query.search ?? ""}
+              id="exercise-search"
+              maxLength={80}
+              name="search"
+              placeholder="Search by exercise name"
+              type="search"
+            />
+          </span>
+          <Button size="compact" type="submit">
+            Search
+          </Button>
+          {query.search && (
+            <Link className={styles.clearSearch} href="/exercises">
+              Clear
+            </Link>
+          )}
+        </form>
+
+        <div className={styles.toolbar}>
+          <p className={styles.resultCount} aria-live="polite">
+            {result.total === 0
+              ? "No exercises found"
+              : `Showing ${firstResult}–${lastResult} of ${result.total}`}
+          </p>
+          <p className={styles.pageStatus}>
+            Page {result.page} of {result.pageCount}
+          </p>
+        </div>
+
+        {result.items.length > 0 ? (
+          <>
+            <ul className={styles.exerciseGrid}>
+              {result.items.map((exercise) => (
+                <li key={exercise.id}>
+                  <ExerciseCard exercise={exercise} />
+                </li>
+              ))}
+            </ul>
+            <ExercisePagination
+              page={result.page}
+              pageCount={result.pageCount}
+              query={query}
+            />
+          </>
+        ) : (
+          <div className={styles.emptyState}>
+            <h3>No matching exercises</h3>
+            <p>Try a shorter or more general exercise name.</p>
+            <Link className={styles.stateAction} href="/exercises">
+              View all exercises
+            </Link>
+          </div>
+        )}
+      </section>
+    );
+  } catch {
+    return (
+      <section className={styles.errorState} role="alert">
+        <h2>Exercises are temporarily unavailable</h2>
+        <p>The provider could not be reached. Try loading the catalog again.</p>
+        <Link className={styles.stateAction} href="/exercises">
+          Try again
+        </Link>
+      </section>
+    );
+  }
+}
+
+export default function ExercisesPage({ searchParams }: ExercisesPageProps) {
   return (
     <main className={styles.page} id="main-content">
       <header className={styles.header}>
         <div className={styles.headingGroup}>
-          <p className={styles.context}>Demo catalog</p>
-          <h1 className={styles.pageTitle}>Exercises</h1>
+          <h1 className={styles.pageTitle}>Exercise library</h1>
+          <p className={styles.summary}>
+            Find a movement by name, then open it for verified instructions and
+            training details.
+          </p>
         </div>
-        <p className={styles.summary}>
-          These entries are interface placeholders, not provider-backed exercise
-          guidance. Verified content will replace them later.
+        <p className={styles.dataNote}>
+          Catalog previews remain unavailable until media rights are verified.
         </p>
       </header>
 
-      <section aria-labelledby="demo-exercises-title">
-        <h2 className={styles.visuallyHidden} id="demo-exercises-title">
-          Sample exercise entries
-        </h2>
-        <ul className={styles.exerciseList}>
-          {demoExercises.map((exercise) => (
-            <li className={styles.exerciseItem} key={exercise.id}>
-              <div className={styles.exerciseAccent} aria-hidden="true" />
-              <div className={styles.exerciseContent}>
-                <h3 className={styles.exerciseTitle}>{exercise.name}</h3>
-                <dl className={styles.metadata}>
-                  <div className={styles.metadataGroup}>
-                    <dt className={styles.metadataTerm}>Category</dt>
-                    <dd className={styles.metadataDescription}>
-                      {exercise.category}
-                    </dd>
-                  </div>
-                  <div className={styles.metadataGroup}>
-                    <dt className={styles.metadataTerm}>Equipment</dt>
-                    <dd className={styles.metadataDescription}>
-                      {exercise.equipment}
-                    </dd>
-                  </div>
-                </dl>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <Suspense fallback={<CatalogFallback />}>
+        <ExerciseCatalog searchParams={searchParams} />
+      </Suspense>
     </main>
   );
 }
