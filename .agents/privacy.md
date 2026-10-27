@@ -7,17 +7,20 @@
 
 ## 1. Data minimization
 
-Collect only data required for an approved user-visible feature. Requiring a Clerk session does not justify collecting an additional application profile: the exercise catalog must work without fitness or demographic profile fields. Do not collect birth date, sex/gender, height, weight, photos, injury/medical history, disability, location, contacts, or wearable data unless a later approved feature cannot work without it and receives a specific privacy review.
+Collect only data required for an approved user-visible feature. On 2026-10-27, the developer explicitly approved a mandatory profile containing gender, height, weight, and country so future progress and training records can be personalized and owned. BMI is derived on demand and not stored. Do not collect birth date, photos, injury/medical history, disability, precise location, contacts, wearable data, or additional measurements without a new review.
 
 ## 2. Data classes
 
 | Data | Treatment |
 | --- | --- |
 | Clerk account/session identifiers | Private; server access only as needed |
+| Gender, height, weight, country | Sensitive profile data; required for the approved profile, owner-scoped, editable, and deletable |
+| BMI | Derived in application code from height and weight; never stored independently or used diagnostically |
 | Display name/avatar | Personal; optional where possible |
 | Fitness preferences/goals | Potentially sensitive; optional, purpose-limited, editable |
 | Favorites/workout plans | Private user content |
-| Sets/reps/history/frequency | Sensitive behavioral fitness data; future only |
+| Measurement history | Sensitive profile history; owner-scoped, retained with the fitness profile, deleted with it |
+| Sets/reps/workout history/frequency | Sensitive behavioral fitness data; future only |
 | Medical/injury information | Out of scope |
 | Search/filter events | Do not retain by default; analytics requires approval |
 
@@ -27,7 +30,7 @@ Before collection, explain what is collected, why, where it is stored, who recei
 
 ## 4. Access and deletion
 
-Future private data is owner-scoped. Users need reasonable export/correction/deletion paths before public launch. Define retention and account-deletion behavior alongside the chosen database; do not promise deletion mechanics before implementation is verified.
+Private data is owner-scoped. Profile correction and profile deletion are part of the initial implementation. A deleted profile returns the account to mandatory onboarding. Profile records are retained until the user deletes the profile or application account deletion is processed. Full account deletion synchronization and export remain release gates.
 
 ## 5. Third parties
 
@@ -43,4 +46,4 @@ The platform provides general fitness information, not medical advice. Do not in
 
 ## 8. Future decision gate
 
-Before persistence, document the data inventory, field purposes, retention, access/deletion, backup behavior, vendor regions, encryption, account deletion, and incident response. Database selection is not only a technical decision.
+Neon PostgreSQL is approved for development and production. Before public release, document and verify the selected Neon regions, encryption posture, backup retention and deletion behavior, Clerk account-deletion synchronization, export process, and incident response. These are release blockers, not inferred guarantees.
