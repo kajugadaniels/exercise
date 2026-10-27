@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/Button/Button";
 import styles from "./error.module.css";
 
 type ExercisesErrorProps = {
@@ -15,9 +16,9 @@ export default function ExercisesError({ reset }: ExercisesErrorProps) {
           The exercise source could not be loaded or returned unsupported data.
           Try the request again.
         </p>
-        <button type="button" onClick={reset}>
+        <Button type="button" onClick={reset}>
           Try again
-        </button>
+        </Button>
       </section>
     </main>
   );
