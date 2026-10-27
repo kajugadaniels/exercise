@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Gender {
+  WOMAN
+  MAN
+  NON_BINARY
+  SELF_DESCRIBED
+  PREFER_NOT_TO_SAY
+}
+
+model User {
+  id                   String             @id @default(cuid())
+  clerkUserId          String             @unique @db.VarChar(64)
+  profile              UserProfile?
+  measurementSnapshots MeasurementSnapshot[]
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+}
+
+model MeasurementSnapshot {
+  id                String   @id @default(cuid())
+  userId            String
+  heightCentimeters Int
+  weightGrams       Int
+  recordedAt        DateTime @default(now())
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, recordedAt])
+}
+
+model UserProfile {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  gender            Gender
+  genderDescription String?  @db.VarChar(80)
+  heightCentimeters Int
+  weightGrams       Int
+  country           String   @db.VarChar(80)
+  completedAt       DateTime @default(now())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([updatedAt])
+}
