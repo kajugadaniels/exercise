@@ -1,0 +1,113 @@
+.form {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.formError {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-danger-soft);
+  color: var(--color-danger-text);
+  font-size: var(--text-sm);
+}
+
+.fieldset {
+  display: grid;
+  gap: var(--space-4);
+  min-inline-size: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fieldset:disabled {
+  opacity: 0.66;
+}
+
+.legend {
+  margin-block-end: var(--space-2);
+  color: var(--color-text);
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+}
+
+.sectionCopy {
+  max-inline-size: 60ch;
+  margin-block-start: calc(var(--space-2) * -1);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.fieldGrid {
+  display: grid;
+  gap: var(--space-4);
+  min-inline-size: 0;
+}
+
+.measurementLayout {
+  display: grid;
+  gap: var(--space-4);
+  min-inline-size: 0;
+}
+
+.bmiCard {
+  display: grid;
+  gap: var(--space-2);
+  align-content: center;
+  min-block-size: 9rem;
+  padding: var(--space-5);
+  border: 1px solid var(--color-glass-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-raised);
+  box-shadow: var(--shadow-glass-inset);
+}
+
+.bmiLabel {
+  color: var(--color-primary-text);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+}
+
+.bmiValue {
+  color: var(--color-text);
+  font-size: var(--text-xl);
+  line-height: 1;
+}
+
+.bmiCopy {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-block-start: var(--space-2);
+  border-block-start: 1px solid var(--color-border);
+}
+
+@media (min-width: 40rem) {
+  .fieldGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .actions {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+@media (min-width: 64rem) {
+  .measurementLayout {
+    grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.55fr);
+    align-items: stretch;
+  }
+}
+
+@media (forced-colors: active) {
+  .formError,
+  .bmiCard {
+    border-color: CanvasText;
+  }
+}
