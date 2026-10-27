@@ -14,7 +14,7 @@
 | Authentication | Clerk; versions/configuration verified before implementation |
 | Exercise source | Exercise Gym GIFs DB through a replaceable adapter; media use is license-blocked for public deployment |
 | Anatomy | React Muscle Highlighter, proposed and subject to dependency approval |
-| Styling | Modern token-driven system; Tailwind is proposed, not yet approved |
+| Styling | Plain CSS with semantic tokens and colocated CSS Modules; Tailwind/CSS-in-JS/UI kits are not approved |
 | Database/ORM | No decision; do not add persistence |
 | Deployment | Vercel-compatible design; provider/account decision pending |
 
