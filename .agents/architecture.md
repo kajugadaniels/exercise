@@ -18,7 +18,7 @@
 | Icons | Hugeicons React `^1.1.10` with Core Free Icons `^4.3.5`; import icons individually |
 | Typography | Outfit through `next/font/google`; no font package or external stylesheet |
 | Styling | Plain CSS with semantic tokens and colocated CSS Modules; Tailwind/CSS-in-JS/UI kits are not approved |
-| Database/ORM | No decision; do not add persistence |
+| Database/ORM | Neon PostgreSQL with Prisma ORM 7, Prisma Neon adapter, and Neon serverless driver; pooled runtime connection and direct CLI connection |
 | Deployment | Vercel-compatible design; provider/account decision pending |
 
 No other framework, service, ORM, state library, component library, analytics SDK, or paid API may be introduced without approval.
@@ -36,7 +36,7 @@ flowchart TD
   F --> M[Client muscle visualization adapter]
   R --> A[Clerk auth boundary]
   A --> S[Server-only personal operations]
-  S -. future .-> DB[(Database: pending approval)]
+  S --> DB[(Neon PostgreSQL)]
 ```
 
 - **Route layer (`src/app`)** composes features, metadata, loading/error UI, and route boundaries. It contains little domain logic.
@@ -57,7 +57,7 @@ Use a narrow `"use client"` boundary for filter controls that require immediate 
 
 ### Server Actions
 
-Reserve Server Actions for authenticated, user-initiated mutations after persistence is approved. Each action independently authenticates, authorizes, validates, and returns a typed result. Do not use actions as a general data-fetch API.
+Reserve Server Actions for authenticated, user-initiated mutations where they improve the form experience. Each action independently authenticates, authorizes, validates, and returns a typed result. Do not use actions as a general data-fetch API.
 
 ### Route Handlers
 
@@ -94,7 +94,9 @@ Media is a separate capability within the normalized model so a future licensed 
 
 Clerk proves session identity; it does not confer ownership. Every future private mutation re-derives the actor server-side and scopes data access to that actor. Client-only visibility controls are never authorization.
 
-Keep domain types and provider contracts independent of the future database so a web server and native API can share concepts. Do not create repository implementations or persistence models before database and ORM approval.
+The application user is keyed internally and has one unique Clerk user ID. Profile and future training records reference that internal user. Every personal query derives the Clerk ID from the verified server session and never accepts an owner ID from the browser.
+
+Prisma is server-only. Use Neon's pooled URL for application traffic and its direct URL for Prisma CLI migration work. Development and production are the only approved database environments; do not add a test, preview, branch-per-PR, or shadow database without a new decision.
 
 ## 7. Error model
 
