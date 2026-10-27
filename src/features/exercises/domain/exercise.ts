@@ -98,6 +98,7 @@ export type ExerciseSummary = {
   id: string;
   image: {
     alt: string;
+    kind: "gif" | "image";
     url: string;
   } | null;
   name: string;
