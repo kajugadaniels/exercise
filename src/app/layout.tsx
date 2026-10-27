@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
 import { Outfit } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import { ToastProvider } from "@/components/ui/Toast/Toast";
+import { clerkAppearance } from "@/features/auth/config/appearance";
+import { AUTH_ROUTES } from "@/features/auth/config/routes";
 import "./globals.css";
-import styles from "./layout.module.css";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -29,29 +29,15 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className={outfit.variable}>
       <body>
-        <ToastProvider>
-          <a className={styles.skipLink} href="#main-content">
-            Skip to main content
-          </a>
-          <header className={styles.header}>
-            <div className={styles.headerInner}>
-              <Link className={styles.brand} href="/exercises">
-                <Image
-                  src="/logo.png"
-                  alt=""
-                  width={40}
-                  height={40}
-                  priority
-                />
-                <span>GYM Fitness</span>
-              </Link>
-              <nav aria-label="Primary navigation">
-                <Link href="/exercises">Exercise library</Link>
-              </nav>
-            </div>
-          </header>
-          {children}
-        </ToastProvider>
+        <ClerkProvider
+          appearance={clerkAppearance}
+          signInUrl={AUTH_ROUTES.signIn}
+          signUpUrl={AUTH_ROUTES.signUp}
+          signInFallbackRedirectUrl={AUTH_ROUTES.home}
+          signUpFallbackRedirectUrl={AUTH_ROUTES.home}
+        >
+          <ToastProvider>{children}</ToastProvider>
+        </ClerkProvider>
       </body>
     </html>
   );
