@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight02Icon } from "@hugeicons/core-free-icons";
+import { Badge } from "@/components/ui/Badge/Badge";
 import { Icon } from "@/components/ui/Icon/Icon";
 import {
   formatExerciseValue,
@@ -25,9 +26,11 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
       <div className={styles.content}>
         <div className={styles.tags}>
           {exercise.category && (
-            <span>{formatExerciseValue(exercise.category)}</span>
+            <Badge tone="primary">
+              {formatExerciseValue(exercise.category)}
+            </Badge>
           )}
-          <span>{formatExerciseValue(exercise.primaryMuscle)}</span>
+          <Badge>{formatExerciseValue(exercise.primaryMuscle)}</Badge>
         </div>
 
         <h2 className={styles.title}>
