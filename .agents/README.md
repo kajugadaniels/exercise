@@ -13,9 +13,9 @@ These documents are project policy. Read this file first, then the documents req
 | [workflow.md](workflow.md) | Execution restrictions, lifecycle, reporting | **Every task** |
 | [project.md](project.md) | Mission, users, phases, boundaries, open decisions | **Every task** |
 | [architecture.md](architecture.md) | Application layers and rendering/integration boundaries | Any code or architecture work |
-| [folder-structure.md](folder-structure.md) | Feature organization, naming, and imports | Creating or moving files |
+| [folder-structure.md](folder-structure.md) | Feature organization, naming, imports, and stylesheet placement | Creating or moving files |
 | [code-quality.md](code-quality.md) | Strict typing, maintainability, and documentation | Any code change |
-| [design.md](design.md) | Design system, responsive states, component behavior | Any UI work |
+| [design.md](design.md) | Design system, CSS architecture, page/component modules, responsive behavior | Any UI or CSS work |
 | [accessibility.md](accessibility.md) | WCAG, keyboard, screen reader, and motion requirements | Any UI work |
 | [authentication.md](authentication.md) | Clerk sessions, onboarding, and authorization | Auth, profiles, protected areas |
 | [security.md](security.md) | Validation, secrets, authorization, and external resources | Server, data, auth, integrations |
@@ -96,4 +96,5 @@ A chat request alone does not relax level-one restrictions. Give the developer t
 | Date | Change |
 | --- | --- |
 | 2026-10-27 | Created the Phase 0 rulebook, adapted from CareBasket governance for the fitness domain. |
+| 2026-10-27 | Adopted plain CSS with colocated CSS Modules and added page, layout, component, token, cascade, and responsive styling rules. |
 
