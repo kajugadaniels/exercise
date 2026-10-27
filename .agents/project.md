@@ -79,7 +79,7 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | Database and hosting | Unresolved |
 | ORM/query layer | Unresolved |
 | Exact Next.js, React, Clerk, and styling versions | Select during approved scaffold |
-| Tailwind CSS adoption | Proposed, not approved until scaffold conventions are set |
+| Styling architecture | Plain CSS with semantic tokens and colocated CSS Modules is approved; Tailwind/CSS-in-JS/UI kits require a future stack-change approval |
 | Public/private route matrix | Library likely public; saved/personal areas private; confirm |
 | Media commercial rights and alternative licensed provider | Blocking public use of ExerciseGymGifsDB GIFs |
 | Native framework | Unresolved |
