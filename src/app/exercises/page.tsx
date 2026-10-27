@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { auth } from "@clerk/nextjs/server";
 import { ExerciseLibrary } from "@/features/exercises/components/ExerciseLibrary/ExerciseLibrary";
 import { exerciseGymGifsAdapter } from "@/features/exercises/providers/exercise-gym-gifs/adapter";
 import {
@@ -20,6 +21,8 @@ type ExercisesPageProps = {
 export default async function ExercisesPage({
   searchParams,
 }: ExercisesPageProps) {
+  await auth.protect();
+
   const query = parseExerciseQuery(await searchParams);
   const [page, facets] = await Promise.all([
     exerciseGymGifsAdapter.list(query),
