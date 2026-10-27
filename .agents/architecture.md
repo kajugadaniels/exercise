@@ -9,11 +9,14 @@
 
 | Concern | Decision |
 | --- | --- |
-| Web framework | Next.js App Router; exact version chosen in Phase 1 |
-| Language/UI | Strict TypeScript and React |
-| Authentication | Clerk; versions/configuration verified before implementation |
+| Web framework | Next.js `16.4.3` App Router (current manifest) |
+| Language/UI | React `19.3.0` and strict TypeScript (current manifest) |
+| Authentication | Clerk `@clerk/nextjs@^7.9.21`; developer installation/configuration pending |
 | Exercise source | Exercise Gym GIFs DB through a replaceable adapter; media use is license-blocked for public deployment |
-| Anatomy | React Muscle Highlighter, proposed and subject to dependency approval |
+| Runtime validation | Zod `^4.6.7`; developer installation pending |
+| Anatomy | React Muscle Highlighter `^1.2.0`; developer installation pending |
+| Icons | Hugeicons React `^1.1.10` with Core Free Icons `^4.3.5`; import icons individually |
+| Typography | Outfit through `next/font/google`; no font package or external stylesheet |
 | Styling | Plain CSS with semantic tokens and colocated CSS Modules; Tailwind/CSS-in-JS/UI kits are not approved |
 | Database/ORM | No decision; do not add persistence |
 | Deployment | Vercel-compatible design; provider/account decision pending |
