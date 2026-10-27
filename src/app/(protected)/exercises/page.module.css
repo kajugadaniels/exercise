@@ -46,6 +46,13 @@
   min-inline-size: 0;
 }
 
+.libraryLayout,
+.results {
+  display: grid;
+  gap: var(--space-5);
+  min-inline-size: 0;
+}
+
 .searchForm {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -165,6 +172,7 @@
 }
 
 .searchPlaceholder,
+.filterPlaceholder,
 .toolbarPlaceholder,
 .cardPlaceholder {
   border-radius: var(--radius-lg);
@@ -180,6 +188,11 @@
 .toolbarPlaceholder {
   inline-size: 12rem;
   block-size: 1rem;
+}
+
+.filterPlaceholder {
+  inline-size: 100%;
+  block-size: var(--control-height);
 }
 
 .cardPlaceholder {
@@ -221,6 +234,16 @@
 }
 
 @media (min-width: 64rem) {
+  .libraryLayout {
+    grid-template-columns: minmax(11rem, 13rem) minmax(0, 1fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .filterPlaceholder {
+    block-size: 18rem;
+  }
+
   .exerciseGrid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -228,6 +251,7 @@
 
 @media (forced-colors: active) {
   .searchControl,
+  .filterPlaceholder,
   .emptyState,
   .errorState,
   .cardPlaceholder {
