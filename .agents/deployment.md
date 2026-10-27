@@ -7,7 +7,7 @@
 
 ## 1. Status
 
-No application, Vercel project, domain, database, or live Clerk instance is configured in Phase 0. Vercel compatibility is a design goal, not evidence of deployment. Agents do not deploy.
+A Next.js scaffold and safe environment templates exist. No Vercel project, approved domain, database, live Clerk instance, or verified deployment is configured. Agents do not deploy.
 
 ## 2. Environments
 
@@ -21,7 +21,9 @@ Use distinct local, preview, and production Clerk/configuration environments. Ne
 | Server secrets | Clerk secret/webhook keys, future database URL, RapidAPI key | Server only |
 | Non-secret server config | Pinned exercise provider base/ref | Prefer server-owned; safe to document |
 
-Exact environment names must follow installed vendor documentation. Example files use placeholders only and are added during the relevant implementation phase.
+The committed templates are `.env.local.example` and `.env.production.example`. They define `NEXT_PUBLIC_APP_URL`, Clerk publishable/server/webhook placeholders, and the pinned exercise-provider base/version. Copy names—not example values—into the intended environment. Hosting dashboards hold production secrets; real `.env*` files remain ignored.
+
+Do not add database, RapidAPI, analytics, or storage variables until those integrations are approved. When a vendor version changes, re-check its official variable names and update both templates together.
 
 ## 4. Release gates
 
