@@ -1,11 +1,11 @@
 .content {
   inline-size: min(100%, var(--content-max));
   margin-inline: auto;
-  padding: var(--space-5) var(--gutter) var(--space-8);
+  padding: var(--space-3) var(--space-4) var(--space-6);
 }
 
 @media (min-width: 48rem) {
   .content {
-    padding-block-start: var(--space-7);
+    padding-block-start: var(--space-4);
   }
 }
