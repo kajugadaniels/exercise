@@ -77,15 +77,28 @@ No stack, secret, raw provider payload, or private identifier appears in client 
 
 Use actions only for UI mutations. Validate arguments, obtain the actor server-side, authorize the target, perform one bounded use case, and return a typed serializable result. Revalidate/cache-invalidate only the data affected. Actions are not implicitly safe because they live in server files.
 
-## 6. Caching and availability
+## 6. Profile and progress contracts
+
+The initial private HTTP surface is:
+
+| Endpoint | Purpose | Access |
+| --- | --- | --- |
+| `GET /api/profile` | Return the current actor's profile or `null` | Authenticated |
+| `PUT /api/profile` | Validate and upsert the current actor's profile; append a snapshot only when measurements change | Authenticated, same-origin |
+| `DELETE /api/profile` | Delete the current actor's profile and measurement history | Authenticated, same-origin |
+| `GET /api/progress` | Return up to 100 of the current actor's newest measurement snapshots | Authenticated, completed profile |
+
+The server derives the Clerk user ID; none of these contracts accepts an owner ID. Personalized responses use `Cache-Control: no-store`. Mutation bodies are strict JSON and limited to 16 KiB. Errors use lowercase stable codes and user-safe messages.
+
+## 7. Caching and availability
 
 Version-pinned catalog data may use long-lived/revalidated caching after provider update behavior is verified. Never cache personalized results publicly. Define stale/fallback behavior explicitly; do not silently show a partial result as complete. Provider failure should preserve the application shell and offer retry.
 
-## 7. Future provider composition
+## 8. Future provider composition
 
 If a licensed MP4 provider is added, compose by stable application identity with documented matching confidence. Never join records solely by display name without review. Metadata conflicts retain provenance; do not overwrite verified data silently.
 
-## 8. Contract evolution
+## 9. Contract evolution
 
 Native-client APIs require explicit versioning and compatibility policy. Provider schema changes are contained within adapters; domain contract changes receive tests and documentation. Do not expose a provider's URL shape as the application's public contract.
 
