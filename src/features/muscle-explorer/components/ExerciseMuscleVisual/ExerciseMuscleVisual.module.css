@@ -1,0 +1,211 @@
+.root {
+  display: grid;
+  gap: var(--space-5);
+  min-inline-size: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-glass-surface);
+  box-shadow: var(--shadow-glass-inset);
+  backdrop-filter: var(--glass-filter-compact);
+}
+
+.headingRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: start;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: var(--text-lg);
+}
+
+.description {
+  max-inline-size: 46ch;
+  margin-block-start: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.viewSwitch {
+  display: inline-grid;
+  grid-template-columns: repeat(2, 1fr);
+  padding: var(--space-1);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-full);
+  background-color: var(--color-background);
+}
+
+.viewButton {
+  min-block-size: var(--control-height);
+  padding-inline: var(--space-4);
+  border: 0;
+  border-radius: var(--radius-full);
+  background-color: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.viewButton[aria-pressed="true"] {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.content {
+  display: grid;
+  gap: var(--space-5);
+  align-items: center;
+}
+
+.visual {
+  display: grid;
+  min-block-size: 20rem;
+  place-items: center;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background-color: var(--color-background);
+}
+
+.diagram {
+  display: grid;
+  inline-size: min(100%, 17rem);
+  min-block-size: 20rem;
+  place-items: center;
+  pointer-events: none;
+}
+
+.diagram > div {
+  display: grid;
+  place-items: center;
+}
+
+.unavailable {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: center;
+  max-inline-size: 30ch;
+  padding: var(--space-5);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.unavailableMark {
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+  border: 1px solid var(--color-glass-border-strong);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-soft);
+  box-shadow: inset 0 0 0 var(--space-3) var(--color-background);
+}
+
+.legend {
+  display: grid;
+  align-content: start;
+  border-block-start: 1px solid var(--color-glass-border);
+}
+
+.legendGroup {
+  display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-4);
+  border-block-end: 1px solid var(--color-glass-border);
+}
+
+.legendLabel {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.primaryDot,
+.secondaryDot {
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+  flex: 0 0 auto;
+  border-radius: var(--radius-full);
+}
+
+.primaryDot {
+  background-color: var(--color-muscle-primary);
+}
+
+.secondaryDot {
+  background-color: var(--color-muscle-secondary);
+}
+
+.legendGroup strong,
+.muscleList,
+.missing {
+  font-size: var(--text-sm);
+}
+
+.muscleList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.muscleList li {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  background-color: var(--color-secondary-soft);
+  color: var(--color-secondary-text);
+}
+
+.missing {
+  color: var(--color-text-muted);
+}
+
+@media (hover: hover) {
+  .viewButton:hover:not([aria-pressed="true"]) {
+    background-color: var(--color-navigation-hover);
+    color: var(--color-text);
+  }
+}
+
+@media (min-width: 40rem) {
+  .content {
+    grid-template-columns: minmax(15rem, 0.9fr) minmax(0, 1.1fr);
+  }
+
+  .legend {
+    border-block-start: 0;
+  }
+}
+
+@media (min-width: 64rem) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+
+  .legend {
+    border-block-start: 1px solid var(--color-glass-border);
+  }
+}
+
+@media (forced-colors: active) {
+  .root,
+  .viewSwitch,
+  .visual,
+  .primaryDot,
+  .secondaryDot {
+    border: 1px solid CanvasText;
+  }
+
+  .viewButton[aria-pressed="true"] {
+    color: HighlightText;
+    background-color: Highlight;
+  }
+}
