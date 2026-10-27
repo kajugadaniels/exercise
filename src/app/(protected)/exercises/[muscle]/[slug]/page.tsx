@@ -75,7 +75,7 @@ async function ExerciseDetail({ params }: ExerciseDetailPageProps) {
         <div className={styles.mediaColumn}>
           <ExerciseThumbnail image={summary.image} size="detail" />
           <p className={styles.mediaNote}>
-            Animated provider media is withheld until usage rights are verified.
+            Animated preview supplied by the source catalog.
           </p>
         </div>
 
