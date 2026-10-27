@@ -104,6 +104,7 @@ test("filters normalized exercises with AND semantics", () => {
 test("bounds and normalizes URL filter input", () => {
   assert.deepEqual(
     parseExerciseQuery({
+      bodyPart: "arms",
       category: "cardio",
       search: "  curl  ",
       muscle: "biceps",
@@ -111,6 +112,7 @@ test("bounds and normalizes URL filter input", () => {
       page: "999",
     }),
     {
+      bodyPart: "arms",
       category: "cardio",
       search: "curl",
       muscle: "biceps",
@@ -137,6 +139,24 @@ test("changes category filters while preserving search and resetting pagination"
   assert.equal(
     buildExerciseLibraryUrl(query, 1, { search: null }),
     "/exercises?category=strength",
+  );
+});
+
+test("changes body-part filters while preserving category and search", () => {
+  const query: ExerciseQuery = {
+    bodyPart: "chest",
+    category: "strength",
+    page: 3,
+    search: "press",
+  };
+
+  assert.equal(
+    buildExerciseLibraryUrl(query, 1, { bodyPart: "back" }),
+    "/exercises?search=press&bodyPart=back&category=strength",
+  );
+  assert.equal(
+    buildExerciseLibraryUrl(query, 1, { bodyPart: null }),
+    "/exercises?search=press&category=strength",
   );
 });
 
