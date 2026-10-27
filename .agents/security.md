@@ -26,7 +26,9 @@ Treat browser input, URLs, query parameters, provider JSON, remote media, webhoo
 
 ## 4. Secrets and environment variables
 
-Secrets are server-only, never prefixed/exposed as public values, committed, printed, or embedded in browser bundles. Validate required server configuration at startup using the eventual approved approach. Public CDN URLs are configuration, not secrets; still allowlist their origin and protocol.
+Secrets are server-only, never prefixed/exposed as public values, committed, printed, or embedded in browser bundles. `DATABASE_URL` and `DIRECT_URL` are server secrets; the browser receives neither. The application validates the runtime database connection before constructing Prisma. Public CDN URLs are configuration, not secrets; still allowlist their origin and protocol.
+
+Profile mutation endpoints require a verified Clerk session, same-origin request, JSON content type, a 16 KiB body limit, and strict runtime validation. Profile and measurement queries scope through the session-derived Clerk ID. Personalized data is never publicly cached.
 
 ## 5. External providers and SSRF
 
