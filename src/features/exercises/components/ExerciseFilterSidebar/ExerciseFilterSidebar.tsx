@@ -5,24 +5,18 @@ import {
   BodyPartMuscleIcon,
   BodyPartSixPackIcon,
   Dumbbell01Icon,
-  JumpersIcon,
-  ListFilterIcon,
   ShoulderIcon,
-  WorkoutBattleRopesIcon,
   WorkoutRunIcon,
-  WorkoutStretchingIcon,
 } from "@hugeicons/core-free-icons";
 import type { IconSvgElement } from "@hugeicons/react";
 import { Icon } from "@/components/ui/Icon/Icon";
 import {
   bodyPartIds,
   equipmentIds,
-  exerciseCategoryIds,
   formatExerciseValue,
   muscleIds,
   type BodyPartId,
   type EquipmentId,
-  type ExerciseCategory,
   type ExerciseQuery,
   type MuscleId,
 } from "../../domain/exercise";
@@ -56,13 +50,6 @@ const bodyPartIcons: Record<BodyPartId, IconSvgElement> = {
   shoulders: ShoulderIcon,
 };
 
-const categoryIcons: Record<ExerciseCategory, IconSvgElement> = {
-  cardio: WorkoutRunIcon,
-  plyometrics: JumpersIcon,
-  strength: WorkoutBattleRopesIcon,
-  stretching: WorkoutStretchingIcon,
-};
-
 const bodyPartOptions: readonly FilterOption<BodyPartId>[] = [
   {
     icon: BodyPartMuscleIcon,
@@ -71,19 +58,6 @@ const bodyPartOptions: readonly FilterOption<BodyPartId>[] = [
   },
   ...bodyPartIds.map((value) => ({
     icon: bodyPartIcons[value],
-    label: formatExerciseValue(value),
-    value,
-  })),
-];
-
-const categoryOptions: readonly FilterOption<ExerciseCategory>[] = [
-  {
-    icon: Dumbbell01Icon,
-    label: "All categories",
-    value: null,
-  },
-  ...exerciseCategoryIds.map((value) => ({
-    icon: categoryIcons[value],
     label: formatExerciseValue(value),
     value,
   })),
@@ -226,30 +200,6 @@ export function ExerciseFilterSidebar({ query }: ExerciseFilterSidebarProps) {
             })
           }
           options={equipmentOptions}
-        />
-      </section>
-
-      <section
-        className={styles.filterGroup}
-        aria-labelledby="exercise-categories-title"
-      >
-        <div className={styles.heading}>
-          <span className={styles.headingIcon} aria-hidden="true">
-            <Icon icon={ListFilterIcon} size={18} />
-          </span>
-          <h2 className={styles.title} id="exercise-categories-title">
-            Categories
-          </h2>
-        </div>
-        <FilterList
-          activeValue={query.category}
-          ariaLabel="Exercise categories"
-          getHref={(category) =>
-            buildExerciseLibraryUrl(query, 1, {
-              category,
-            })
-          }
-          options={categoryOptions}
         />
       </section>
 
