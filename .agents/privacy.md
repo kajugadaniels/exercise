@@ -7,7 +7,7 @@
 
 ## 1. Data minimization
 
-Collect only data required for an approved user-visible feature. On 2026-10-27, the developer explicitly approved a mandatory profile containing gender, height, weight, and country so future progress and training records can be personalized and owned. BMI is derived on demand and not stored. Do not collect birth date, photos, injury/medical history, disability, precise location, contacts, wearable data, or additional measurements without a new review.
+Collect only data required for an approved user-visible feature. On 2026-10-27, the developer explicitly approved a mandatory profile containing a male/female gender selection, height, weight, and country so future progress and training records can be personalized and owned. BMI is derived on demand and not stored. Do not collect birth date, photos, injury/medical history, disability, precise location, contacts, wearable data, or additional measurements without a new review.
 
 ## 2. Data classes
 
