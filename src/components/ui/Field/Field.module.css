@@ -10,7 +10,6 @@
   font-weight: var(--weight-medium);
 }
 
-.control,
 .selectControl {
   display: flex;
   align-items: center;
@@ -28,26 +27,16 @@
     box-shadow var(--duration-fast) var(--ease-standard);
 }
 
-.control:focus-within,
 .selectControl:focus-within {
   border-color: var(--color-focus);
   outline: 3px solid var(--color-focus);
   outline-offset: 2px;
 }
 
-.control[data-invalid="true"],
 .selectControl[data-invalid="true"] {
   border-color: var(--color-danger);
 }
 
-.leadingIcon {
-  display: grid;
-  flex: 0 0 auto;
-  place-items: center;
-  padding-inline-start: var(--space-3);
-}
-
-.input,
 .select {
   inline-size: 100%;
   min-inline-size: 0;
@@ -58,18 +47,9 @@
   color: var(--color-text);
 }
 
-.input {
-  padding-inline: var(--space-3);
-}
-
 .select {
   padding-inline: var(--space-3);
   cursor: pointer;
-}
-
-.input::placeholder {
-  color: var(--color-text-muted);
-  opacity: 0.78;
 }
 
 .hint,
@@ -87,13 +67,11 @@
 }
 
 @media (forced-colors: active) {
-  .control,
   .selectControl {
     border-color: ButtonText;
     background-color: Field;
   }
 
-  .control[data-invalid="true"],
   .selectControl[data-invalid="true"] {
     border-color: Mark;
   }
