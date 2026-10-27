@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button/Button";
 import { Icon } from "@/components/ui/Icon/Icon";
 import { ExerciseCard } from "@/features/exercises/components/ExerciseCard/ExerciseCard";
 import { ExercisePagination } from "@/features/exercises/components/ExercisePagination/ExercisePagination";
+import type { ExerciseQuery } from "@/features/exercises/domain/exercise";
 import {
   parseExerciseQuery,
   type ExerciseSearchParams,
@@ -15,6 +16,14 @@ import styles from "./page.module.css";
 type ExercisesPageProps = Readonly<{
   searchParams: Promise<ExerciseSearchParams>;
 }>;
+
+async function loadExerciseCatalogPage(query: ExerciseQuery) {
+  try {
+    return await getExerciseCatalogPage(query);
+  } catch {
+    return null;
+  }
+}
 
 function CatalogFallback() {
   return (
@@ -34,85 +43,9 @@ async function ExerciseCatalog({
   searchParams,
 }: Pick<ExercisesPageProps, "searchParams">) {
   const query = parseExerciseQuery(await searchParams);
+  const result = await loadExerciseCatalogPage(query);
 
-  try {
-    const result = await getExerciseCatalogPage(query);
-    const firstResult =
-      result.total === 0 ? 0 : (result.page - 1) * result.pageSize + 1;
-    const lastResult = Math.min(result.page * result.pageSize, result.total);
-
-    return (
-      <section className={styles.catalog} aria-labelledby="catalog-title">
-        <h2 className={styles.visuallyHidden} id="catalog-title">
-          Exercise catalog
-        </h2>
-
-        <form className={styles.searchForm} action="/exercises">
-          <label className={styles.visuallyHidden} htmlFor="exercise-search">
-            Search exercises by name
-          </label>
-          <span className={styles.searchControl}>
-            <span className={styles.searchIcon} aria-hidden="true">
-              <Icon icon={Search02Icon} size={20} />
-            </span>
-            <input
-              className={styles.searchInput}
-              defaultValue={query.search ?? ""}
-              id="exercise-search"
-              maxLength={80}
-              name="search"
-              placeholder="Search by exercise name"
-              type="search"
-            />
-          </span>
-          <Button size="compact" type="submit">
-            Search
-          </Button>
-          {query.search && (
-            <Link className={styles.clearSearch} href="/exercises">
-              Clear
-            </Link>
-          )}
-        </form>
-
-        <div className={styles.toolbar}>
-          <p className={styles.resultCount} aria-live="polite">
-            {result.total === 0
-              ? "No exercises found"
-              : `Showing ${firstResult}–${lastResult} of ${result.total}`}
-          </p>
-          <p className={styles.pageStatus}>
-            Page {result.page} of {result.pageCount}
-          </p>
-        </div>
-
-        {result.items.length > 0 ? (
-          <>
-            <ul className={styles.exerciseGrid}>
-              {result.items.map((exercise) => (
-                <li key={exercise.id}>
-                  <ExerciseCard exercise={exercise} />
-                </li>
-              ))}
-            </ul>
-            <ExercisePagination
-              page={result.page}
-              pageCount={result.pageCount}
-              query={query}
-            />
-          </>
-        ) : (
-          <div className={styles.emptyState}>
-            <h3>No matching exercises</h3>
-            <p>Try a shorter or more general exercise name.</p>
-            <Link className={styles.stateAction} href="/exercises">
-              View all exercises
-            </Link>
-          </div>
-        )}
-      </section>
-    );
-  } catch {
+  if (!result) {
     return (
       <section className={styles.errorState} role="alert">
         <h2>Exercises are temporarily unavailable</h2>
@@ -123,6 +56,82 @@ async function ExerciseCatalog({
       </section>
     );
   }
+
+  const firstResult =
+    result.total === 0 ? 0 : (result.page - 1) * result.pageSize + 1;
+  const lastResult = Math.min(result.page * result.pageSize, result.total);
+
+  return (
+    <section className={styles.catalog} aria-labelledby="catalog-title">
+      <h2 className={styles.visuallyHidden} id="catalog-title">
+        Exercise catalog
+      </h2>
+
+      <form className={styles.searchForm} action="/exercises">
+        <label className={styles.visuallyHidden} htmlFor="exercise-search">
+          Search exercises by name
+        </label>
+        <span className={styles.searchControl}>
+          <span className={styles.searchIcon} aria-hidden="true">
+            <Icon icon={Search02Icon} size={20} />
+          </span>
+          <input
+            className={styles.searchInput}
+            defaultValue={query.search ?? ""}
+            id="exercise-search"
+            maxLength={80}
+            name="search"
+            placeholder="Search by exercise name"
+            type="search"
+          />
+        </span>
+        <Button size="compact" type="submit">
+          Search
+        </Button>
+        {query.search && (
+          <Link className={styles.clearSearch} href="/exercises">
+            Clear
+          </Link>
+        )}
+      </form>
+
+      <div className={styles.toolbar}>
+        <p className={styles.resultCount} aria-live="polite">
+          {result.total === 0
+            ? "No exercises found"
+            : `Showing ${firstResult}–${lastResult} of ${result.total}`}
+        </p>
+        <p className={styles.pageStatus}>
+          Page {result.page} of {result.pageCount}
+        </p>
+      </div>
+
+      {result.items.length > 0 ? (
+        <>
+          <ul className={styles.exerciseGrid}>
+            {result.items.map((exercise) => (
+              <li key={exercise.id}>
+                <ExerciseCard exercise={exercise} />
+              </li>
+            ))}
+          </ul>
+          <ExercisePagination
+            page={result.page}
+            pageCount={result.pageCount}
+            query={query}
+          />
+        </>
+      ) : (
+        <div className={styles.emptyState}>
+          <h3>No matching exercises</h3>
+          <p>Try a shorter or more general exercise name.</p>
+          <Link className={styles.stateAction} href="/exercises">
+            View all exercises
+          </Link>
+        </div>
+      )}
+    </section>
+  );
 }
 
 export default function ExercisesPage({ searchParams }: ExercisesPageProps) {
@@ -137,7 +146,7 @@ export default function ExercisesPage({ searchParams }: ExercisesPageProps) {
           </p>
         </div>
         <p className={styles.dataNote}>
-          Catalog previews remain unavailable until media rights are verified.
+          Animated previews are loaded from the source catalog when available.
         </p>
       </header>
 
