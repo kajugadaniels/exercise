@@ -28,8 +28,16 @@ export function GenderSelector({
 
   return (
     <fieldset className={styles.fieldset} disabled={disabled}>
-      <legend className={styles.legend}>Gender</legend>
-      <div className={styles.options}>
+      <legend className={styles.legend} id="gender-label">
+        Gender
+      </legend>
+      <div
+        aria-describedby={errorId}
+        aria-invalid={Boolean(error) || undefined}
+        aria-labelledby="gender-label"
+        className={styles.options}
+        role="radiogroup"
+      >
         {options.map((option) => (
           <label className={styles.option} key={option.value}>
             <input
@@ -38,8 +46,6 @@ export function GenderSelector({
               name="gender"
               value={option.value}
               checked={value === option.value}
-              aria-invalid={Boolean(error) || undefined}
-              aria-describedby={errorId}
               onChange={() => onChange(option.value)}
             />
             <span className={styles.optionContent}>
