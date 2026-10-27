@@ -1,20 +1,20 @@
 # GYM Fitness Platform
 
-> A planned mobile-first exercise discovery and learning platform built with Next.js. The product name and visual brand are temporary.
+> A mobile-first exercise discovery and learning platform built with Next.js. The product name remains temporary; the logo mark, Outfit typography, and coral/navy foundation are approved.
 
 ## Project status
 
-**Phase 0 — engineering foundation is documented.** The repository currently contains governance and architecture documentation only. No Next.js application has been scaffolded, no dependency is installed, no Clerk tenant or database is configured, and no feature, test, build, or deployment is claimed to work.
+**Phase 1 foundation is present but unverified.** The repository contains a Next.js 16.4.3/React 19.3.0 scaffold, the logo/favicon, Outfit typography, semantic light/dark tokens, responsive starter styles, governance, and safe environment templates. No Clerk tenant, database, feature integration, test result, build result, or deployment is claimed to work.
 
 | Capability | Status |
 | --- | --- |
 | Engineering rulebook | Implemented as documentation |
 | Architecture and provider design | Documented, not implemented |
-| Responsive Next.js application | Planned for Phase 1 |
+| Responsive Next.js foundation | Scaffolded and styled; not built or run by an agent |
 | Exercise catalog integration | Planned; metadata contract inspected |
 | Exercise GIF use | **Blocked for public/commercial release pending rights verification** |
 | Clerk authentication | Approved approach, not configured |
-| Muscle visualization | Proposed dependency, not installed |
+| Muscle visualization | Approved dependency, developer installation pending |
 | Database and persistence | Pending developer decision |
 | Deployment | Not configured or verified |
 
@@ -69,7 +69,6 @@ The platform provides general fitness information, not medical advice, diagnosis
 ### Pending approval
 
 - Database and ORM
-- Exact framework/package versions; CSS Modules are approved, while final brand tokens remain open
 - Final route access matrix
 - Any paid/RapidAPI integration
 - Media licensing solution
@@ -94,12 +93,15 @@ Exercise discovery should remain useful when the provider, animation, account se
 
 | Concern | Decision/status |
 | --- | --- |
-| Framework | Next.js App Router — approved, exact version pending scaffold |
-| UI | React — approved, exact version pending scaffold |
+| Framework | Next.js 16.4.3 App Router |
+| UI | React 19.3.0 |
 | Language | TypeScript with strict settings |
-| Authentication | Clerk |
+| Authentication | Clerk `@clerk/nextjs@^7.9.21`, installation/configuration pending |
 | Exercise source | Exercise Gym GIFs DB behind a provider abstraction |
-| Muscle anatomy | React Muscle Highlighter, proposed; MIT code license verified at repository v1.2.0 |
+| Validation | Zod `^4.6.7`, installation pending |
+| Muscle anatomy | React Muscle Highlighter `^1.2.0`, installation pending |
+| Icons | Hugeicons React `^1.1.10` and Core Free Icons `^4.3.5`, installation pending |
+| Typography | Outfit through `next/font/google` |
 | Styling | Plain CSS, semantic tokens, and colocated CSS Modules; Tailwind/CSS-in-JS/UI kits are not approved |
 | Database/ORM | Not selected |
 | Deployment | Vercel-compatible; not configured |
@@ -213,32 +215,36 @@ Routes compose features; features own domain behavior. UI never consumes provide
 
 ## 13. Local development
 
-There is no runnable application yet. Do not run framework, install, lint, test, or build commands against Phase 0 and do not infer missing scripts.
+A Next.js scaffold exists. Agents never install dependencies or run the application, lint, tests, type checks, formatters, or builds. The developer performs those commands and shares output when assistance is needed.
 
-After the developer approves Phase 1, the expected process will be:
+Install the approved Phase 1 runtime dependencies manually:
 
-1. Select exact Node, Next.js, React, Clerk, styling, and package-manager versions.
-2. Scaffold the App Router project using a developer-run approved command.
-3. Commit the generated lockfile and tool configuration.
-4. Add safe environment example files.
-5. Implement a first-party placeholder-backed vertical slice before enabling disputed media.
-6. Run the newly defined quality commands and record their actual output.
+```bash
+npm install @clerk/nextjs@^7.9.21 zod@^4.6.7 @hugeicons/react@^1.1.10 @hugeicons/core-free-icons@^4.3.5 react-muscle-highlighter@^1.2.0
+```
 
-The Phase 1 task should provide exact commands based on the chosen versions; none are validly specified yet.
+Outfit is provided by `next/font/google`; it does not require an npm package. No database, ORM, RapidAPI, analytics, or testing dependency is included in this command.
 
 ## 14. Environment variables
 
-Exact variable names must match installed Clerk/vendor documentation. A future placeholder-only example may resemble:
+Safe committed templates exist for both environments:
+
+- `.env.local.example` — local development placeholders
+- `.env.production.example` — production hosting placeholders
+
+Create your ignored local file manually:
+
+```bash
+cp .env.local.example .env.local
+```
+
+Then replace placeholders locally. The templates define:
 
 ```dotenv
-# Public only when Clerk documents this key as publishable
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_REPLACE_ME
-
-# Server only — never expose to browser code or commit a real value
 CLERK_SECRET_KEY=sk_test_REPLACE_ME
-CLERK_WEBHOOK_SECRET=whsec_REPLACE_ME
-
-# Non-secret, pinned provider configuration
+CLERK_WEBHOOK_SIGNING_SECRET=whsec_REPLACE_ME
 EXERCISE_PROVIDER_BASE_URL=https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0
 EXERCISE_PROVIDER_VERSION=v1.1.0
 ```
@@ -262,7 +268,7 @@ Read [`.agents/security.md`](.agents/security.md), [`.agents/privacy.md`](.agent
 
 The target is WCAG 2.2 AA. Core flows must work with keyboard, touch, zoom/reflow, reduced motion, forced colors, and assistive technology. Animated exercise content requires available written instruction; the anatomy diagram requires a text equivalent. Loading, empty, provider error, malformed data, and missing-media states are first-class product states.
 
-Final visual brand choices remain open. The implementation uses a small global token/reset layer, route-owned `page.module.css`/`layout.module.css` files for composition, and same-name colocated CSS Modules for shared and feature components. Components consume semantic tokens for color, typography, spacing, shape, elevation, and motion, with light/dark compatibility. See [`.agents/design.md`](.agents/design.md) and [`.agents/accessibility.md`](.agents/accessibility.md).
+The approved foundation uses Outfit, logo coral `#ff4b33` as primary, logo navy as secondary, compact but accessible text sizes, system-aware dark mode, and manual `data-theme` hooks for a future theme control. Route `page.module.css`/`layout.module.css` files own composition, while shared and feature components use same-name colocated CSS Modules. See [`.agents/design.md`](.agents/design.md) and [`.agents/accessibility.md`](.agents/accessibility.md).
 
 ## 17. Testing and quality control
 
@@ -297,10 +303,9 @@ Production release requires developer-run quality checks, Clerk production verif
 
 ## 20. Known limitations and open decisions
 
-- Final name, branding, typography, and palette are not selected.
-- The current workspace is not initialized as a Git repository, so status and diff history are unavailable.
-- No application code, dependency manifest, runtime, test harness, or deployment exists.
-- Exact package versions remain undecided; the styling architecture is plain CSS with CSS Modules, while brand values remain unresolved.
+- The final product name and full voice/art direction remain unresolved; the logo, Outfit, coral primary, and navy secondary are approved.
+- The application scaffold and dependency manifest exist, but runtime dependencies listed above have not been installed by an agent and the app has not been verified.
+- No test harness or deployment is configured.
 - The exercise provider's documented schema was inspected, but integration behavior has not been implemented or runtime-validated here.
 - Exercise Gym GIF media provenance and commercial rights are unresolved and blocking.
 - React Muscle Highlighter accessibility and visuals have not been tested in this project.
