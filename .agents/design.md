@@ -9,7 +9,7 @@
 
 Design a focused fitness guide, not a generic admin dashboard. The experience should feel energetic, precise, and credible without aggression, body-shaming, medicalized imagery, or “before/after” pressure. Exercise motion, technique, and anatomy are the visual center.
 
-Final branding, fonts, logo, and palette remain developer decisions. Until approved, build structure with semantic tokens and clearly licensed assets rather than cementing a temporary brand into component styles.
+The logo mark, Outfit typeface, coral primary, and navy secondary are approved. The final product name, supporting voice, and broader art direction remain open. Components consume the approved semantic tokens rather than sampling colors from the raster logo.
 
 ### 1.1 Principles
 
@@ -140,7 +140,20 @@ If two instances need different behavior, add an intentional typed variant or co
 
 Components consume semantic tokens rather than defining a private design system.
 
-### 8.1 Required token families
+### 8.1 Approved foundation and token families
+
+The foundation implemented in `src/app/globals.css` is authoritative:
+
+| Role | Decision |
+| --- | --- |
+| Primary | Logo coral `#ff4b33`; action background and primary muscle role |
+| Secondary | Logo navy `#092e68`; supporting brand role and secondary muscle role |
+| Typeface | Outfit, loaded by `next/font/google` with `display: swap` |
+| Compact type scale | 0.75rem caption, 0.875rem compact UI, 1rem body/input, then 1.125rem and 1.375rem |
+| Touch/control height | 2.75rem minimum even when labels are visually compact |
+| Theme | Light default, automatic system dark mode, and `data-theme="light|dark"` override hooks |
+
+“Small fonts” means compact UI hierarchy, not unreadable content. Body copy, instructions, and form controls remain at least `1rem`; `--text-xs` and `--text-sm` are limited to captions, metadata, navigation labels, and short control labels. Never use caption sizes for instructions or error recovery.
 
 - **Color:** canvas, surface, elevated surface, text, muted text, border, strong border, action, action-hover, on-action, focus, success, warning, danger, info, primary-muscle, secondary-muscle.
 - **Typography:** interface font, optional display font, sizes, weights, line heights, tracking, readable measure.
@@ -150,7 +163,7 @@ Components consume semantic tokens rather than defining a private design system.
 - **Controls:** minimum control/touch dimensions.
 - **Motion:** duration, easing, and layer/z-index levels.
 
-Final values require brand approval and contrast verification. Token names describe meaning, not a current color (`--color-action`, not `--blue-600`). Feature-specific semantic tokens such as muscle roles may alias core tokens.
+Token names describe meaning, not a color (`--color-primary`, not `--coral-500`). Feature-specific semantic tokens such as muscle roles alias core tokens. New foreground/background combinations still require developer-run contrast verification before release.
 
 ### 8.2 Raw-value policy
 
@@ -187,9 +200,9 @@ The initial breakpoint vocabulary is provisional until Phase 1 validates real co
 
 ## 10. Typography and content hierarchy
 
-Typography carries the product's character. Choose one family or a deliberately contrasting pair after licensing and performance review; do not default automatically to common product fonts.
+Outfit is the single approved interface and content family. It is loaded through `next/font/google`, exposed as `--font-outfit`, and consumed through `--font-sans`. Do not add a second family without a specific readability or brand need and approval.
 
-- Body text stays readable, generally 16px equivalent or larger; form inputs remain at least 1rem to prevent mobile zoom behavior.
+- Body text, instructions, and inputs remain 1rem or larger. Compact labels and metadata may use 0.875rem; captions may use 0.75rem only when non-essential.
 - Headings use a bounded scale, clear weight hierarchy, balanced wrapping where supported, and tighter leading than body text.
 - Default line length is below 80 characters; instructional steps may be narrower.
 - Avoid light weights below 400 for functional text and all-caps sentences.
@@ -221,6 +234,14 @@ Build a primitive only when a real use requires it; then reuse it.
 | **Inline message** | State icon/text and next action. Errors remain near the affected content; transient toast never replaces recovery. |
 | **Skeleton** | Mirrors final geometry, is hidden from assistive technology, and does not become permanent decorative shimmer. |
 
+### 12.1 Iconography
+
+- Use `@hugeicons/react` with `@hugeicons/core-free-icons` for interface icons.
+- Import named icons individually; never render an entire icon catalog or choose an icon dynamically from an unrestricted string.
+- Wrap repeated rendering in one accessible `Icon` primitive that standardizes size, stroke, and `aria-hidden` behavior.
+- Icons support text; they do not replace an unfamiliar action label. Icon-only controls require an accessible name and at least the minimum touch target.
+- Custom SVG is reserved for the product logo, muscle anatomy, or a concept Hugeicons cannot express. Do not mix unrelated icon families.
+
 ## 13. Interaction, motion, and media
 
 Every interactive component defines relevant default, hover, active, focus-visible, selected, disabled, pending, success, and error behavior. Disabled is not a substitute for explaining invalid input.
@@ -234,7 +255,7 @@ Every interactive component defines relevant default, hover, active, focus-visib
 ## 14. Themes, contrast, and system modes
 
 - Components depend only on semantic tokens and must not assume a white page or dark text.
-- Light and dark compatibility is an architectural requirement; implementing automatic dark mode waits for approved palette tokens and verified contrast.
+- Light and dark themes are implemented through semantic tokens. System preference applies automatically; `data-theme="light"` and `data-theme="dark"` hooks are reserved for a future user control.
 - Every foreground/background and status pair requires recorded WCAG contrast verification when values are selected.
 - Forced-colors mode retains boundaries, focus, selection, and muscle-role labels.
 - Do not override user color scheme or motion preferences with a purely decorative theme.
