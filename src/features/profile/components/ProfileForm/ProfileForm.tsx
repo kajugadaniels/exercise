@@ -196,7 +196,12 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
   const isSelfDescribed = values.gender === "self-described";
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit} noValidate>
+    <form
+      className={styles.form}
+      data-mode={mode}
+      onSubmit={handleSubmit}
+      noValidate
+    >
       {formError && (
         <p className={styles.formError} role="alert">
           {formError}
@@ -204,11 +209,19 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
       )}
 
       <fieldset className={styles.fieldset} disabled={isSaving || isDeleting}>
-        <legend className={styles.legend}>About you</legend>
-        <p className={styles.sectionCopy}>
-          These details keep your future training records accurate and belong
-          only to your account.
-        </p>
+        <legend
+          className={
+            mode === "onboarding" ? styles.visuallyHidden : styles.legend
+          }
+        >
+          About you
+        </legend>
+        {mode === "settings" && (
+          <p className={styles.sectionCopy}>
+            These details keep your future training records accurate and belong
+            only to your account.
+          </p>
+        )}
 
         <div className={styles.fieldGrid}>
           <Select
@@ -261,10 +274,18 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
       </fieldset>
 
       <fieldset className={styles.fieldset} disabled={isSaving || isDeleting}>
-        <legend className={styles.legend}>Current measurements</legend>
-        <p className={styles.sectionCopy}>
-          You can update these measurements whenever they change.
-        </p>
+        <legend
+          className={
+            mode === "onboarding" ? styles.visuallyHidden : styles.legend
+          }
+        >
+          Current measurements
+        </legend>
+        {mode === "settings" && (
+          <p className={styles.sectionCopy}>
+            You can update these measurements whenever they change.
+          </p>
+        )}
 
         <div className={styles.measurementLayout}>
           <div className={styles.fieldGrid}>
@@ -305,19 +326,36 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
             />
           </div>
 
-          <aside className={styles.bmiCard} aria-live="polite">
+          <output
+            className={styles.bmiCard}
+            htmlFor="height weight"
+            aria-live="polite"
+          >
             <span className={styles.bmiLabel}>Calculated BMI</span>
             <strong className={styles.bmiValue}>{bmi ?? "—"}</strong>
-            <p className={styles.bmiCopy}>
-              Calculated from your current height and weight. It is not stored
-              separately and is not medical advice.
-            </p>
-          </aside>
+            {mode === "settings" && (
+              <p className={styles.bmiCopy}>
+                Calculated from your current height and weight. It is not stored
+                separately and is not medical advice.
+              </p>
+            )}
+          </output>
         </div>
       </fieldset>
 
+      {mode === "onboarding" && (
+        <p className={styles.privacyNote}>
+          Your details stay private and can be changed later.
+        </p>
+      )}
+
       <div className={styles.actions}>
-        <Button type="submit" isLoading={isSaving} disabled={isDeleting}>
+        <Button
+          className={mode === "onboarding" ? styles.primaryAction : undefined}
+          type="submit"
+          isLoading={isSaving}
+          disabled={isDeleting}
+        >
           {mode === "onboarding" ? "Complete profile" : "Save changes"}
         </Button>
         {mode === "settings" && (
