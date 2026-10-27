@@ -6,6 +6,7 @@
 
 .sidebar {
   gap: var(--space-4);
+  scroll-margin-block-start: 6rem;
   padding-block-end: var(--space-4);
   border-block-end: 1px solid var(--color-border);
 }
