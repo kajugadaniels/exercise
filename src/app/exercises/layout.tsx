@@ -33,9 +33,12 @@ export default async function ExercisesLayout({
             <span>GYM Fitness</span>
           </Link>
           <nav className={styles.navigation} aria-label="Primary navigation">
-            <Link href={AUTH_ROUTES.home}>Exercise library</Link>
-            <UserButton />
+            <Link href="/">Home</Link>
+            <Link href={AUTH_ROUTES.home}>Exercises</Link>
           </nav>
+          <div className={styles.account}>
+            <UserButton />
+          </div>
         </div>
       </header>
       {children}
