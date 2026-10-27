@@ -2,12 +2,20 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import {
+  Location01Icon,
+  RulerIcon,
+  WeightScale01Icon,
+} from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/Button/Button";
-import { Input, Select } from "@/components/ui/Field/Field";
+import { Input } from "@/components/ui/Input/Input";
 import { useToast } from "@/components/ui/Toast/Toast";
 import { AUTH_ROUTES } from "@/features/auth/config/routes";
+import { BodyMetricsVisual } from "../BodyMetricsVisual/BodyMetricsVisual";
+import { GenderSelector } from "../GenderSelector/GenderSelector";
 import {
   calculateBmi,
+  getBmiCategory,
   profileSchema,
   type ProfileInput,
   type ProfileView,
@@ -22,7 +30,6 @@ type ProfileFormProps = Readonly<{
 type FormValues = {
   country: string;
   gender: string;
-  genderDescription: string;
   heightCentimeters: string;
   weightKilograms: string;
 };
@@ -34,7 +41,6 @@ function initialValues(profile?: ProfileView): FormValues {
   return {
     country: profile?.country ?? "",
     gender: profile?.gender ?? "",
-    genderDescription: profile?.genderDescription ?? "",
     heightCentimeters: profile ? String(profile.heightCentimeters) : "",
     weightKilograms: profile ? String(profile.weightKilograms) : "",
   };
@@ -46,7 +52,6 @@ function firstFieldErrors(
   return {
     country: errors.country?.[0],
     gender: errors.gender?.[0],
-    genderDescription: errors.genderDescription?.[0],
     heightCentimeters: errors.heightCentimeters?.[0],
     weightKilograms: errors.weightKilograms?.[0],
   };
@@ -99,7 +104,6 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
     const result = profileSchema.safeParse({
       country: values.country,
       gender: values.gender,
-      genderDescription: values.genderDescription || undefined,
       heightCentimeters: Number(values.heightCentimeters),
       weightKilograms: Number(values.weightKilograms),
     });
@@ -193,7 +197,17 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
     }
   }
 
-  const isSelfDescribed = values.gender === "self-described";
+  const bmiCategory = bmi === null ? null : getBmiCategory(bmi);
+  const bmiStatus = bmiCategory
+    ? {
+        low: "Below range",
+        healthy: "Healthy range",
+        moderate: "Medium range",
+        high: "High range",
+      }[bmiCategory]
+    : "Add measurements";
+  const heightCentimeters = Number(values.heightCentimeters);
+  const weightKilograms = Number(values.weightKilograms);
 
   return (
     <form
@@ -208,14 +222,15 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
         </p>
       )}
 
-      <fieldset className={styles.fieldset} disabled={isSaving || isDeleting}>
-        <legend
+      <section className={styles.section} aria-labelledby="about-you-title">
+        <h2
           className={
             mode === "onboarding" ? styles.visuallyHidden : styles.legend
           }
+          id="about-you-title"
         >
           About you
-        </legend>
+        </h2>
         {mode === "settings" && (
           <p className={styles.sectionCopy}>
             These details keep your future training records accurate and belong
@@ -224,24 +239,16 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
         )}
 
         <div className={styles.fieldGrid}>
-          <Select
-            id="gender"
-            name="gender"
-            label="Gender"
-            value={values.gender}
+          <GenderSelector
+            value={
+              values.gender === "male" || values.gender === "female"
+                ? values.gender
+                : ""
+            }
             error={errors.gender}
-            onChange={(event) => updateValue("gender", event.target.value)}
-            required
-          >
-            <option value="" disabled>
-              Select an option
-            </option>
-            <option value="woman">Woman</option>
-            <option value="man">Man</option>
-            <option value="non-binary">Non-binary</option>
-            <option value="self-described">Self-described</option>
-            <option value="prefer-not-to-say">Prefer not to say</option>
-          </Select>
+            disabled={isSaving || isDeleting}
+            onChange={(gender) => updateValue("gender", gender)}
+          />
 
           <Input
             id="country"
@@ -249,38 +256,25 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
             label="Country"
             autoComplete="country-name"
             placeholder="e.g. Rwanda"
+            icon={Location01Icon}
             value={values.country}
             error={errors.country}
+            disabled={isSaving || isDeleting}
             onChange={(event) => updateValue("country", event.target.value)}
             required
           />
         </div>
+      </section>
 
-        {isSelfDescribed && (
-          <Input
-            id="gender-description"
-            name="genderDescription"
-            label="How do you describe your gender?"
-            autoComplete="off"
-            maxLength={80}
-            value={values.genderDescription}
-            error={errors.genderDescription}
-            onChange={(event) =>
-              updateValue("genderDescription", event.target.value)
-            }
-            required
-          />
-        )}
-      </fieldset>
-
-      <fieldset className={styles.fieldset} disabled={isSaving || isDeleting}>
-        <legend
+      <section className={styles.section} aria-labelledby="measurements-title">
+        <h2
           className={
             mode === "onboarding" ? styles.visuallyHidden : styles.legend
           }
+          id="measurements-title"
         >
           Current measurements
-        </legend>
+        </h2>
         {mode === "settings" && (
           <p className={styles.sectionCopy}>
             You can update these measurements whenever they change.
@@ -288,7 +282,21 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
         )}
 
         <div className={styles.measurementLayout}>
-          <div className={styles.fieldGrid}>
+          <BodyMetricsVisual
+            bmiCategory={bmiCategory}
+            heightCentimeters={
+              Number.isFinite(heightCentimeters) && heightCentimeters > 0
+                ? heightCentimeters
+                : null
+            }
+            weightKilograms={
+              Number.isFinite(weightKilograms) && weightKilograms > 0
+                ? weightKilograms
+                : null
+            }
+          />
+
+          <div className={styles.measurementFields}>
             <Input
               id="height"
               name="heightCentimeters"
@@ -299,8 +307,10 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
               step={1}
               type="number"
               placeholder="175"
+              icon={RulerIcon}
               value={values.heightCentimeters}
               error={errors.heightCentimeters}
+              disabled={isSaving || isDeleting}
               onChange={(event) =>
                 updateValue("heightCentimeters", event.target.value)
               }
@@ -317,31 +327,45 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
               step={0.1}
               type="number"
               placeholder="70.0"
+              icon={WeightScale01Icon}
               value={values.weightKilograms}
               error={errors.weightKilograms}
+              disabled={isSaving || isDeleting}
               onChange={(event) =>
                 updateValue("weightKilograms", event.target.value)
               }
               required
             />
           </div>
+        </div>
 
-          <output
-            className={styles.bmiCard}
-            htmlFor="height weight"
-            aria-live="polite"
-          >
+        <output
+          className={styles.bmiCard}
+          data-tone={bmiCategory ?? "empty"}
+          htmlFor="height weight"
+          aria-live="polite"
+        >
+          <span className={styles.bmiSummary}>
             <span className={styles.bmiLabel}>Calculated BMI</span>
             <strong className={styles.bmiValue}>{bmi ?? "—"}</strong>
-            {mode === "settings" && (
-              <p className={styles.bmiCopy}>
-                Calculated from your current height and weight. It is not stored
-                separately and is not medical advice.
-              </p>
+            <span className={styles.bmiStatus}>{bmiStatus}</span>
+          </span>
+          <span className={styles.bmiScale} aria-hidden="true">
+            {(["low", "healthy", "moderate", "high"] as const).map(
+              (category) => (
+                <span
+                  data-active={category === bmiCategory}
+                  data-category={category}
+                  key={category}
+                />
+              ),
             )}
-          </output>
-        </div>
-      </fieldset>
+          </span>
+          <span className={styles.bmiCopy}>
+            BMI is a general screening guide, not a medical diagnosis.
+          </span>
+        </output>
+      </section>
 
       {mode === "onboarding" && (
         <p className={styles.privacyNote}>
