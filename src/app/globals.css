@@ -1,49 +1,276 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  /* Brand colors: the coral is taken from the approved logo mark. */
+  --color-primary: #ff4b33;
+  --color-primary-hover: #e43b25;
+  --color-primary-active: #c92f1c;
+  --color-on-primary: #180b08;
+  --color-primary-text: #b52714;
+  --color-secondary: #092e68;
+  --color-on-secondary: #ffffff;
+
+  /* Light theme. */
+  --color-background: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-soft: #edf1f6;
+  --color-text: #151821;
+  --color-text-muted: #596273;
+  --color-border: #d6dce6;
+  --color-border-strong: #788397;
+  --color-focus: #092e68;
+  --color-success: #167447;
+  --color-warning: #8a5700;
+  --color-danger: #b42318;
+  --color-info: #155ea8;
+
+  /* Primary and secondary muscle roles must also use labels or a legend. */
+  --color-muscle-primary: var(--color-primary);
+  --color-muscle-secondary: var(--color-secondary);
+
+  /* Outfit is loaded through next/font in the root layout. */
+  --font-sans: var(--font-outfit), "Avenir Next", "Segoe UI", sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.375rem;
+  --text-xl: clamp(1.75rem, 4vw, 2.5rem);
+  --text-display: clamp(2.25rem, 7vw, 4rem);
+  --leading-tight: 1.15;
+  --leading-body: 1.55;
+  --tracking-tight: -0.025em;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Compact spacing keeps the interface efficient without shrinking targets. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --gutter: clamp(1rem, 4vw, 2rem);
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-full: 999px;
+  --shadow-sm: 0 1px 2px rgb(21 24 33 / 0.08);
+  --shadow-md: 0 1rem 3rem rgb(21 24 33 / 0.12);
+
+  --control-height: 2.75rem;
+  --content-max: 76rem;
+  --reading-max: 65ch;
+
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --z-header: 10;
+  --z-dialog: 100;
+  --z-toast: 200;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: dark;
+    --color-primary-hover: #ff684f;
+    --color-primary-active: #ff7c68;
+    --color-primary-text: #ff8878;
+    --color-secondary: #82adff;
+    --color-on-secondary: #07162f;
+    --color-background: #0b0e14;
+    --color-surface: #131823;
+    --color-surface-raised: #191f2c;
+    --color-surface-soft: #202736;
+    --color-text: #f4f6fa;
+    --color-text-muted: #aab3c3;
+    --color-border: #30394a;
+    --color-border-strong: #78859b;
+    --color-focus: #ff8878;
+    --color-success: #6fd3a1;
+    --color-warning: #f5bb5b;
+    --color-danger: #ff8a80;
+    --color-info: #83bfff;
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35);
+    --shadow-md: 0 1rem 3rem rgb(0 0 0 / 0.4);
   }
 }
 
+/* These hooks allow a future theme control to override the system setting. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-primary-hover: #e43b25;
+  --color-primary-active: #c92f1c;
+  --color-primary-text: #b52714;
+  --color-secondary: #092e68;
+  --color-on-secondary: #ffffff;
+  --color-background: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-soft: #edf1f6;
+  --color-text: #151821;
+  --color-text-muted: #596273;
+  --color-border: #d6dce6;
+  --color-border-strong: #788397;
+  --color-focus: #092e68;
+  --color-success: #167447;
+  --color-warning: #8a5700;
+  --color-danger: #b42318;
+  --color-info: #155ea8;
+  --shadow-sm: 0 1px 2px rgb(21 24 33 / 0.08);
+  --shadow-md: 0 1rem 3rem rgb(21 24 33 / 0.12);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-primary-hover: #ff684f;
+  --color-primary-active: #ff7c68;
+  --color-primary-text: #ff8878;
+  --color-secondary: #82adff;
+  --color-on-secondary: #07162f;
+  --color-background: #0b0e14;
+  --color-surface: #131823;
+  --color-surface-raised: #191f2c;
+  --color-surface-soft: #202736;
+  --color-text: #f4f6fa;
+  --color-text-muted: #aab3c3;
+  --color-border: #30394a;
+  --color-border-strong: #78859b;
+  --color-focus: #ff8878;
+  --color-success: #6fd3a1;
+  --color-warning: #f5bb5b;
+  --color-danger: #ff8a80;
+  --color-info: #83bfff;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35);
+  --shadow-md: 0 1rem 3rem rgb(0 0 0 / 0.4);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
 html {
-  height: 100%;
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
   min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  scroll-padding-block-start: var(--space-7);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-body);
+  font-kerning: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+h1,
+h2,
+h3,
+h4 {
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+h1,
+h2 {
+  letter-spacing: var(--tracking-tight);
+}
+
+p,
+li,
+dd {
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-inline-size: 100%;
+}
+
+img,
+picture,
+video,
+canvas {
+  block-size: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  color: inherit;
+  font: inherit;
+}
+
+input,
+textarea,
+select {
+  font-size: var(--text-base);
+}
+
+button,
+a {
+  touch-action: manipulation;
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+  color: var(--color-primary-text);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.2em;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (forced-colors: active) {
+  :focus-visible {
+    outline-color: Highlight;
   }
 }
