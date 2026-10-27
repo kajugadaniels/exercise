@@ -53,63 +53,6 @@
   min-inline-size: 0;
 }
 
-.searchForm {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--space-2);
-  align-items: center;
-  max-inline-size: 46rem;
-}
-
-.searchControl {
-  display: flex;
-  align-items: center;
-  min-inline-size: 0;
-  min-block-size: var(--control-height);
-  border-radius: var(--radius-full);
-  background-color: var(--color-surface-raised);
-  color: var(--color-text-muted);
-  transition:
-    background-color var(--duration-fast) var(--ease-standard),
-    color var(--duration-fast) var(--ease-standard);
-}
-
-.searchControl:focus-within {
-  background-color: var(--color-surface-soft);
-  color: var(--color-primary-text);
-}
-
-.searchIcon {
-  display: grid;
-  flex: 0 0 auto;
-  inline-size: var(--control-height);
-  block-size: var(--control-height);
-  place-items: center;
-}
-
-.searchInput {
-  inline-size: 100%;
-  min-inline-size: 0;
-  min-block-size: var(--control-height);
-  padding-inline-end: var(--space-4);
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: var(--color-text);
-}
-
-.searchInput::placeholder {
-  color: var(--color-text-muted);
-  opacity: 0.75;
-}
-
-.clearSearch {
-  grid-column: 1 / -1;
-  justify-self: start;
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
 .toolbar {
   display: flex;
   gap: var(--space-3);
@@ -171,16 +114,23 @@
   outline-offset: 3px;
 }
 
-.searchPlaceholder,
 .filterPlaceholder,
 .toolbarPlaceholder,
-.cardPlaceholder {
+.cardPlaceholder,
+.searchPlaceholder span {
   border-radius: var(--radius-lg);
   background-color: var(--color-surface-raised);
 }
 
 .searchPlaceholder {
-  inline-size: min(100%, 46rem);
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  inline-size: 100%;
+}
+
+.searchPlaceholder span {
+  inline-size: var(--control-height);
   block-size: var(--control-height);
   border-radius: var(--radius-full);
 }
@@ -212,10 +162,6 @@
 }
 
 @media (hover: hover) {
-  .searchControl:hover {
-    background-color: var(--color-surface-soft);
-  }
-
   .stateAction:hover {
     background-color: var(--color-primary-hover);
   }
@@ -250,8 +196,8 @@
 }
 
 @media (forced-colors: active) {
-  .searchControl,
   .filterPlaceholder,
+  .searchPlaceholder span,
   .emptyState,
   .errorState,
   .cardPlaceholder {
