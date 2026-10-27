@@ -16,11 +16,15 @@ import type { IconSvgElement } from "@hugeicons/react";
 import { Icon } from "@/components/ui/Icon/Icon";
 import {
   bodyPartIds,
+  equipmentIds,
   exerciseCategoryIds,
   formatExerciseValue,
+  muscleIds,
   type BodyPartId,
+  type EquipmentId,
   type ExerciseCategory,
   type ExerciseQuery,
+  type MuscleId,
 } from "../../domain/exercise";
 import { buildExerciseLibraryUrl } from "../../providers/exercise-gym-gifs/filters";
 import styles from "./ExerciseFilterSidebar.module.css";
@@ -80,6 +84,32 @@ const categoryOptions: readonly FilterOption<ExerciseCategory>[] = [
   },
   ...exerciseCategoryIds.map((value) => ({
     icon: categoryIcons[value],
+    label: formatExerciseValue(value),
+    value,
+  })),
+];
+
+const muscleOptions: readonly FilterOption<MuscleId>[] = [
+  {
+    icon: BodyPartMuscleIcon,
+    label: "All muscles",
+    value: null,
+  },
+  ...muscleIds.map((value) => ({
+    icon: BodyPartMuscleIcon,
+    label: formatExerciseValue(value),
+    value,
+  })),
+];
+
+const equipmentOptions: readonly FilterOption<EquipmentId>[] = [
+  {
+    icon: Dumbbell01Icon,
+    label: "All equipment",
+    value: null,
+  },
+  ...equipmentIds.map((value) => ({
+    icon: Dumbbell01Icon,
     label: formatExerciseValue(value),
     value,
   })),
@@ -148,6 +178,54 @@ export function ExerciseFilterSidebar({ query }: ExerciseFilterSidebarProps) {
             })
           }
           options={bodyPartOptions}
+        />
+      </section>
+
+      <section
+        className={styles.filterGroup}
+        aria-labelledby="exercise-muscles-title"
+      >
+        <div className={styles.heading}>
+          <span className={styles.headingIcon} aria-hidden="true">
+            <Icon icon={BodyPartMuscleIcon} size={18} />
+          </span>
+          <h2 className={styles.title} id="exercise-muscles-title">
+            Muscles
+          </h2>
+        </div>
+        <FilterList
+          activeValue={query.muscle}
+          ariaLabel="Exercise muscles"
+          getHref={(muscle) =>
+            buildExerciseLibraryUrl(query, 1, {
+              muscle,
+            })
+          }
+          options={muscleOptions}
+        />
+      </section>
+
+      <section
+        className={styles.filterGroup}
+        aria-labelledby="exercise-equipment-title"
+      >
+        <div className={styles.heading}>
+          <span className={styles.headingIcon} aria-hidden="true">
+            <Icon icon={Dumbbell01Icon} size={18} />
+          </span>
+          <h2 className={styles.title} id="exercise-equipment-title">
+            Equipment
+          </h2>
+        </div>
+        <FilterList
+          activeValue={query.equipment}
+          ariaLabel="Exercise equipment"
+          getHref={(equipment) =>
+            buildExerciseLibraryUrl(query, 1, {
+              equipment,
+            })
+          }
+          options={equipmentOptions}
         />
       </section>
 
