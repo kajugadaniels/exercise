@@ -53,6 +53,12 @@
   min-inline-size: 0;
 }
 
+.controlBar {
+  display: grid;
+  gap: var(--space-3);
+  min-inline-size: 0;
+}
+
 .toolbar {
   display: flex;
   gap: var(--space-3);
@@ -117,9 +123,16 @@
 .filterPlaceholder,
 .toolbarPlaceholder,
 .cardPlaceholder,
+.categoryPlaceholder,
 .searchPlaceholder span {
   border-radius: var(--radius-lg);
   background-color: var(--color-surface-raised);
+}
+
+.categoryPlaceholder {
+  inline-size: 100%;
+  min-block-size: var(--control-height);
+  border-radius: var(--radius-full);
 }
 
 .searchPlaceholder {
@@ -177,6 +190,11 @@
   .header {
     grid-template-columns: minmax(0, 1fr) auto;
   }
+
+  .controlBar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
 }
 
 @media (min-width: 64rem) {
@@ -197,6 +215,7 @@
 
 @media (forced-colors: active) {
   .filterPlaceholder,
+  .categoryPlaceholder,
   .searchPlaceholder span,
   .emptyState,
   .errorState,
