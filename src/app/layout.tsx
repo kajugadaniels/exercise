@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { Outfit } from "next/font/google";
 import "./globals.css";
+import styles from "./layout.module.css";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -9,14 +12,44 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "GYM Fitness Platform",
-  description: "Discover exercises, learn proper technique, and understand the muscles they target.",
+  title: {
+    default: "GYM Fitness Platform",
+    template: "%s | GYM Fitness Platform",
+  },
+  description:
+    "Discover exercises, learn proper technique, and understand the muscles they target.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+type RootLayoutProps = Readonly<{
+  children: React.ReactNode;
+}>;
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className={outfit.variable}>
-      <body>{children}</body>
+      <body>
+        <a className={styles.skipLink} href="#main-content">
+          Skip to main content
+        </a>
+        <header className={styles.header}>
+          <div className={styles.headerInner}>
+            <Link className={styles.brand} href="/exercises">
+              <Image
+                src="/logo.png"
+                alt=""
+                width={40}
+                height={40}
+                priority
+              />
+              <span>GYM Fitness</span>
+            </Link>
+            <nav aria-label="Primary navigation">
+              <Link href="/exercises">Exercise library</Link>
+            </nav>
+          </div>
+        </header>
+        {children}
+      </body>
     </html>
   );
 }
