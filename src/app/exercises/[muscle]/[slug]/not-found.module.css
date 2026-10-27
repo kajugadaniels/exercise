@@ -1,0 +1,27 @@
+.page {
+  display: grid;
+  min-block-size: 60vh;
+  place-items: center;
+  padding: var(--space-7) var(--gutter);
+}
+
+.message {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: start;
+  inline-size: min(100%, 36rem);
+}
+
+.message h1 {
+  font-size: var(--text-xl);
+}
+
+.message p {
+  color: var(--color-text-muted);
+}
+
+.message a {
+  min-block-size: var(--control-height);
+  align-content: center;
+  font-weight: var(--weight-semibold);
+}
