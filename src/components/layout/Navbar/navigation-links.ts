@@ -11,3 +11,7 @@ export const primaryNavigationLinks = [
   { href: AUTH_ROUTES.progress, label: "Progress" },
   { href: AUTH_ROUTES.profile, label: "Profile" },
 ] as const satisfies readonly NavigationLink[];
+
+export function isNavigationLinkActive(pathname: string, href: string) {
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
