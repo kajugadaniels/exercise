@@ -1,0 +1,150 @@
+.form {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+}
+
+.searchRow {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.searchField,
+.field {
+  display: grid;
+  gap: var(--space-2);
+  min-inline-size: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.searchControl {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--control-height);
+  padding-inline: var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-raised);
+  color: var(--color-text-muted);
+}
+
+.searchControl:focus-within {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.searchControl input {
+  min-inline-size: 0;
+  flex: 1;
+  min-block-size: calc(var(--control-height) - 2px);
+  padding-inline: var(--space-3);
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-text);
+}
+
+.submitButton {
+  min-block-size: var(--control-height);
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+
+.filterGroup {
+  min-inline-size: 0;
+  padding: 0;
+  border: 0;
+}
+
+.filterGroup legend {
+  margin-block-end: var(--space-3);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.filterGrid {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.field select {
+  inline-size: 100%;
+  min-block-size: var(--control-height);
+  padding-inline: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-raised);
+  color: var(--color-text);
+}
+
+.activeFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+  align-items: center;
+  justify-content: space-between;
+  padding-block-start: var(--space-3);
+  border-block-start: 1px solid var(--color-border);
+}
+
+.activeFilters p {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.activeFilters p span {
+  color: var(--color-text);
+  font-weight: var(--weight-semibold);
+}
+
+.clearLink {
+  min-block-size: var(--control-height);
+  align-content: center;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+@media (hover: hover) {
+  .submitButton:hover {
+    background-color: var(--color-primary-hover);
+  }
+}
+
+.submitButton:active {
+  background-color: var(--color-primary-active);
+}
+
+@media (min-width: 40rem) {
+  .searchRow {
+    grid-template-columns: minmax(0, 1fr) max-content;
+    align-items: end;
+  }
+
+  .filterGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .filterGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (forced-colors: active) {
+  .submitButton {
+    border-color: ButtonText;
+  }
+}
