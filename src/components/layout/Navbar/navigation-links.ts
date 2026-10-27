@@ -8,4 +8,6 @@ export type NavigationLink = Readonly<{
 export const primaryNavigationLinks = [
   { href: AUTH_ROUTES.home, label: "Home" },
   { href: AUTH_ROUTES.exercises, label: "Exercises" },
+  { href: AUTH_ROUTES.progress, label: "Progress" },
+  { href: AUTH_ROUTES.profile, label: "Profile" },
 ] as const satisfies readonly NavigationLink[];
