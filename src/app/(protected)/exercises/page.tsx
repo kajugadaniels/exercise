@@ -4,9 +4,11 @@ import { Search02Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/Button/Button";
 import { Icon } from "@/components/ui/Icon/Icon";
 import { ExerciseCard } from "@/features/exercises/components/ExerciseCard/ExerciseCard";
+import { ExerciseCategorySidebar } from "@/features/exercises/components/ExerciseCategorySidebar/ExerciseCategorySidebar";
 import { ExercisePagination } from "@/features/exercises/components/ExercisePagination/ExercisePagination";
 import type { ExerciseQuery } from "@/features/exercises/domain/exercise";
 import {
+  buildExerciseLibraryUrl,
   parseExerciseQuery,
   type ExerciseSearchParams,
 } from "@/features/exercises/providers/exercise-gym-gifs/filters";
@@ -29,11 +31,16 @@ function CatalogFallback() {
   return (
     <section className={styles.catalog} aria-label="Loading exercises">
       <div className={styles.searchPlaceholder} />
-      <div className={styles.toolbarPlaceholder} />
-      <div className={styles.exerciseGrid} aria-hidden="true">
-        {Array.from({ length: 8 }, (_, index) => (
-          <div className={styles.cardPlaceholder} key={index} />
-        ))}
+      <div className={styles.libraryLayout}>
+        <div className={styles.filterPlaceholder} />
+        <div className={styles.results}>
+          <div className={styles.toolbarPlaceholder} />
+          <div className={styles.exerciseGrid} aria-hidden="true">
+            {Array.from({ length: 8 }, (_, index) => (
+              <div className={styles.cardPlaceholder} key={index} />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -85,51 +92,63 @@ async function ExerciseCatalog({
             type="search"
           />
         </span>
+        {query.category ? (
+          <input name="category" type="hidden" value={query.category} />
+        ) : null}
         <Button size="compact" type="submit">
           Search
         </Button>
-        {query.search && (
-          <Link className={styles.clearSearch} href="/exercises">
+        {query.search ? (
+          <Link
+            className={styles.clearSearch}
+            href={buildExerciseLibraryUrl(query, 1, { search: null })}
+          >
             Clear
           </Link>
-        )}
+        ) : null}
       </form>
 
-      <div className={styles.toolbar}>
-        <p className={styles.resultCount} aria-live="polite">
-          {result.total === 0
-            ? "No exercises found"
-            : `Showing ${firstResult}–${lastResult} of ${result.total}`}
-        </p>
-        <p className={styles.pageStatus}>
-          Page {result.page} of {result.pageCount}
-        </p>
-      </div>
+      <div className={styles.libraryLayout}>
+        <ExerciseCategorySidebar query={query} />
 
-      {result.items.length > 0 ? (
-        <>
-          <ul className={styles.exerciseGrid}>
-            {result.items.map((exercise) => (
-              <li key={exercise.id}>
-                <ExerciseCard exercise={exercise} />
-              </li>
-            ))}
-          </ul>
-          <ExercisePagination
-            page={result.page}
-            pageCount={result.pageCount}
-            query={query}
-          />
-        </>
-      ) : (
-        <div className={styles.emptyState}>
-          <h3>No matching exercises</h3>
-          <p>Try a shorter or more general exercise name.</p>
-          <Link className={styles.stateAction} href="/exercises">
-            View all exercises
-          </Link>
+        <div className={styles.results}>
+          <div className={styles.toolbar}>
+            <p className={styles.resultCount} aria-live="polite">
+              {result.total === 0
+                ? "No exercises found"
+                : `Showing ${firstResult}–${lastResult} of ${result.total}`}
+            </p>
+            <p className={styles.pageStatus}>
+              Page {result.page} of {result.pageCount}
+            </p>
+          </div>
+
+          {result.items.length > 0 ? (
+            <>
+              <ul className={styles.exerciseGrid}>
+                {result.items.map((exercise) => (
+                  <li key={exercise.id}>
+                    <ExerciseCard exercise={exercise} />
+                  </li>
+                ))}
+              </ul>
+              <ExercisePagination
+                page={result.page}
+                pageCount={result.pageCount}
+                query={query}
+              />
+            </>
+          ) : (
+            <div className={styles.emptyState}>
+              <h3>No matching exercises</h3>
+              <p>Try a shorter name or choose another category.</p>
+              <Link className={styles.stateAction} href="/exercises">
+                View all exercises
+              </Link>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </section>
   );
 }
