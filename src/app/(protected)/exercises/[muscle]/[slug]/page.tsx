@@ -2,10 +2,7 @@ import { Suspense } from "react";
 import {
   Activity03Icon,
   ArrowLeft01Icon,
-  BodyPartMuscleIcon,
-  EquipmentGym01Icon,
   ExternalLinkIcon,
-  Target01Icon,
 } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -96,54 +93,38 @@ async function ExerciseDetail({ params }: ExerciseDetailPageProps) {
             <ExerciseThumbnail image={summary.image} size="detail" />
             <ul className={styles.mediaBadges} aria-label="Training overview">
               <li className={styles.mediaBadge}>
-                <span className={styles.badgeIcon} aria-hidden="true">
-                  <Icon icon={Target01Icon} size={18} />
-                </span>
-                <span className={styles.badgeContent}>
-                  <span className={styles.badgeLabel}>Primary muscle</span>
-                  <strong className={styles.badgeValue}>{primaryMuscle}</strong>
-                </span>
+                <span className={styles.badgeMark} aria-hidden="true" />
+                <span className={styles.badgeLabel}>Muscle</span>
+                <strong className={styles.badgeValue}>{primaryMuscle}</strong>
               </li>
 
               {exercise.bodyPart && (
                 <li className={styles.mediaBadge}>
-                  <span className={styles.badgeIcon} aria-hidden="true">
-                    <Icon icon={BodyPartMuscleIcon} size={18} />
-                  </span>
-                  <span className={styles.badgeContent}>
-                    <span className={styles.badgeLabel}>Body part</span>
-                    <strong className={styles.badgeValue}>
-                      {formatExerciseValue(exercise.bodyPart)}
-                    </strong>
-                  </span>
+                  <span className={styles.badgeMark} aria-hidden="true" />
+                  <span className={styles.badgeLabel}>Body part</span>
+                  <strong className={styles.badgeValue}>
+                    {formatExerciseValue(exercise.bodyPart)}
+                  </strong>
                 </li>
               )}
 
               {exercise.equipment && (
                 <li className={styles.mediaBadge}>
-                  <span className={styles.badgeIcon} aria-hidden="true">
-                    <Icon icon={EquipmentGym01Icon} size={18} />
-                  </span>
-                  <span className={styles.badgeContent}>
-                    <span className={styles.badgeLabel}>Equipment</span>
-                    <strong className={styles.badgeValue}>
-                      {formatExerciseValue(exercise.equipment)}
-                    </strong>
-                  </span>
+                  <span className={styles.badgeMark} aria-hidden="true" />
+                  <span className={styles.badgeLabel}>Equipment</span>
+                  <strong className={styles.badgeValue}>
+                    {formatExerciseValue(exercise.equipment)}
+                  </strong>
                 </li>
               )}
 
               {exercise.category && (
                 <li className={styles.mediaBadge}>
-                  <span className={styles.badgeIcon} aria-hidden="true">
-                    <Icon icon={Activity03Icon} size={18} />
-                  </span>
-                  <span className={styles.badgeContent}>
-                    <span className={styles.badgeLabel}>Category</span>
-                    <strong className={styles.badgeValue}>
-                      {formatExerciseValue(exercise.category)}
-                    </strong>
-                  </span>
+                  <span className={styles.badgeMark} aria-hidden="true" />
+                  <span className={styles.badgeLabel}>Category</span>
+                  <strong className={styles.badgeValue}>
+                    {formatExerciseValue(exercise.category)}
+                  </strong>
                 </li>
               )}
             </ul>
