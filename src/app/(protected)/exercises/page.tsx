@@ -1,11 +1,9 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { Search02Icon } from "@hugeicons/core-free-icons";
-import { Button } from "@/components/ui/Button/Button";
-import { Icon } from "@/components/ui/Icon/Icon";
 import { ExerciseCard } from "@/features/exercises/components/ExerciseCard/ExerciseCard";
 import { ExerciseFilterSidebar } from "@/features/exercises/components/ExerciseFilterSidebar/ExerciseFilterSidebar";
 import { ExercisePagination } from "@/features/exercises/components/ExercisePagination/ExercisePagination";
+import { ExerciseSearch } from "@/features/exercises/components/ExerciseSearch/ExerciseSearch";
 import type { ExerciseQuery } from "@/features/exercises/domain/exercise";
 import {
   buildExerciseLibraryUrl,
@@ -30,7 +28,10 @@ async function loadExerciseCatalogPage(query: ExerciseQuery) {
 function CatalogFallback() {
   return (
     <section className={styles.catalog} aria-label="Loading exercises">
-      <div className={styles.searchPlaceholder} />
+      <div className={styles.searchPlaceholder} aria-hidden="true">
+        <span />
+        <span />
+      </div>
       <div className={styles.libraryLayout}>
         <div className={styles.filterPlaceholder} />
         <div className={styles.results}>
@@ -74,42 +75,11 @@ async function ExerciseCatalog({
         Exercise catalog
       </h2>
 
-      <form className={styles.searchForm} action="/exercises">
-        <label className={styles.visuallyHidden} htmlFor="exercise-search">
-          Search exercises by name
-        </label>
-        <span className={styles.searchControl}>
-          <span className={styles.searchIcon} aria-hidden="true">
-            <Icon icon={Search02Icon} size={20} />
-          </span>
-          <input
-            className={styles.searchInput}
-            defaultValue={query.search ?? ""}
-            id="exercise-search"
-            maxLength={80}
-            name="search"
-            placeholder="Search by exercise name"
-            type="search"
-          />
-        </span>
-        {query.category ? (
-          <input name="category" type="hidden" value={query.category} />
-        ) : null}
-        {query.bodyPart ? (
-          <input name="bodyPart" type="hidden" value={query.bodyPart} />
-        ) : null}
-        <Button size="compact" type="submit">
-          Search
-        </Button>
-        {query.search ? (
-          <Link
-            className={styles.clearSearch}
-            href={buildExerciseLibraryUrl(query, 1, { search: null })}
-          >
-            Clear
-          </Link>
-        ) : null}
-      </form>
+      <ExerciseSearch
+        clearSearchHref={buildExerciseLibraryUrl(query, 1, { search: null })}
+        key={query.search ?? "closed"}
+        query={query}
+      />
 
       <div className={styles.libraryLayout}>
         <ExerciseFilterSidebar query={query} />
