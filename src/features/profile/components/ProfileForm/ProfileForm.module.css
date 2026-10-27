@@ -10,22 +10,16 @@
 .formError {
   padding: var(--space-3) var(--space-4);
   border: 1px solid var(--color-danger);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   background-color: var(--color-danger-soft);
   color: var(--color-danger-text);
   font-size: var(--text-sm);
 }
 
-.fieldset {
+.section {
   display: grid;
   gap: var(--space-4);
   min-inline-size: 0;
-  padding: 0;
-  border: 0;
-}
-
-.fieldset:disabled {
-  opacity: 0.66;
 }
 
 .visuallyHidden {
@@ -38,7 +32,6 @@
 }
 
 .legend {
-  margin-block-end: var(--space-2);
   color: var(--color-text);
   font-size: var(--text-md);
   font-weight: var(--weight-bold);
@@ -51,61 +44,118 @@
   font-size: var(--text-sm);
 }
 
-.fieldGrid {
-  display: grid;
-  gap: var(--space-4);
-  min-inline-size: 0;
-}
-
+.fieldGrid,
+.measurementFields,
 .measurementLayout {
   display: grid;
   gap: var(--space-4);
   min-inline-size: 0;
 }
 
-.bmiCard {
-  display: grid;
-  gap: var(--space-2);
+.measurementFields {
   align-content: center;
-  min-block-size: 9rem;
-  padding: var(--space-5);
-  border: 1px solid var(--color-glass-border-strong);
-  border-radius: var(--radius-md);
-  background-color: var(--color-surface-raised);
-  box-shadow: var(--shadow-glass-inset);
 }
 
-.form[data-mode="onboarding"] .bmiCard {
-  grid-template-columns: minmax(0, 1fr) auto;
+.bmiCard {
+  display: grid;
   gap: var(--space-3);
-  align-items: center;
-  min-block-size: 0;
-  padding: var(--space-3) var(--space-4);
-  border-color: var(--color-border);
-  background-color: var(--color-surface);
-  box-shadow: none;
+  min-inline-size: 0;
+  padding: var(--space-4);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-raised);
+}
+
+.bmiSummary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-1) var(--space-3);
+  align-items: end;
 }
 
 .bmiLabel {
-  color: var(--color-primary-text);
+  color: var(--color-text-muted);
   font-size: var(--text-xs);
   font-weight: var(--weight-semibold);
 }
 
 .bmiValue {
+  grid-row: 1 / span 2;
+  grid-column: 2;
   color: var(--color-text);
   font-size: var(--text-xl);
+  font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 
-.form[data-mode="onboarding"] .bmiValue {
-  color: var(--color-primary-text);
-  font-size: var(--text-lg);
+.bmiStatus {
+  color: var(--color-info);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
 }
 
-.bmiCopy {
+.bmiCard[data-tone="healthy"] .bmiStatus,
+.bmiCard[data-tone="healthy"] .bmiValue {
+  color: var(--color-success);
+}
+
+.bmiCard[data-tone="moderate"] .bmiStatus,
+.bmiCard[data-tone="moderate"] .bmiValue {
+  color: var(--color-warning);
+}
+
+.bmiCard[data-tone="high"] .bmiStatus,
+.bmiCard[data-tone="high"] .bmiValue {
+  color: var(--color-danger);
+}
+
+.bmiScale {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-1);
+}
+
+.bmiScale span {
+  block-size: 0.25rem;
+  border-radius: var(--radius-full);
+  background-color: var(--color-border);
+  opacity: 0.55;
+  transition:
+    background-color var(--duration-base) var(--ease-standard),
+    opacity var(--duration-base) var(--ease-standard),
+    transform var(--duration-base) var(--ease-standard);
+}
+
+.bmiScale span[data-active="true"] {
+  opacity: 1;
+  transform: scaleY(1.75);
+}
+
+.bmiScale span[data-category="low"][data-active="true"] {
+  background-color: var(--color-info);
+}
+
+.bmiScale span[data-category="healthy"][data-active="true"] {
+  background-color: var(--color-success);
+}
+
+.bmiScale span[data-category="moderate"][data-active="true"] {
+  background-color: var(--color-warning);
+}
+
+.bmiScale span[data-category="high"][data-active="true"] {
+  background-color: var(--color-danger);
+}
+
+.bmiCopy,
+.privacyNote {
   color: var(--color-text-muted);
   font-size: var(--text-xs);
+}
+
+.privacyNote {
+  margin-block-start: calc(var(--space-2) * -1);
+  text-align: center;
 }
 
 .actions {
@@ -121,19 +171,14 @@
   border-block-start: 0;
 }
 
-.privacyNote {
-  margin-block-start: calc(var(--space-2) * -1);
-  color: var(--color-text-muted);
-  font-size: var(--text-xs);
-}
-
 .primaryAction {
   inline-size: 100%;
 }
 
 @media (min-width: 40rem) {
   .fieldGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    align-items: end;
   }
 
   .actions {
@@ -142,20 +187,20 @@
   }
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 48rem) {
   .measurementLayout {
-    grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.55fr);
-    align-items: stretch;
-  }
-
-  .form[data-mode="onboarding"] .measurementLayout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(15rem, 0.85fr) minmax(0, 1.15fr);
+    align-items: center;
   }
 }
 
 @media (forced-colors: active) {
   .formError,
   .bmiCard {
-    border-color: CanvasText;
+    border: 1px solid CanvasText;
+  }
+
+  .bmiScale span[data-active="true"] {
+    background-color: Highlight;
   }
 }
