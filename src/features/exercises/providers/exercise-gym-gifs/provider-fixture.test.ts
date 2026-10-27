@@ -121,6 +121,10 @@ test("bounds and normalizes URL filter input", () => {
   );
 });
 
+test("ignores search terms shorter than three characters", () => {
+  assert.deepEqual(parseExerciseQuery({ search: "ab" }), { page: 1 });
+});
+
 test("changes category filters while preserving search and resetting pagination", () => {
   const query: ExerciseQuery = {
     category: "strength",
