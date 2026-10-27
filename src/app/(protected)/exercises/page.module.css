@@ -192,7 +192,7 @@
 
 .filterPlaceholder {
   inline-size: 100%;
-  block-size: var(--control-height);
+  block-size: 11rem;
 }
 
 .cardPlaceholder {
@@ -241,7 +241,7 @@
   }
 
   .filterPlaceholder {
-    block-size: 18rem;
+    block-size: 34rem;
   }
 
   .exerciseGrid {
