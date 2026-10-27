@@ -1,0 +1,115 @@
+.button {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--control-height);
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.defaultSize {
+  padding: var(--space-2) var(--space-5);
+}
+
+.compact {
+  padding: var(--space-2) var(--space-4);
+}
+
+.primary {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-action);
+}
+
+.secondary {
+  border-color: var(--color-glass-border-strong);
+  background-color: var(--color-glass-strong);
+  color: var(--color-text);
+  box-shadow: var(--shadow-glass-inset);
+  backdrop-filter: var(--glass-filter-compact);
+}
+
+.ghost {
+  border-color: transparent;
+  background-color: transparent;
+  color: var(--color-text);
+}
+
+.danger {
+  background-color: var(--color-danger);
+  color: var(--color-on-danger);
+}
+
+.label {
+  min-inline-size: 0;
+}
+
+.spinner {
+  inline-size: 1rem;
+  block-size: 1rem;
+  flex: 0 0 auto;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: var(--radius-full);
+  animation: buttonSpinner 700ms linear infinite;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+@media (hover: hover) {
+  .primary:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+  }
+
+  .secondary:hover:not(:disabled) {
+    border-color: var(--color-border-strong);
+    background-color: var(--color-glass-surface);
+  }
+
+  .ghost:hover:not(:disabled) {
+    background-color: var(--color-glass-soft);
+  }
+
+  .danger:hover:not(:disabled) {
+    background-color: var(--color-danger-hover);
+  }
+}
+
+.primary:active:not(:disabled) {
+  background-color: var(--color-primary-active);
+}
+
+.secondary:active:not(:disabled),
+.ghost:active:not(:disabled) {
+  background-color: var(--color-surface-soft);
+}
+
+@keyframes buttonSpinner {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (forced-colors: active) {
+  .button {
+    border-color: ButtonText;
+  }
+
+  .button:disabled {
+    color: GrayText;
+  }
+}
