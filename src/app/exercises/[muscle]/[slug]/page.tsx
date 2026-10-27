@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 import { ExerciseDetails } from "@/features/exercises/components/ExerciseDetails/ExerciseDetails";
 import { exerciseGymGifsAdapter } from "@/features/exercises/providers/exercise-gym-gifs/adapter";
 import styles from "./page.module.css";
@@ -18,6 +19,8 @@ type ExerciseDetailsPageProps = {
 export default async function ExerciseDetailsPage({
   params,
 }: ExerciseDetailsPageProps) {
+  await auth.protect();
+
   const { muscle, slug } = await params;
   const exercise = await exerciseGymGifsAdapter.getById(`${muscle}/${slug}`);
 
