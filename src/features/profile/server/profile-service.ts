@@ -10,25 +10,18 @@ import {
 } from "../profile-schema";
 
 const databaseGenderByProfileGender: Record<ProfileGender, Gender> = {
-  woman: Gender.WOMAN,
-  man: Gender.MAN,
-  "non-binary": Gender.NON_BINARY,
-  "self-described": Gender.SELF_DESCRIBED,
-  "prefer-not-to-say": Gender.PREFER_NOT_TO_SAY,
+  female: Gender.FEMALE,
+  male: Gender.MALE,
 };
 
 const profileGenderByDatabaseGender: Record<Gender, ProfileGender> = {
-  [Gender.WOMAN]: "woman",
-  [Gender.MAN]: "man",
-  [Gender.NON_BINARY]: "non-binary",
-  [Gender.SELF_DESCRIBED]: "self-described",
-  [Gender.PREFER_NOT_TO_SAY]: "prefer-not-to-say",
+  [Gender.FEMALE]: "female",
+  [Gender.MALE]: "male",
 };
 
 type StoredProfile = {
   country: string;
   gender: Gender;
-  genderDescription: string | null;
   heightCentimeters: number;
   updatedAt: Date;
   weightGrams: number;
@@ -44,7 +37,6 @@ function toProfileView(profile: StoredProfile): ProfileView {
 
   return {
     gender: profileGenderByDatabaseGender[profile.gender],
-    genderDescription: profile.genderDescription ?? undefined,
     heightCentimeters: profile.heightCentimeters,
     weightKilograms,
     country: profile.country,
@@ -102,14 +94,9 @@ export async function saveProfileForClerkUser(
   clerkUserId: string,
   profile: ProfileInput,
 ): Promise<ProfileView> {
-  const genderDescription =
-    profile.gender === "self-described"
-      ? (profile.genderDescription?.trim() ?? null)
-      : null;
   const storedProfile = {
     country: profile.country.trim(),
     gender: databaseGenderByProfileGender[profile.gender],
-    genderDescription,
     heightCentimeters: profile.heightCentimeters,
     weightGrams: Math.round(profile.weightKilograms * 1_000),
   };
