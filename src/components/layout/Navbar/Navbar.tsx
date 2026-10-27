@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import { AUTH_ROUTES } from "@/features/auth/config/routes";
-import { primaryNavigationLinks } from "./navigation-links";
+import { NavbarLinks } from "./NavbarLinks";
 import styles from "./Navbar.module.css";
 
 export function Navbar() {
@@ -28,13 +28,7 @@ export function Navbar() {
             />
           </Link>
 
-          <nav className={styles.navigation} aria-label="Primary navigation">
-            {primaryNavigationLinks.map((link) => (
-              <Link className={styles.link} href={link.href} key={link.href}>
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+          <NavbarLinks />
 
           <div className={styles.account}>
             <UserButton />
