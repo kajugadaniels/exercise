@@ -26,14 +26,8 @@
   min-inline-size: 0;
   padding: var(--space-5);
   overflow: hidden;
-  background:
-    radial-gradient(
-      circle at 86% 8%,
-      color-mix(in srgb, var(--color-primary) 72%, transparent),
-      transparent 14rem
-    ),
-    var(--color-secondary);
-  color: var(--color-on-secondary);
+  background-color: var(--color-background);
+  color: var(--color-text);
 }
 
 .story::after {
