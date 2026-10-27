@@ -3,6 +3,7 @@
 import { useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import {
+  Calculator01Icon,
   Location01Icon,
   RulerIcon,
   WeightScale01Icon,
@@ -11,7 +12,6 @@ import { Button } from "@/components/ui/Button/Button";
 import { Input } from "@/components/ui/Input/Input";
 import { useToast } from "@/components/ui/Toast/Toast";
 import { AUTH_ROUTES } from "@/features/auth/config/routes";
-import { BodyMetricsVisual } from "../BodyMetricsVisual/BodyMetricsVisual";
 import { GenderSelector } from "../GenderSelector/GenderSelector";
 import {
   calculateBmi,
@@ -206,8 +206,14 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
         high: "High range",
       }[bmiCategory]
     : "Add measurements";
-  const heightCentimeters = Number(values.heightCentimeters);
-  const weightKilograms = Number(values.weightKilograms);
+  const bmiTone = bmiCategory
+    ? ({
+        low: "info",
+        healthy: "success",
+        moderate: "warning",
+        high: "danger",
+      } as const)[bmiCategory]
+    : undefined;
 
   return (
     <form
@@ -281,90 +287,63 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
           </p>
         )}
 
-        <div className={styles.measurementLayout}>
-          <BodyMetricsVisual
-            bmiCategory={bmiCategory}
-            heightCentimeters={
-              Number.isFinite(heightCentimeters) && heightCentimeters > 0
-                ? heightCentimeters
-                : null
+        <div className={styles.measurementFields}>
+          <Input
+            id="height"
+            name="heightCentimeters"
+            label="Height (cm)"
+            inputMode="numeric"
+            min={100}
+            max={250}
+            step={1}
+            type="number"
+            placeholder="175"
+            icon={RulerIcon}
+            value={values.heightCentimeters}
+            error={errors.heightCentimeters}
+            disabled={isSaving || isDeleting}
+            onChange={(event) =>
+              updateValue("heightCentimeters", event.target.value)
             }
-            weightKilograms={
-              Number.isFinite(weightKilograms) && weightKilograms > 0
-                ? weightKilograms
-                : null
-            }
+            required
           />
 
-          <div className={styles.measurementFields}>
-            <Input
-              id="height"
-              name="heightCentimeters"
-              label="Height (cm)"
-              inputMode="numeric"
-              min={100}
-              max={250}
-              step={1}
-              type="number"
-              placeholder="175"
-              icon={RulerIcon}
-              value={values.heightCentimeters}
-              error={errors.heightCentimeters}
-              disabled={isSaving || isDeleting}
-              onChange={(event) =>
-                updateValue("heightCentimeters", event.target.value)
-              }
-              required
-            />
+          <Input
+            id="weight"
+            name="weightKilograms"
+            label="Weight (kg)"
+            inputMode="decimal"
+            min={20}
+            max={400}
+            step={0.1}
+            type="number"
+            placeholder="70.0"
+            icon={WeightScale01Icon}
+            value={values.weightKilograms}
+            error={errors.weightKilograms}
+            disabled={isSaving || isDeleting}
+            onChange={(event) =>
+              updateValue("weightKilograms", event.target.value)
+            }
+            required
+          />
 
-            <Input
-              id="weight"
-              name="weightKilograms"
-              label="Weight (kg)"
-              inputMode="decimal"
-              min={20}
-              max={400}
-              step={0.1}
-              type="number"
-              placeholder="70.0"
-              icon={WeightScale01Icon}
-              value={values.weightKilograms}
-              error={errors.weightKilograms}
-              disabled={isSaving || isDeleting}
-              onChange={(event) =>
-                updateValue("weightKilograms", event.target.value)
-              }
-              required
-            />
-          </div>
+          <Input
+            id="bmi"
+            label="BMI"
+            placeholder="—"
+            icon={Calculator01Icon}
+            value={bmi === null ? "" : String(bmi)}
+            hint={bmiStatus}
+            tone={bmiTone}
+            aria-live="polite"
+            readOnly
+          />
         </div>
 
-        <output
-          className={styles.bmiCard}
-          data-tone={bmiCategory ?? "empty"}
-          htmlFor="height weight"
-          aria-live="polite"
-        >
-          <span className={styles.bmiSummary}>
-            <span className={styles.bmiLabel}>Calculated BMI</span>
-            <strong className={styles.bmiValue}>{bmi ?? "—"}</strong>
-            <span className={styles.bmiStatus}>{bmiStatus}</span>
-          </span>
-          <span className={styles.bmiScale} aria-hidden="true">
-            {(["low", "healthy", "moderate", "high"] as const).map(
-              (category) => (
-                <span
-                  data-active={category === bmiCategory}
-                  data-category={category}
-                  key={category}
-                />
-              ),
-            )}
-          </span>
-          <span className={styles.bmiCopy}>
-            BMI is a general screening guide, not a medical diagnosis.
-          </span>
-        </output>
+        <p className={styles.bmiNote}>
+          BMI is a general screening guide, not a medical diagnosis.
+        </p>
       </section>
 
       {mode === "onboarding" && (
