@@ -80,12 +80,13 @@
 }
 
 .form[data-mode="onboarding"] .actions {
+  justify-content: center;
   padding-block-start: 0;
   border-block-start: 0;
 }
 
 .primaryAction {
-  align-self: flex-start;
+  align-self: center;
   inline-size: fit-content;
   max-inline-size: 100%;
 }
