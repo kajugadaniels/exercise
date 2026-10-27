@@ -54,7 +54,6 @@
 }
 
 .mediaPanel,
-.factsPanel,
 .instructions {
   min-inline-size: 0;
   border: 1px solid var(--color-glass-border);
@@ -71,7 +70,47 @@
 }
 
 .mediaFrame {
+  position: relative;
   padding: var(--space-2);
+}
+
+.mediaBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-3) 0 0;
+}
+
+.mediaBadge {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-block-size: 2.25rem;
+  max-inline-size: 100%;
+  padding-inline: var(--space-3);
+  border: 1px solid var(--color-glass-border-strong);
+  border-radius: var(--radius-full);
+  background-color: var(--color-glass-strong);
+  box-shadow: var(--shadow-glass-inset);
+  backdrop-filter: var(--glass-filter-compact);
+}
+
+.mediaBadge dt {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
+
+.mediaBadge dd {
+  overflow: hidden;
+  color: var(--color-text);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .mediaCaption {
@@ -92,75 +131,14 @@
   box-shadow: 0 0 0 var(--space-1) var(--color-primary-soft);
 }
 
-.factsPanel {
-  display: grid;
-  align-content: start;
-  padding: var(--space-5);
-}
-
-.panelHeading {
-  display: flex;
-  gap: var(--space-3);
-  align-items: center;
-  padding-block-end: var(--space-5);
-}
-
-.panelHeading p,
 .instructionsHeading p {
   margin-block-start: var(--space-1);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
 }
 
-.panelIcon {
-  display: grid;
-  inline-size: var(--control-height);
-  block-size: var(--control-height);
-  flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid var(--color-glass-border);
-  border-radius: var(--radius-full);
-  background-color: var(--color-primary-soft);
-  color: var(--color-primary-text);
-}
-
 .sectionTitle {
   font-size: var(--text-lg);
-}
-
-.factList {
-  display: grid;
-  border-block-start: 1px solid var(--color-glass-border);
-}
-
-.fact {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--space-4);
-  align-items: center;
-  padding-block: var(--space-4);
-  border-block-end: 1px solid var(--color-glass-border);
-}
-
-.fact dt {
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.fact dd {
-  overflow-wrap: anywhere;
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
-  text-align: end;
-}
-
-.guideGrid {
-  display: grid;
-  gap: var(--space-5);
-  align-items: start;
 }
 
 .instructions {
@@ -343,38 +321,37 @@
   }
 }
 
-@media (min-width: 48rem) {
+@media (min-width: 64rem) {
   .overview,
   .loadingOverview {
     grid-template-columns: minmax(0, 1.3fr) minmax(19rem, 0.7fr);
   }
 
-  .mediaPanel,
-  .factsPanel {
+  .mediaPanel {
     min-block-size: 100%;
   }
-}
 
-@media (min-width: 64rem) {
-  .guideGrid {
-    grid-template-columns: minmax(0, 1.4fr) minmax(20rem, 0.6fr);
+  .mediaBadges {
+    position: absolute;
+    inset-inline: var(--space-5);
+    inset-block-end: var(--space-5);
+    padding: 0;
   }
 
-  .instructions,
-  .factsPanel {
+  .instructions {
     padding: var(--space-6);
   }
 }
 
 @media (forced-colors: active) {
   .mediaPanel,
-  .factsPanel,
   .instructions,
   .errorState,
   .loadingHeader,
   .loadingMedia,
   .loadingContent,
-  .stepCount {
+  .stepCount,
+  .mediaBadge {
     border: 1px solid CanvasText;
   }
 
