@@ -1,0 +1,115 @@
+.field {
+  display: grid;
+  gap: var(--space-2);
+  min-inline-size: 0;
+}
+
+.label {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  min-block-size: 3.25rem;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-raised);
+  color: var(--color-text-muted);
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.icon {
+  display: grid;
+  flex: 0 0 auto;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  margin-inline-start: var(--space-1);
+  place-items: center;
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-soft);
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.input {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 3.25rem;
+  padding-inline: var(--space-3) var(--space-4);
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-text);
+}
+
+.input:focus-visible {
+  outline: 0;
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+.control:focus-within {
+  background-color: var(--color-surface-soft);
+  color: var(--color-primary-text);
+}
+
+.control:focus-within .icon {
+  background-color: var(--color-primary-soft);
+}
+
+.control[data-invalid="true"] {
+  background-color: var(--color-danger-soft);
+  color: var(--color-danger-text);
+}
+
+.control:has(.input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.hint,
+.error {
+  padding-inline: var(--space-3);
+  font-size: var(--text-xs);
+}
+
+.hint {
+  color: var(--color-text-muted);
+}
+
+.error {
+  color: var(--color-danger);
+  font-weight: var(--weight-medium);
+}
+
+@media (hover: hover) {
+  .control:hover {
+    background-color: var(--color-surface-soft);
+  }
+}
+
+@media (forced-colors: active) {
+  .control {
+    border: 1px solid ButtonText;
+    background-color: Field;
+  }
+
+  .control:focus-within {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+
+  .icon {
+    background-color: Field;
+  }
+}
