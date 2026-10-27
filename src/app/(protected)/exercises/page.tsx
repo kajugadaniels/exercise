@@ -4,7 +4,7 @@ import { Search02Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/Button/Button";
 import { Icon } from "@/components/ui/Icon/Icon";
 import { ExerciseCard } from "@/features/exercises/components/ExerciseCard/ExerciseCard";
-import { ExerciseCategorySidebar } from "@/features/exercises/components/ExerciseCategorySidebar/ExerciseCategorySidebar";
+import { ExerciseFilterSidebar } from "@/features/exercises/components/ExerciseFilterSidebar/ExerciseFilterSidebar";
 import { ExercisePagination } from "@/features/exercises/components/ExercisePagination/ExercisePagination";
 import type { ExerciseQuery } from "@/features/exercises/domain/exercise";
 import {
@@ -95,6 +95,9 @@ async function ExerciseCatalog({
         {query.category ? (
           <input name="category" type="hidden" value={query.category} />
         ) : null}
+        {query.bodyPart ? (
+          <input name="bodyPart" type="hidden" value={query.bodyPart} />
+        ) : null}
         <Button size="compact" type="submit">
           Search
         </Button>
@@ -109,7 +112,7 @@ async function ExerciseCatalog({
       </form>
 
       <div className={styles.libraryLayout}>
-        <ExerciseCategorySidebar query={query} />
+        <ExerciseFilterSidebar query={query} />
 
         <div className={styles.results}>
           <div className={styles.toolbar}>
@@ -141,7 +144,7 @@ async function ExerciseCatalog({
           ) : (
             <div className={styles.emptyState}>
               <h3>No matching exercises</h3>
-              <p>Try a shorter name or choose another category.</p>
+              <p>Try a shorter name or choose another filter.</p>
               <Link className={styles.stateAction} href="/exercises">
                 View all exercises
               </Link>
