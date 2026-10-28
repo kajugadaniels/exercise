@@ -134,7 +134,7 @@
   cursor: pointer;
 }
 
-.radio {
+.checkbox {
   position: absolute;
   inline-size: 1px;
   block-size: 1px;
@@ -160,26 +160,40 @@
     color var(--duration-fast) var(--ease-standard);
 }
 
-.radioMark {
+.checkMark {
+  position: relative;
   inline-size: 0.75rem;
   block-size: 0.75rem;
   border: 1px solid currentColor;
-  border-radius: var(--radius-full);
+  border-radius: 0.2rem;
 }
 
-.radio:checked + .option {
+.checkMark::after {
+  position: absolute;
+  inset: 0.08rem 0.2rem 0.2rem;
+  border: solid var(--color-on-primary);
+  border-width: 0 0.1rem 0.1rem 0;
+  content: "";
+  opacity: 0;
+  transform: rotate(45deg);
+}
+
+.checkbox:checked + .option {
   border-color: var(--color-primary);
   background-color: var(--color-primary-soft);
   color: var(--color-primary-text);
 }
 
-.radio:checked + .option .radioMark {
+.checkbox:checked + .option .checkMark {
   border-color: var(--color-primary);
   background-color: var(--color-primary);
-  box-shadow: inset 0 0 0 3px var(--color-background);
 }
 
-.radio:focus-visible + .option {
+.checkbox:checked + .option .checkMark::after {
+  opacity: 1;
+}
+
+.checkbox:focus-visible + .option {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
@@ -232,7 +246,7 @@
     color: var(--color-text);
   }
 
-  .radio:checked + .option:hover {
+  .checkbox:checked + .option:hover {
     background-color: var(--color-primary-soft);
     color: var(--color-primary-text);
   }
@@ -270,8 +284,16 @@
     border: 1px solid ButtonText;
   }
 
-  .radio:checked + .option {
+  .checkbox:checked + .option {
     border-color: Highlight;
     color: Highlight;
+  }
+
+  .checkbox:checked + .option .checkMark {
+    background-color: Highlight;
+  }
+
+  .checkbox:checked + .option .checkMark::after {
+    border-color: HighlightText;
   }
 }
