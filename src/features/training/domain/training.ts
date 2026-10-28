@@ -66,6 +66,7 @@ export type TrainingDayPlan = Readonly<{
 export type TrainingWeekPlan = Readonly<{
   createdAt: string;
   days: readonly TrainingDayPlan[];
+  isLocked: boolean;
   updatedAt: string;
   weekStart: string;
 }>;
@@ -124,6 +125,23 @@ export function getTrainingWeekDates(weekStart: string): readonly string[] {
       .toISOString()
       .slice(0, 10),
   );
+}
+
+export function getTrainingWeekStartForDate(
+  calendarDate: string,
+): string | null {
+  const timestamp = getCalendarDateTimestamp(calendarDate);
+
+  if (timestamp === null) {
+    return null;
+  }
+
+  const dayOfWeek = new Date(timestamp).getUTCDay();
+  const daysSinceMonday = (dayOfWeek + 6) % TRAINING_WEEK_DAY_COUNT;
+
+  return new Date(timestamp - daysSinceMonday * millisecondsPerDay)
+    .toISOString()
+    .slice(0, 10);
 }
 
 export function isDateInTrainingWeek(
