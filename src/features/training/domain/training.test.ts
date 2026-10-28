@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   getPlannedSetIssues,
   getTrainingWeekDates,
+  getTrainingWeekStartForDate,
   isDateInTrainingWeek,
   isMondayCalendarDate,
   trainingDayStatuses,
@@ -40,6 +41,12 @@ test("returns one Monday through Sunday training week", () => {
     "2027-01-02",
     "2027-01-03",
   ]);
+});
+
+test("finds the Monday boundary for any valid calendar date", () => {
+  assert.equal(getTrainingWeekStartForDate("2026-10-26"), "2026-10-26");
+  assert.equal(getTrainingWeekStartForDate("2026-11-01"), "2026-10-26");
+  assert.equal(getTrainingWeekStartForDate("2026-02-30"), null);
 });
 
 test("rejects dates outside the selected weekly boundary", () => {
