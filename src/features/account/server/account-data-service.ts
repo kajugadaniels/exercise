@@ -4,6 +4,12 @@ import { prisma } from "@/server/database/prisma";
 
 const accountExportInclude = {
   profile: true,
+  trainingSessions: {
+    orderBy: { scheduledDate: "asc" },
+    include: {
+      exercises: { orderBy: { createdAt: "asc" } },
+    },
+  },
 } satisfies Prisma.UserInclude;
 
 type StoredAccountExport = Prisma.UserGetPayload<{
@@ -24,6 +30,17 @@ function toAccountExport(user: StoredAccountExport) {
           weightKilograms: user.profile.weightGrams / 1_000,
         }
       : null,
+    trainingSessions: user.trainingSessions.map((session) => ({
+      scheduledDate: session.scheduledDate.toISOString().slice(0, 10),
+      exercises: session.exercises.map((exercise) => ({
+        addedAt: exercise.createdAt.toISOString(),
+        name: exercise.exerciseName,
+        provider: exercise.exerciseProvider,
+        providerAttributionUrl: exercise.exerciseAttributionUrl,
+        providerExerciseId: exercise.exerciseSourceId,
+        providerSourceVersion: exercise.exerciseSourceVersion,
+      })),
+    })),
   };
 }
 
