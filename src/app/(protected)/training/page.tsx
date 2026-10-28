@@ -59,9 +59,11 @@ export default async function TrainingPage({
       </header>
 
       <TrainingPlanner
+        currentCalendarDate={currentCalendarDate}
         currentWeekStart={currentWeekStart}
         initialPlan={plan}
-        key={weekStart}
+        key={`${weekStart}:${plan?.updatedAt ?? "new"}`}
+        trainingPreferences={preferences}
         weekStart={weekStart}
       />
     </main>
