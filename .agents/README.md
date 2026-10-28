@@ -89,6 +89,7 @@ A chat request alone does not relax level-one restrictions. Give the developer t
 | Muscle slug | Application identifier mapped explicitly to visualization identifiers. |
 | Exercise media | Third-party GIF/video referenced by a normalized record. Availability is not a usage license. |
 | Protected catalog | Exercise discovery pages that require a verified Clerk session under the confirmed authenticated-first route policy. |
+| Dated training session | Owner-scoped calendar date containing provider-verified exercises; the same source exercise is unique within that date. |
 
 ## 8. Changelog
 
@@ -106,4 +107,5 @@ A chat request alone does not relax level-one restrictions. Give the developer t
 | 2026-10-28 | Added bounded completed-workout analytics, exercise progression, and muscle distribution. |
 | 2026-10-28 | Added local fitness-data export, explicit workout-record deletion, and confirmed full local-data deletion. |
 | 2026-10-28 | Removed training, workout, recommendation, and progress pages, APIs, feature modules, and persisted tables by developer request. Profile export and deletion remain. |
+| 2026-10-28 | Re-approved minimal dated training sessions with duplicate-safe exercise scheduling; broader training and progress features remain removed. |
 
