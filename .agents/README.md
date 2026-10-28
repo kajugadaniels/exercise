@@ -90,6 +90,7 @@ A chat request alone does not relax level-one restrictions. Give the developer t
 | Exercise media | Third-party GIF/video referenced by a normalized record. Availability is not a usage license. |
 | Protected catalog | Exercise discovery pages that require a verified Clerk session under the confirmed authenticated-first route policy. |
 | Personal workout | User-owned Monday–Sunday training plan. Its persistence foundation is approved; APIs, UI, and recommendation behavior remain separate tasks. |
+| Training preferences | Optional owner-scoped goal, experience, session duration, timezone, equipment, and preferred training days used as future recommendation inputs. |
 
 ## 8. Changelog
 
@@ -99,4 +100,5 @@ A chat request alone does not relax level-one restrictions. Give the developer t
 | 2026-10-27 | Adopted plain CSS with colocated CSS Modules and added page, layout, component, token, cascade, and responsive styling rules. |
 | 2026-10-27 | Approved Outfit, the logo coral/navy palette, compact accessible type, Hugeicons, responsive foundation, light/dark themes, and safe environment templates. |
 | 2026-10-28 | Approved the owner-scoped weekly training persistence foundation. |
+| 2026-10-28 | Approved optional owner-scoped training preferences and their protected API boundary. |
 
