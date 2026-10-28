@@ -76,7 +76,7 @@ const dayStatusValueByDatabaseStatus: Record<
 
 export class TrainingWeekConflictError extends Error {
   constructor() {
-    super("A week with recorded workout activity cannot be replaced or deleted.");
+    super("A week with started, completed, or skipped workouts cannot be changed.");
     this.name = "TrainingWeekConflictError";
   }
 }
@@ -207,7 +207,10 @@ function toTrainingWeekPlan(week: StoredTrainingWeek): TrainingWeekPlan {
   return {
     weekStart: toCalendarDate(week.weekStart),
     createdAt: week.createdAt.toISOString(),
-    isLocked: week.days.some((day) => day.session !== null),
+    isLocked: week.days.some(
+      (day) =>
+        day.session !== null || day.status !== TrainingDayStatus.PLANNED,
+    ),
     updatedAt: week.updatedAt.toISOString(),
     days: week.days.map((day) => ({
       plannedDate: toCalendarDate(day.plannedDate),
@@ -270,19 +273,21 @@ export async function saveTrainingWeekForClerkUser(
   input: TrainingWeekInput,
 ): Promise<TrainingWeekPlan> {
   const weekStartDate = toDatabaseDate(weekStart);
-  const recordedSession = await prisma.workoutSession.findFirst({
+  const immutableDay = await prisma.trainingDay.findFirst({
     where: {
-      trainingDay: {
-        trainingWeek: {
-          weekStart: weekStartDate,
-          user: { clerkUserId },
-        },
+      trainingWeek: {
+        weekStart: weekStartDate,
+        user: { clerkUserId },
       },
+      OR: [
+        { session: { isNot: null } },
+        { status: { not: TrainingDayStatus.PLANNED } },
+      ],
     },
     select: { id: true },
   });
 
-  if (recordedSession) {
+  if (immutableDay) {
     throw new TrainingWeekConflictError();
   }
 
@@ -299,16 +304,18 @@ export async function saveTrainingWeekForClerkUser(
         throw new Error("Authenticated application user was not found.");
       }
 
-      const recordedSession = await transaction.workoutSession.findFirst({
+      const immutableDay = await transaction.trainingDay.findFirst({
         where: {
-          trainingDay: {
-            trainingWeek: { userId: user.id, weekStart: weekStartDate },
-          },
+          trainingWeek: { userId: user.id, weekStart: weekStartDate },
+          OR: [
+            { session: { isNot: null } },
+            { status: { not: TrainingDayStatus.PLANNED } },
+          ],
         },
         select: { id: true },
       });
 
-      if (recordedSession) {
+      if (immutableDay) {
         throw new TrainingWeekConflictError();
       }
 
@@ -414,7 +421,12 @@ export async function deleteTrainingWeekForClerkUser(
         select: {
           id: true,
           days: {
-            where: { session: { isNot: null } },
+            where: {
+              OR: [
+                { session: { isNot: null } },
+                { status: { not: TrainingDayStatus.PLANNED } },
+              ],
+            },
             select: { id: true },
             take: 1,
           },
