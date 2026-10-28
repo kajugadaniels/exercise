@@ -19,13 +19,77 @@ const searchParamsSchema = z.object({
   page: z.coerce.number().int().min(1).max(100).optional().catch(1),
 });
 
+function isCalendarDate(value: string): boolean {
+  const timestamp = Date.parse(`${value}T00:00:00.000Z`);
+  return (
+    Number.isFinite(timestamp) &&
+    new Date(timestamp).toISOString().slice(0, 10) === value
+  );
+}
+
 export type ExerciseSearchParams = Record<
   string,
   string | string[] | undefined
 >;
 
+export type ExerciseSelectionContext = Readonly<{
+  availableMinutes: number;
+  plannedDate: string;
+  preferredBodyPart?: (typeof bodyPartIds)[number];
+  weekStart: string;
+}>;
+
+const exerciseSelectionContextSchema = z
+  .object({
+    planWeek: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    planDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    planMinutes: z.coerce.number().int().min(15).max(480).catch(60),
+    planFocus: z.enum(bodyPartIds).optional().catch(undefined),
+  })
+  .refine(
+    (value) => {
+      const weekTimestamp = Date.parse(`${value.planWeek}T00:00:00.000Z`);
+      const dateTimestamp = Date.parse(`${value.planDate}T00:00:00.000Z`);
+
+      return (
+        isCalendarDate(value.planWeek) &&
+        isCalendarDate(value.planDate) &&
+        Number.isFinite(weekTimestamp) &&
+        Number.isFinite(dateTimestamp) &&
+        new Date(weekTimestamp).getUTCDay() === 1 &&
+        dateTimestamp >= weekTimestamp &&
+        dateTimestamp < weekTimestamp + 7 * 86_400_000
+      );
+    },
+    "The planned date must be inside the selected training week.",
+  );
+
 function firstValue(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
+}
+
+export function parseExerciseSelectionContext(
+  searchParams: ExerciseSearchParams,
+): ExerciseSelectionContext | null {
+  const result = exerciseSelectionContextSchema.safeParse({
+    planWeek: firstValue(searchParams.planWeek),
+    planDate: firstValue(searchParams.planDate),
+    planMinutes: firstValue(searchParams.planMinutes),
+    planFocus: firstValue(searchParams.planFocus),
+  });
+
+  if (!result.success) {
+    return null;
+  }
+
+  return {
+    weekStart: result.data.planWeek,
+    plannedDate: result.data.planDate,
+    availableMinutes: result.data.planMinutes,
+    ...(result.data.planFocus
+      ? { preferredBodyPart: result.data.planFocus }
+      : {}),
+  };
 }
 
 export function parseExerciseQuery(
@@ -111,6 +175,7 @@ export function buildExerciseLibraryUrl(
     muscle?: ExerciseQuery["muscle"] | null;
     search?: string | null;
   }>,
+  selectionContext?: ExerciseSelectionContext,
 ): string {
   const params = new URLSearchParams();
   const bodyPart =
@@ -140,6 +205,14 @@ export function buildExerciseLibraryUrl(
   if (equipment) params.set("equipment", equipment);
   if (category) params.set("category", category);
   if (page > 1) params.set("page", String(page));
+  if (selectionContext) {
+    params.set("planWeek", selectionContext.weekStart);
+    params.set("planDate", selectionContext.plannedDate);
+    params.set("planMinutes", String(selectionContext.availableMinutes));
+    if (selectionContext.preferredBodyPart) {
+      params.set("planFocus", selectionContext.preferredBodyPart);
+    }
+  }
 
   const queryString = params.toString();
   return queryString ? `/exercises?${queryString}` : "/exercises";
