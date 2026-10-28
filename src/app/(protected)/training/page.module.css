@@ -16,6 +16,7 @@
 .header > div {
   display: grid;
   gap: var(--space-2);
+  justify-items: start;
 }
 
 .header h1 {
@@ -37,6 +38,33 @@
   letter-spacing: 0.08em;
 }
 
+.historyLink {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-block-size: var(--control-height);
+  margin-block-start: var(--space-2);
+  padding-inline: var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-full);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+}
+
+.historyLink:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .historyLink:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary-text);
+  }
+}
+
 @media (min-width: 48rem) {
   .header {
     grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.7fr);
@@ -44,5 +72,11 @@
 
   .header > p {
     justify-self: end;
+  }
+}
+
+@media (forced-colors: active) {
+  .historyLink {
+    border-color: ButtonText;
   }
 }
