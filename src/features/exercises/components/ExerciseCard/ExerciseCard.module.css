@@ -1,20 +1,22 @@
 .card {
-  min-inline-size: 0;
-}
-
-.link {
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-2);
+  min-inline-size: 0;
   block-size: 100%;
   padding: var(--space-2);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background-color: var(--color-surface-raised);
-  color: var(--color-text);
-  text-decoration: none;
   transition:
     border-color var(--duration-fast) var(--ease-standard),
     background-color var(--duration-fast) var(--ease-standard);
+}
+
+.link {
+  display: grid;
+  gap: var(--space-3);
+  color: var(--color-text);
+  text-decoration: none;
 }
 
 .identity {
@@ -48,11 +50,16 @@
 
 .link:focus-visible {
   outline: 2px solid var(--color-focus);
-  outline-offset: 3px;
+  outline-offset: 2px;
+}
+
+.scheduleAction {
+  padding-inline: var(--space-2);
+  padding-block-end: var(--space-2);
 }
 
 @media (hover: hover) {
-  .link:hover {
+  .card:hover {
     border-color: var(--color-border-strong);
     background-color: var(--color-surface-soft);
   }
@@ -64,7 +71,7 @@
 }
 
 @media (forced-colors: active) {
-  .link {
+  .card {
     border-color: CanvasText;
   }
 }
