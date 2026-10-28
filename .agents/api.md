@@ -3,7 +3,7 @@
 **Purpose:** Define validated external adapters and consistent server HTTP contracts.  
 **Scope:** Exercise providers, Route Handlers, Server Actions, future native APIs, and webhooks.  
 **Related:** [architecture.md](architecture.md), [security.md](security.md), [exercises.md](exercises.md)  
-**Last reviewed:** 2026-10-27
+**Last reviewed:** 2026-10-28
 
 ## 1. Provider adapter contract
 
@@ -90,15 +90,27 @@ The initial private HTTP surface is:
 
 The server derives the Clerk user ID; none of these contracts accepts an owner ID. Personalized responses use `Cache-Control: no-store`. Mutation bodies are strict JSON and limited to 16 KiB. Errors use lowercase stable codes and user-safe messages.
 
-## 7. Caching and availability
+## 7. Training preference contracts
+
+The optional training-preference HTTP surface is:
+
+| Endpoint | Purpose | Access |
+| --- | --- | --- |
+| `GET /api/training/preferences` | Return the current actor's preferences or `null` | Authenticated, completed profile |
+| `PUT /api/training/preferences` | Strictly validate and upsert the current actor's preferences | Authenticated, completed profile, same-origin |
+| `DELETE /api/training/preferences` | Clear only the current actor's preferences | Authenticated, same-origin |
+
+The server derives ownership from the Clerk session and never accepts a user ID. Responses are private and non-cacheable. Mutation bodies are JSON, bounded to 16 KiB, and return stable user-safe errors. Clearing preferences does not delete the profile or workout history.
+
+## 8. Caching and availability
 
 Version-pinned catalog data may use long-lived/revalidated caching after provider update behavior is verified. Never cache personalized results publicly. Define stale/fallback behavior explicitly; do not silently show a partial result as complete. Provider failure should preserve the application shell and offer retry.
 
-## 8. Future provider composition
+## 9. Future provider composition
 
 If a licensed MP4 provider is added, compose by stable application identity with documented matching confidence. Never join records solely by display name without review. Metadata conflicts retain provenance; do not overwrite verified data silently.
 
-## 9. Contract evolution
+## 10. Contract evolution
 
 Native-client APIs require explicit versioning and compatibility policy. Provider schema changes are contained within adapters; domain contract changes receive tests and documentation. Do not expose a provider's URL shape as the application's public contract.
 
