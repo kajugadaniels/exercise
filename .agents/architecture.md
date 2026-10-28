@@ -3,7 +3,7 @@
 **Purpose:** Define approved technologies, application layers, rendering boundaries, and integration architecture.  
 **Scope:** All application and infrastructure design.  
 **Related:** [folder-structure.md](folder-structure.md), [api.md](api.md), [security.md](security.md)  
-**Last reviewed:** 2026-10-27
+**Last reviewed:** 2026-10-28
 
 ## 1. Technology decisions
 
@@ -94,7 +94,7 @@ Media is a separate capability within the normalized model so a future licensed 
 
 Clerk proves session identity; it does not confer ownership. Every future private mutation re-derives the actor server-side and scopes data access to that actor. Client-only visibility controls are never authorization.
 
-The application user is keyed internally and has one unique Clerk user ID. Profile and future training records reference that internal user. Every personal query derives the Clerk ID from the verified server session and never accepts an owner ID from the browser.
+The application user is keyed internally and has one unique Clerk user ID. Profile and approved weekly training records reference that internal user. Every personal query derives the Clerk ID from the verified server session and never accepts an owner ID from the browser.
 
 Prisma is server-only. Use Neon's pooled URL for application traffic and its direct URL for Prisma CLI migration work. Development and production are the only approved database environments; do not add a test, preview, branch-per-PR, or shadow database without a new decision.
 
