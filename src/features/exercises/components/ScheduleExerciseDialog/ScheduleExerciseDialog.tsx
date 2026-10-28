@@ -133,11 +133,12 @@ export function ScheduleExerciseDialog({
         onClick={openDialog}
         ref={triggerRef}
         type="button"
+        aria-label={`Add ${exerciseName} to a training session`}
         aria-controls={dialogId}
         aria-haspopup="dialog"
+        title="Add to training session"
       >
-        <Icon icon={CalendarAdd01Icon} size={18} />
-        <span>Add to session</span>
+        <Icon icon={CalendarAdd01Icon} size={20} />
       </button>
 
       <dialog
