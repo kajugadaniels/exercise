@@ -30,7 +30,7 @@ Before collection, explain what is collected, why, where it is stored, who recei
 
 ## 4. Access and deletion
 
-Private data is owner-scoped. Profile correction and profile deletion are part of the initial implementation. A deleted profile returns the account to mandatory onboarding. Profile records are retained until the user deletes the profile or application account deletion is processed. Training preferences can be cleared independently without deleting the profile or workout history. Training records attach to the internal user rather than the editable profile so profile correction does not rewrite history. User-facing training-history deletion, full account deletion synchronization, and export remain release gates before public release.
+Private data is owner-scoped. Profile correction and profile deletion are part of the initial implementation. A deleted profile returns the account to mandatory onboarding. Profile records are retained until the user deletes the profile or application account deletion is processed. Training preferences can be cleared independently without deleting the profile or workout history. A planned week can be deleted independently until workout activity is recorded; after that point, the planning API protects the history from replacement or deletion. Training records attach to the internal user rather than the editable profile so profile correction does not rewrite history. User-facing training-history deletion, full account deletion synchronization, and export remain release gates before public release.
 
 ## 5. Third parties
 
