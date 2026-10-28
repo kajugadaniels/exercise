@@ -1,8 +1,6 @@
 import { Suspense } from "react";
-import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import {
-  ArrowLeft01Icon,
   RefreshIcon,
   SearchRemoveIcon,
 } from "@hugeicons/core-free-icons";
@@ -15,12 +13,9 @@ import type { ExerciseQuery } from "@/features/exercises/domain/exercise";
 import {
   buildExerciseLibraryUrl,
   parseExerciseQuery,
-  parseExerciseSelectionContext,
   type ExerciseSearchParams,
 } from "@/features/exercises/providers/exercise-gym-gifs/filters";
 import { getExerciseCatalogPage } from "@/features/exercises/server/exercise-catalog";
-import { getTrainingWeekForClerkUser } from "@/features/training/server/training-week-service";
-import type { TrainingWeekPlan } from "@/features/training/domain/training";
 import styles from "./page.module.css";
 
 type ExercisesPageProps = Readonly<{
@@ -59,7 +54,6 @@ async function ExerciseCatalog({
 }: Pick<ExercisesPageProps, "searchParams">) {
   const resolvedSearchParams = await searchParams;
   const query = parseExerciseQuery(resolvedSearchParams);
-  const selectionContext = parseExerciseSelectionContext(resolvedSearchParams);
   const result = await loadExerciseCatalogPage(query);
 
   if (!result) {
@@ -69,12 +63,7 @@ async function ExerciseCatalog({
         <p>The provider could not be reached. Try loading the catalog again.</p>
         <Link
           className={styles.stateAction}
-          href={buildExerciseLibraryUrl(
-            { page: 1 },
-            1,
-            undefined,
-            selectionContext ?? undefined,
-          )}
+          href={buildExerciseLibraryUrl({ page: 1 }, 1)}
         >
           Try again
         </Link>
@@ -85,73 +74,17 @@ async function ExerciseCatalog({
   const firstResult =
     result.total === 0 ? 0 : (result.page - 1) * result.pageSize + 1;
   const lastResult = Math.min(result.page * result.pageSize, result.total);
-  let selectionPlan: TrainingWeekPlan | null = null;
-  if (selectionContext) {
-    const { userId } = await auth.protect();
-    selectionPlan = await getTrainingWeekForClerkUser(
-      userId,
-      selectionContext.weekStart,
-    );
-  }
-  const selectionDay = selectionPlan?.days.find(
-    (day) => day.plannedDate === selectionContext?.plannedDate,
-  );
-
-  if (selectionContext && selectionPlan?.isLocked) {
-    return (
-      <section className={styles.errorState} role="alert">
-        <h2>This training week can no longer be edited</h2>
-        <p>
-          Started, completed, or skipped workouts protect the week from plan
-          changes.
-        </p>
-        <Link
-          className={styles.stateAction}
-          href={`/training?week=${encodeURIComponent(selectionContext.weekStart)}`}
-        >
-          Return to training
-        </Link>
-      </section>
-    );
-  }
-
   return (
     <section className={styles.catalog} aria-labelledby="catalog-title">
       <h2 className={styles.visuallyHidden} id="catalog-title">
         Exercise catalog
       </h2>
 
-      {selectionContext ? (
-        <div className={styles.selectionBanner}>
-          <Link
-            className={styles.selectionBack}
-            href={`/training?week=${encodeURIComponent(selectionContext.weekStart)}`}
-          >
-            <Icon icon={ArrowLeft01Icon} size={18} />
-            Weekly plan
-          </Link>
-          <div>
-            <p>Add an exercise</p>
-            <h3>Choose from the full library</h3>
-            <span>
-              Search or filter the catalog, then select a movement to configure
-              its sets.
-            </span>
-          </div>
-        </div>
-      ) : null}
-
       <div className={styles.controlBar}>
         <ExerciseSearch
-          clearSearchHref={buildExerciseLibraryUrl(
-            query,
-            1,
-            { search: null },
-            selectionContext ?? undefined,
-          )}
+          clearSearchHref={buildExerciseLibraryUrl(query, 1, { search: null })}
           key={query.search ?? "closed"}
           query={query}
-          selectionContext={selectionContext ?? undefined}
         />
         <ExerciseFilterSheet
           key={[
@@ -161,7 +94,6 @@ async function ExerciseCatalog({
             query.equipment,
           ].join(":")}
           query={query}
-          selectionContext={selectionContext ?? undefined}
         />
       </div>
 
@@ -180,51 +112,16 @@ async function ExerciseCatalog({
         {result.items.length > 0 ? (
           <>
             <ul className={styles.exerciseGrid}>
-              {result.items.map((exercise) => {
-                const plannedExercise = selectionDay?.exercises.find(
-                  (item) => item.exercise.sourceId === exercise.id,
-                );
-                const selectionSearch = new URLSearchParams({
-                  exercise: exercise.id,
-                  planMinutes: String(
-                    selectionContext?.availableMinutes ?? 60,
-                  ),
-                });
-                if (selectionContext?.preferredBodyPart) {
-                  selectionSearch.set(
-                    "planFocus",
-                    selectionContext.preferredBodyPart,
-                  );
-                }
-                const href =
-                  selectionContext && plannedExercise
-                    ? `/training/${selectionContext.weekStart}/${selectionContext.plannedDate}/exercises/${plannedExercise.position}/edit`
-                    : selectionContext
-                      ? `/training/${selectionContext.weekStart}/${selectionContext.plannedDate}/exercises/new?${selectionSearch}`
-                      : undefined;
-
-                return (
-                  <li key={exercise.id}>
-                    <ExerciseCard
-                      action={
-                        selectionContext
-                          ? plannedExercise
-                            ? "edit"
-                            : "add"
-                          : "open"
-                      }
-                      exercise={exercise}
-                      href={href}
-                    />
-                  </li>
-                );
-              })}
+              {result.items.map((exercise) => (
+                <li key={exercise.id}>
+                  <ExerciseCard exercise={exercise} />
+                </li>
+              ))}
             </ul>
             <ExercisePagination
               page={result.page}
               pageCount={result.pageCount}
               query={query}
-              selectionContext={selectionContext ?? undefined}
             />
           </>
         ) : (
@@ -241,12 +138,7 @@ async function ExerciseCatalog({
             </div>
             <Link
               className={styles.stateAction}
-              href={buildExerciseLibraryUrl(
-                { page: 1 },
-                1,
-                undefined,
-                selectionContext ?? undefined,
-              )}
+              href={buildExerciseLibraryUrl({ page: 1 }, 1)}
             >
               <Icon icon={RefreshIcon} size={18} />
               <span>Reset filters</span>
@@ -266,7 +158,7 @@ export default function ExercisesPage({ searchParams }: ExercisesPageProps) {
           <h1 className={styles.pageTitle}>Exercise library</h1>
           <p className={styles.summary}>
             Find a movement by name, then open it for verified instructions and
-            training details.
+            movement details.
           </p>
         </div>
         <p className={styles.dataNote}>

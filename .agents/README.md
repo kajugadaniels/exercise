@@ -47,7 +47,7 @@ These documents are project policy. Read this file first, then the documents req
 | Exercise catalog or search | exercises, api, architecture, performance, testing |
 | GIF/video media | exercises, security, performance, accessibility |
 | Muscle explorer | muscle-visualization, exercises, design, accessibility, testing |
-| Workout or progress planning | project, privacy, security; weekly training persistence approved 2026-10-28 |
+| Future personal-data feature | project, privacy, security; requires fresh persistence approval |
 | Deployment/configuration | deployment, security, performance |
 | Rulebook/documentation | workflow, project, and each edited document's owner topic |
 
@@ -89,8 +89,6 @@ A chat request alone does not relax level-one restrictions. Give the developer t
 | Muscle slug | Application identifier mapped explicitly to visualization identifiers. |
 | Exercise media | Third-party GIF/video referenced by a normalized record. Availability is not a usage license. |
 | Protected catalog | Exercise discovery pages that require a verified Clerk session under the confirmed authenticated-first route policy. |
-| Personal workout | User-owned Monday–Sunday training plan and session. Owner-scoped planning, actual set logging, weekly reporting, paginated history, and conservative next-load guidance are implemented in code. |
-| Training preferences | Optional owner-scoped goal, experience, session duration, timezone, equipment, and preferred training days used as future recommendation inputs. |
 
 ## 8. Changelog
 
@@ -107,4 +105,5 @@ A chat request alone does not relax level-one restrictions. Give the developer t
 | 2026-10-28 | Added private weekly training reports, paginated session history, and explainable next-load guidance. |
 | 2026-10-28 | Added bounded completed-workout analytics, exercise progression, and muscle distribution. |
 | 2026-10-28 | Added local fitness-data export, explicit workout-record deletion, and confirmed full local-data deletion. |
+| 2026-10-28 | Removed training, workout, recommendation, and progress pages, APIs, feature modules, and persisted tables by developer request. Profile export and deletion remain. |
 

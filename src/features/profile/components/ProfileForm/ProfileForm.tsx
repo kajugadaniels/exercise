@@ -136,8 +136,8 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
         title: mode === "onboarding" ? "Profile complete" : "Profile updated",
         message:
           mode === "onboarding"
-            ? "Your training workspace is ready."
-            : "Your latest measurements are now saved.",
+            ? "Your profile is ready."
+            : "Your profile details are now saved.",
       });
 
       if (mode === "onboarding") {
@@ -205,7 +205,7 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
         moderate: "Medium range",
         high: "High range",
       }[bmiCategory]
-    : "Add measurements";
+    : "Add height and weight";
   const bmiTone = bmiCategory
     ? ({
         low: "info",
@@ -239,8 +239,8 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
         </h2>
         {mode === "settings" && (
           <p className={styles.sectionCopy}>
-            These details keep your future training records accurate and belong
-            only to your account.
+            These details personalize your profile and belong only to your
+            account.
           </p>
         )}
 
@@ -279,11 +279,11 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
           }
           id="measurements-title"
         >
-          Current measurements
+          Height and weight
         </h2>
         {mode === "settings" && (
           <p className={styles.sectionCopy}>
-            You can update these measurements whenever they change.
+            Update these profile details whenever they change.
           </p>
         )}
 

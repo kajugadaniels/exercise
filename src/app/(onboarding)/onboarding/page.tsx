@@ -35,7 +35,7 @@ export default async function OnboardingPage() {
               Complete your profile
             </h1>
             <p className={styles.summary}>
-              Set your baseline to start tracking progress.
+              Complete your details to enter the platform.
             </p>
           </div>
         </header>

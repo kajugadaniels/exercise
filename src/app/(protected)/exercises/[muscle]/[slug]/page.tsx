@@ -82,7 +82,7 @@ async function ExerciseDetail({ params }: ExerciseDetailPageProps) {
           <h1 className={styles.title}>{exercise.name}</h1>
           <p className={styles.summary}>
             Review the movement, target muscles, and source instructions before
-            training.
+            movement.
           </p>
         </div>
       </header>
@@ -91,7 +91,7 @@ async function ExerciseDetail({ params }: ExerciseDetailPageProps) {
         <figure className={styles.mediaPanel}>
           <div className={styles.mediaFrame}>
             <ExerciseThumbnail image={summary.image} size="detail" />
-            <ul className={styles.mediaBadges} aria-label="Training overview">
+            <ul className={styles.mediaBadges} aria-label="Exercise overview">
               <li className={styles.mediaBadge}>
                 <span className={styles.badgeMark} aria-hidden="true" />
                 <span className={styles.badgeLabel}>Muscle</span>

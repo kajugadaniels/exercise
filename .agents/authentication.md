@@ -16,7 +16,7 @@ Authentication answers “who has a valid session?” Authorization answers “m
 - Sign up and sign in through Clerk-supported components or documented custom flows.
 - Account/session management through Clerk-supported UI where it fits product design.
 - Required post-registration onboarding for the approved platform profile.
-- Future saved exercises, workouts, and history scoped to the authenticated application user.
+- Future saved content scoped to the authenticated application user after persistence approval.
 
 Do not collect age, diagnoses, injuries, medical history, or additional body measurements. Gender, height, weight, country, and derived BMI are the specifically approved onboarding fields.
 
@@ -30,7 +30,7 @@ The developer confirmed an authenticated-first application on 2026-10-27. The ro
 | Sign-in/sign-up | Public Clerk catch-all routes; authenticated users redirect safely |
 | Exercise browse/detail | Authenticated |
 | Profile/account/onboarding | Authenticated |
-| Favorites, plans, history, progress | Authenticated and owner-scoped |
+| Future saved content | Authenticated and owner-scoped after feature approval |
 | Internal callbacks/webhooks | Signature-verified server endpoints, not user sessions |
 
 Keep `clerkMiddleware()` configured for Clerk request integration, but do not treat proxy redirects as authorization. Each protected page, Server Action, Route Handler, and server data function enforces its own policy with the installed Clerk server API.

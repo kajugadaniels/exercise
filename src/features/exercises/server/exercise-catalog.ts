@@ -1,9 +1,5 @@
 import "server-only";
-import type {
-  Exercise,
-  ExerciseQuery,
-  ExerciseSummaryPage,
-} from "../domain/exercise";
+import type { ExerciseQuery, ExerciseSummaryPage } from "../domain/exercise";
 import { toExerciseSummary } from "../catalog/exercise-summary";
 import { exerciseGymGifsAdapter } from "../providers/exercise-gym-gifs/adapter";
 
@@ -19,10 +15,4 @@ export async function getExerciseCatalogPage(
     pageSize: result.pageSize,
     total: result.total,
   };
-}
-
-export async function getExerciseCatalogItem(
-  exerciseId: string,
-): Promise<Exercise | null> {
-  return exerciseGymGifsAdapter.getById(exerciseId);
 }

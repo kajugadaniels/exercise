@@ -5,21 +5,15 @@ import styles from "./page.module.css";
 const workspacePreview = [
   {
     id: "profile",
-    title: "Training profile",
+    title: "Personal profile",
     value: "Complete",
-    description: "Your measurements and preferences are securely connected to your account.",
-  },
-  {
-    id: "progress",
-    title: "Progress history",
-    value: "Tracking",
-    description: "Measurement changes are saved as private snapshots you can review over time.",
+    description: "Your physical details are securely connected to your account.",
   },
   {
     id: "catalog",
     title: "Exercise catalog",
     value: "Explore",
-    description: "Browse the exercise workspace while the verified catalog is being completed.",
+    description: "Search and filter movements, then open each exercise for detailed guidance.",
   },
 ] as const;
 
@@ -27,11 +21,11 @@ export default function HomePage() {
   return (
     <main className={styles.page} id="main-content">
       <header className={styles.hero}>
-        <p className={styles.context}>Training workspace</p>
-        <h1 className={styles.heroTitle}>Your training space</h1>
+        <p className={styles.context}>Fitness workspace</p>
+        <h1 className={styles.heroTitle}>Move with clarity</h1>
         <p className={styles.summary}>
-          Your profile, measurements, and progress history now stay connected
-          to your private account. Explore exercises or update your latest data.
+          Explore the exercise library and keep your personal profile current in
+          one private workspace.
         </p>
         <Link className={styles.primaryLink} href={AUTH_ROUTES.exercises}>
           Browse exercises
@@ -44,7 +38,7 @@ export default function HomePage() {
             Workspace overview
           </h2>
           <p className={styles.sectionDescription}>
-            The essentials that support your personal training record.
+            The essentials available in your private account.
           </p>
         </div>
 

@@ -5,19 +5,16 @@ import { useRouter } from "next/navigation";
 import { Cancel01Icon, Search02Icon } from "@hugeicons/core-free-icons";
 import { Icon } from "@/components/ui/Icon/Icon";
 import type { ExerciseQuery } from "../../domain/exercise";
-import type { ExerciseSelectionContext } from "../../providers/exercise-gym-gifs/filters";
 import styles from "./ExerciseSearch.module.css";
 
 type ExerciseSearchProps = Readonly<{
   clearSearchHref: string;
   query: ExerciseQuery;
-  selectionContext?: ExerciseSelectionContext;
 }>;
 
 export function ExerciseSearch({
   clearSearchHref,
   query,
-  selectionContext,
 }: ExerciseSearchProps) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -78,32 +75,6 @@ export function ExerciseSearch({
           ) : null}
           {query.muscle ? (
             <input name="muscle" type="hidden" value={query.muscle} />
-          ) : null}
-          {selectionContext ? (
-            <>
-              <input
-                name="planWeek"
-                type="hidden"
-                value={selectionContext.weekStart}
-              />
-              <input
-                name="planDate"
-                type="hidden"
-                value={selectionContext.plannedDate}
-              />
-              <input
-                name="planMinutes"
-                type="hidden"
-                value={selectionContext.availableMinutes}
-              />
-              {selectionContext.preferredBodyPart ? (
-                <input
-                  name="planFocus"
-                  type="hidden"
-                  value={selectionContext.preferredBodyPart}
-                />
-              ) : null}
-            </>
           ) : null}
           <button
             className={styles.closeButton}

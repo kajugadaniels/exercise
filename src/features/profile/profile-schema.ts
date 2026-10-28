@@ -16,14 +16,6 @@ export type ProfileView = ProfileInput & {
   updatedAt: string;
 };
 
-export type MeasurementSnapshotView = {
-  bmi: number;
-  heightCentimeters: number;
-  id: string;
-  recordedAt: string;
-  weightKilograms: number;
-};
-
 export type BmiCategory = "low" | "healthy" | "moderate" | "high";
 
 export const profileSchema = z

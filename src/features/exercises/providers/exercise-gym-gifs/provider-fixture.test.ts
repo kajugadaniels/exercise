@@ -7,7 +7,6 @@ import {
   buildExerciseLibraryUrl,
   filterExercises,
   parseExerciseQuery,
-  parseExerciseSelectionContext,
 } from "./filters";
 import { normalizeProviderExercise } from "./mapping";
 import {
@@ -198,49 +197,6 @@ test("changes equipment filters while preserving the other active filters", () =
   assert.equal(
     buildExerciseLibraryUrl(query, 1, { equipment: null }),
     "/exercises?muscle=biceps&category=strength",
-  );
-});
-
-test("preserves a validated training selection context in catalog URLs", () => {
-  const selectionContext = parseExerciseSelectionContext({
-    planWeek: "2026-10-26",
-    planDate: "2026-10-28",
-    planMinutes: "75",
-    planFocus: "chest",
-  });
-
-  assert.deepEqual(selectionContext, {
-    availableMinutes: 75,
-    plannedDate: "2026-10-28",
-    preferredBodyPart: "chest",
-    weekStart: "2026-10-26",
-  });
-  assert.equal(
-    buildExerciseLibraryUrl(
-      { page: 2, search: "press" },
-      3,
-      undefined,
-      selectionContext ?? undefined,
-    ),
-    "/exercises?search=press&page=3&planWeek=2026-10-26&planDate=2026-10-28&planMinutes=75&planFocus=chest",
-  );
-});
-
-test("rejects incomplete or out-of-week training selection context", () => {
-  assert.equal(
-    parseExerciseSelectionContext({
-      planWeek: "2026-10-26",
-      planDate: "2026-11-03",
-      planMinutes: "60",
-    }),
-    null,
-  );
-  assert.equal(
-    parseExerciseSelectionContext({
-      planWeek: "2026-10-26",
-      planMinutes: "60",
-    }),
-    null,
   );
 });
 

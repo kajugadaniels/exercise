@@ -16,7 +16,7 @@ Agents may write and review tests but must not execute tests, lint, type checks,
 | Unit | Provider schemas/mappings, muscle mapping, profile validation/BMI, filter semantics, URL construction, error translation |
 | Component | Exercise states, filter controls, diagram wrapper, keyboard behavior, missing media |
 | Integration | Route rendering with provider success/failure, Clerk protection, owner-scoped operations |
-| End-to-end | Core browse→filter→detail and future sign-in/onboarding/workout journeys |
+| End-to-end | Core browse→filter→detail and sign-in/onboarding/profile journeys |
 | Manual | Visual quality, mobile/touch, real assistive tech, reduced motion, remote-media behavior |
 
 Prefer behavior assertions over implementation details. Tests should remain deterministic and independent of live providers.

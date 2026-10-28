@@ -18,15 +18,11 @@ import {
   muscleIds,
   type ExerciseQuery,
 } from "../../domain/exercise";
-import {
-  buildExerciseLibraryUrl,
-  type ExerciseSelectionContext,
-} from "../../providers/exercise-gym-gifs/filters";
+import { buildExerciseLibraryUrl } from "../../providers/exercise-gym-gifs/filters";
 import styles from "./ExerciseFilterSheet.module.css";
 
 type ExerciseFilterSheetProps = Readonly<{
   query: ExerciseQuery;
-  selectionContext?: ExerciseSelectionContext;
 }>;
 
 type FilterGroupProps<TValue extends string> = Readonly<{
@@ -96,10 +92,7 @@ function readSelectedFilter<TValue extends string>(
   return allowedValues.find((value) => value === submittedValue);
 }
 
-export function ExerciseFilterSheet({
-  query,
-  selectionContext,
-}: ExerciseFilterSheetProps) {
+export function ExerciseFilterSheet({ query }: ExerciseFilterSheetProps) {
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -161,10 +154,7 @@ export function ExerciseFilterSheet({
     };
 
     closeSheet();
-    router.push(
-      buildExerciseLibraryUrl(nextQuery, 1, undefined, selectionContext),
-      { scroll: false },
-    );
+    router.push(buildExerciseLibraryUrl(nextQuery, 1), { scroll: false });
   }
 
   function clearFilters() {
@@ -174,10 +164,7 @@ export function ExerciseFilterSheet({
     };
 
     closeSheet();
-    router.push(
-      buildExerciseLibraryUrl(nextQuery, 1, undefined, selectionContext),
-      { scroll: false },
-    );
+    router.push(buildExerciseLibraryUrl(nextQuery, 1), { scroll: false });
   }
 
   return (
