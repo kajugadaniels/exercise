@@ -48,8 +48,7 @@
 .iconButton,
 .todayButton,
 .removeButton,
-.removeSetButton,
-.addSetButton {
+.editExerciseLink {
   min-block-size: var(--control-height);
   border: 0;
   background: transparent;
@@ -59,7 +58,8 @@
 }
 
 .iconButton,
-.removeButton {
+.removeButton,
+.editExerciseLink {
   display: grid;
   inline-size: var(--control-height);
   place-items: center;
@@ -365,8 +365,36 @@
   border-block-start: 1px solid var(--color-border);
 }
 
-.exerciseList,
-.setList {
+.addExerciseLink {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--control-height);
+  padding-inline: var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-raised);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+}
+
+.addExerciseLink[aria-disabled="true"],
+.addExerciseDisabled {
+  opacity: 0.58;
+}
+
+.addExerciseDisabled {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--control-height);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.exerciseList {
   display: grid;
   gap: var(--space-4);
   margin: 0;
@@ -389,6 +417,17 @@
   align-items: center;
 }
 
+.exerciseActions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.editExerciseLink {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
 .exercisePosition {
   display: grid;
   inline-size: 2rem;
@@ -405,35 +444,19 @@
   color: var(--color-danger-text);
 }
 
-.setRow {
-  display: grid;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+.exerciseMetrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 
-.setRow legend {
-  padding-inline: var(--space-2);
+.exerciseMetrics span {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-raised);
   color: var(--color-text-muted);
   font-size: var(--text-xs);
-  font-weight: var(--weight-semibold);
-}
-
-.removeSetButton,
-.addSetButton {
-  inline-size: fit-content;
-  padding-inline: var(--space-2);
-  color: var(--color-danger-text);
-  font-size: var(--text-xs);
-  font-weight: var(--weight-semibold);
-}
-
-.addSetButton {
-  display: inline-flex;
-  gap: var(--space-2);
-  align-items: center;
-  color: var(--color-primary-text);
+  font-variant-numeric: tabular-nums;
 }
 
 .formError {
@@ -462,9 +485,7 @@
 
 .iconButton:disabled,
 .todayButton:disabled,
-.removeButton:disabled,
-.removeSetButton:disabled,
-.addSetButton:disabled {
+.removeButton:disabled {
   cursor: default;
   opacity: 0.5;
 }
@@ -475,8 +496,8 @@
 .kindSelector label:has(input:focus-visible),
 .selectControl:focus-within,
 .removeButton:focus-visible,
-.removeSetButton:focus-visible,
-.addSetButton:focus-visible {
+.editExerciseLink:focus-visible,
+.addExerciseLink:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
@@ -489,18 +510,14 @@
 @media (hover: hover) {
   .iconButton:hover:not(:disabled),
   .todayButton:hover:not(:disabled),
-  .removeButton:hover:not(:disabled) {
+  .removeButton:hover:not(:disabled),
+  .editExerciseLink:hover,
+  .addExerciseLink:hover:not([aria-disabled="true"]) {
     background-color: var(--color-surface-soft);
   }
 
   .dayTab:hover:not([aria-pressed="true"]) {
     color: var(--color-text);
-  }
-
-  .removeSetButton:hover:not(:disabled),
-  .addSetButton:hover:not(:disabled) {
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
   }
 
   .workoutAction:hover {
@@ -536,15 +553,6 @@
     overflow: visible;
   }
 
-  .setRow {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    align-items: end;
-  }
-
-  .setRow legend,
-  .removeSetButton {
-    grid-column: 1 / -1;
-  }
 }
 
 @media (forced-colors: active) {
@@ -552,12 +560,16 @@
   .dayTab,
   .editor,
   .exerciseCard,
-  .setRow,
   .restState,
   .exerciseEmpty,
   .lockedMessage {
     border-color: CanvasText;
     background-color: Canvas;
+  }
+
+  .addExerciseLink,
+  .editExerciseLink {
+    border-color: CanvasText;
   }
 
   .workoutAction {
