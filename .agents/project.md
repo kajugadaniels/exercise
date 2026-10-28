@@ -35,10 +35,11 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | Muscle highlighter on detail pages | MVP after dependency approval | Local React SVG package; explicit normalization |
 | Interactive muscle explorer | Future | Select muscle, filter catalog, open detail |
 | Favorites | Future | Persist only after their product model is approved |
-| Measurement progress/history | MVP, approved 2026-10-27 | Append when height or weight changes; owner-scoped and deleted with the fitness profile |
-| Weekly workout planning and execution records | MVP planner, execution, and history implemented in code, unverified | Owner-scoped Monday–Sunday calendar, rest days, planned sets, actual set logging, completion, abandonment, weekly reports, paginated history, and explainable progression guidance |
+| Measurement and training progress | MVP analytics implemented in code, unverified | Owner-scoped measurement history plus bounded 4/8/12-week completed-workout trends, exercise progression, muscle distribution, and responsive empty/error states |
+| Weekly workout planning and execution records | MVP planner, execution, history, and deletion implemented in code, unverified | Owner-scoped Monday–Sunday calendar, rest days, planned and actual sets, lifecycle actions, reports, paginated history, progression guidance, and explicit ended-workout deletion |
 | Training preferences | MVP foundation approved 2026-10-28, unverified | Optional goal, experience, session duration, timezone, available equipment, and preferred training days; owner-scoped, editable, and independently deletable |
-| Training recommendations | Progression foundation implemented in code, unverified | Conservative next-load guidance consumes completed set history only; daily workout generation and body-part recovery recommendations remain a later task |
+| Training recommendations | Daily and progression foundations implemented in code, unverified | Deterministic daily generation considers recent body-part history; conservative next-load guidance consumes completed set history only |
+| Fitness data portability and deletion | MVP controls implemented in code, unverified | JSON export, individual ended-workout deletion, and full local application-data deletion; external Clerk account synchronization remains a release gate |
 | PWA | Future | Separate approval and offline/data policy |
 | Native mobile application | Future / pending framework decision | Not supplied by Next.js automatically |
 | RapidAPI muscle image generator | Optional / pending approval | Must never be a required dependency |
