@@ -88,10 +88,10 @@ async function ExerciseCatalog({
         />
         <ExerciseFilterSheet
           key={[
-            query.bodyPart,
-            query.category,
-            query.muscle,
-            query.equipment,
+            query.bodyParts?.join(","),
+            query.categories?.join(","),
+            query.muscles?.join(","),
+            query.equipment?.join(","),
           ].join(":")}
           query={query}
         />
