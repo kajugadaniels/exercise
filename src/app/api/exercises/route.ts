@@ -20,14 +20,30 @@ const allowedQueryKeys = new Set([
   "page",
   "search",
 ]);
-const MAX_QUERY_LENGTH = 256;
+const MAX_QUERY_LENGTH = 1_024;
 
 const catalogQuerySchema = z
   .object({
-    bodyPart: z.enum(bodyPartIds).optional(),
-    category: z.enum(exerciseCategoryIds).optional(),
-    equipment: z.enum(equipmentIds).optional(),
-    muscle: z.enum(muscleIds).optional(),
+    bodyPart: z
+      .array(z.enum(bodyPartIds))
+      .max(bodyPartIds.length)
+      .refine((values) => new Set(values).size === values.length)
+      .optional(),
+    category: z
+      .array(z.enum(exerciseCategoryIds))
+      .max(exerciseCategoryIds.length)
+      .refine((values) => new Set(values).size === values.length)
+      .optional(),
+    equipment: z
+      .array(z.enum(equipmentIds))
+      .max(equipmentIds.length)
+      .refine((values) => new Set(values).size === values.length)
+      .optional(),
+    muscle: z
+      .array(z.enum(muscleIds))
+      .max(muscleIds.length)
+      .refine((values) => new Set(values).size === values.length)
+      .optional(),
     page: z.coerce.number().int().min(1).max(100).default(1),
     search: z.preprocess(
       (value) =>
@@ -52,21 +68,41 @@ function readCatalogQuery(request: Request) {
   }
 
   for (const key of searchParams.keys()) {
-    if (!allowedQueryKeys.has(key) || searchParams.getAll(key).length !== 1) {
+    if (
+      !allowedQueryKeys.has(key) ||
+      ((key === "page" || key === "search") &&
+        searchParams.getAll(key).length !== 1)
+    ) {
       return null;
     }
   }
 
+  const values = (key: string) => {
+    const submittedValues = searchParams.getAll(key);
+    return submittedValues.length > 0 ? submittedValues : undefined;
+  };
+
   const result = catalogQuerySchema.safeParse({
-    bodyPart: searchParams.get("bodyPart") ?? undefined,
-    category: searchParams.get("category") ?? undefined,
-    equipment: searchParams.get("equipment") ?? undefined,
-    muscle: searchParams.get("muscle") ?? undefined,
+    bodyPart: values("bodyPart"),
+    category: values("category"),
+    equipment: values("equipment"),
+    muscle: values("muscle"),
     page: searchParams.get("page") ?? undefined,
     search: searchParams.get("search") ?? undefined,
   });
 
-  return result.success ? result.data : null;
+  if (!result.success) {
+    return null;
+  }
+
+  return {
+    ...(result.data.bodyPart ? { bodyParts: result.data.bodyPart } : {}),
+    ...(result.data.category ? { categories: result.data.category } : {}),
+    ...(result.data.equipment ? { equipment: result.data.equipment } : {}),
+    ...(result.data.muscle ? { muscles: result.data.muscle } : {}),
+    page: result.data.page,
+    ...(result.data.search ? { search: result.data.search } : {}),
+  };
 }
 
 export async function GET(request: Request) {
