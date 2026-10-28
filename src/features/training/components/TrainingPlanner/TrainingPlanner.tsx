@@ -26,6 +26,8 @@ import {
   formatExerciseValue,
 } from "@/features/exercises/domain/exercise";
 import type { TrainingWeekPlan } from "../../domain/training";
+import type { DailyRecommendationView } from "../../daily-recommendation-schema";
+import type { TrainingPreferencesView } from "../../training-preferences-schema";
 import {
   createDefaultSet,
   createEmptyTrainingWeek,
@@ -38,11 +40,14 @@ import {
 } from "../../training-week-editor";
 import { createTrainingWeekInputSchema } from "../../training-week-schema";
 import { ExercisePicker } from "../ExercisePicker/ExercisePicker";
+import { DailyRecommendation } from "../DailyRecommendation/DailyRecommendation";
 import styles from "./TrainingPlanner.module.css";
 
 type TrainingPlannerProps = Readonly<{
+  currentCalendarDate: string;
   currentWeekStart: string;
   initialPlan: TrainingWeekPlan | null;
+  trainingPreferences: TrainingPreferencesView | null;
   weekStart: string;
 }>;
 
@@ -87,8 +92,10 @@ function apiErrorMessage(payload: unknown): string | null {
 }
 
 export function TrainingPlanner({
+  currentCalendarDate,
   currentWeekStart,
   initialPlan,
+  trainingPreferences,
   weekStart,
 }: TrainingPlannerProps) {
   const router = useRouter();
@@ -258,6 +265,40 @@ export function TrainingPlanner({
     );
   }
 
+  function handleRecommendationSaved(
+    recommendation: DailyRecommendationView,
+  ) {
+    setEditor((current) => ({
+      ...current,
+      days: current.days.map((day) =>
+        day.plannedDate === recommendation.plannedDate
+          ? {
+              availableMinutes: String(recommendation.availableMinutes),
+              exercises: recommendation.exercises.map((exercise) => ({
+                exerciseId: exercise.id,
+                name: exercise.name,
+                sets: exercise.sets.map((set) => ({
+                  repetitions: String(set.targetRepetitions),
+                  restSeconds: String(set.restSeconds),
+                  weightKilograms:
+                    set.targetWeightKilograms === null
+                      ? ""
+                      : String(set.targetWeightKilograms),
+                })),
+              })),
+              kind: "workout",
+              plannedDate: recommendation.plannedDate,
+              preferredBodyPart: recommendation.focusBodyPart,
+            }
+          : day,
+      ),
+    }));
+    setActiveDate(recommendation.plannedDate);
+    setHasSavedPlan(true);
+    setIsDirty(false);
+    router.refresh();
+  }
+
   async function saveWeek() {
     const input = toTrainingWeekInput(editor);
     const result = createTrainingWeekInputSchema(weekStart).safeParse(input);
@@ -409,6 +450,22 @@ export function TrainingPlanner({
           </button>
         </div>
       </header>
+
+      <DailyRecommendation
+        currentCalendarDate={currentCalendarDate}
+        defaultMinutes={trainingPreferences?.preferredSessionMinutes ?? 60}
+        disabled={isDirty || isBusy}
+        hasPreferences={trainingPreferences !== null}
+        weekDates={editor.days
+          .filter((day) => {
+            const storedDay = initialPlan?.days.find(
+              (candidate) => candidate.plannedDate === day.plannedDate,
+            );
+            return !storedDay || storedDay.status === "planned";
+          })
+          .map((day) => day.plannedDate)}
+        onSaved={handleRecommendationSaved}
+      />
 
       {isLocked && (
         <div className={styles.lockedMessage} role="status">
