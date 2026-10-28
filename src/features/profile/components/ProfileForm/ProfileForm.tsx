@@ -159,7 +159,7 @@ export function ProfileForm({ initialProfile, mode }: ProfileFormProps) {
 
   async function handleDelete() {
     const isConfirmed = window.confirm(
-      "Delete your fitness profile? You will need to complete onboarding again before using the platform.",
+      "Delete your fitness profile and scheduled sessions? You will need to complete onboarding again before using the platform.",
     );
 
     if (!isConfirmed) {
