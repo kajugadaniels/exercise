@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -12,9 +12,8 @@ import {
   Clock01Icon,
   Delete02Icon,
   Dumbbell01Icon,
+  Edit01Icon,
   PlayIcon,
-  RepeatIcon,
-  WeightScale01Icon,
 } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/Button/Button";
 import { Icon } from "@/components/ui/Icon/Icon";
@@ -29,17 +28,14 @@ import type { TrainingWeekPlan } from "../../domain/training";
 import type { DailyRecommendationView } from "../../daily-recommendation-schema";
 import type { TrainingPreferencesView } from "../../training-preferences-schema";
 import {
-  createDefaultSet,
   createEmptyTrainingWeek,
   createTrainingWeekEditor,
   getAdjacentWeekStart,
   toTrainingWeekInput,
-  type ExercisePickerValue,
   type TrainingDayEditorValue,
   type TrainingWeekEditorValue,
 } from "../../training-week-editor";
 import { createTrainingWeekInputSchema } from "../../training-week-schema";
-import { ExercisePicker } from "../ExercisePicker/ExercisePicker";
 import { DailyRecommendation } from "../DailyRecommendation/DailyRecommendation";
 import styles from "./TrainingPlanner.module.css";
 
@@ -91,6 +87,23 @@ function apiErrorMessage(payload: unknown): string | null {
   return payload.error.message;
 }
 
+function buildExerciseSelectionHref(
+  day: TrainingDayEditorValue,
+  weekStart: string,
+): string {
+  const searchParams = new URLSearchParams({
+    planDate: day.plannedDate,
+    planMinutes: String(Number(day.availableMinutes) || 60),
+    planWeek: weekStart,
+  });
+
+  if (day.preferredBodyPart) {
+    searchParams.set("planFocus", day.preferredBodyPart);
+  }
+
+  return `/exercises?${searchParams}`;
+}
+
 export function TrainingPlanner({
   currentCalendarDate,
   currentWeekStart,
@@ -108,7 +121,6 @@ export function TrainingPlanner({
   const [isDirty, setIsDirty] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const isLocked = initialPlan?.isLocked ?? false;
   const isBusy = isSaving || isDeleting;
@@ -134,9 +146,6 @@ export function TrainingPlanner({
   }, [editor.days]);
 
   const weekEnd = editor.days.at(-1)?.plannedDate ?? weekStart;
-  const selectedExerciseIds = activeDay?.exercises.map(
-    (exercise) => exercise.exerciseId,
-  ) ?? [];
 
   function updateActiveDay(
     update: (day: TrainingDayEditorValue) => TrainingDayEditorValue,
@@ -173,21 +182,6 @@ export function TrainingPlanner({
     }));
   }
 
-  function addExercise(exercise: ExercisePickerValue) {
-    updateActiveDay((day) => ({
-      ...day,
-      exercises: [
-        ...day.exercises,
-        {
-          exerciseId: exercise.id,
-          name: exercise.name,
-          sets: [createDefaultSet()],
-        },
-      ],
-    }));
-    setIsPickerOpen(false);
-  }
-
   function removeExercise(exerciseId: string) {
     updateActiveDay((day) => ({
       ...day,
@@ -197,59 +191,26 @@ export function TrainingPlanner({
     }));
   }
 
-  function addSet(exerciseId: string) {
-    updateActiveDay((day) => ({
-      ...day,
-      exercises: day.exercises.map((exercise) => {
-        if (exercise.exerciseId !== exerciseId) {
-          return exercise;
-        }
-
-        const previousSet = exercise.sets.at(-1);
-        return {
-          ...exercise,
-          sets: [
-            ...exercise.sets,
-            previousSet ? { ...previousSet } : createDefaultSet(),
-          ],
-        };
-      }),
-    }));
+  function confirmExercisePageNavigation(event: MouseEvent<HTMLAnchorElement>) {
+    if (
+      isDirty &&
+      !window.confirm(
+        "Continue to the exercise page? Some unsaved planner changes may not carry over. Save the week first if you want to keep them.",
+      )
+    ) {
+      event.preventDefault();
+    }
   }
 
-  function removeSet(exerciseId: string, setIndex: number) {
-    updateActiveDay((day) => ({
-      ...day,
-      exercises: day.exercises.map((exercise) =>
-        exercise.exerciseId === exerciseId
-          ? {
-              ...exercise,
-              sets: exercise.sets.filter((_, index) => index !== setIndex),
-            }
-          : exercise,
-      ),
-    }));
-  }
-
-  function updateSet(
+  function getStoredExercisePosition(
     exerciseId: string,
-    setIndex: number,
-    field: "repetitions" | "restSeconds" | "weightKilograms",
-    value: string,
-  ) {
-    updateActiveDay((day) => ({
-      ...day,
-      exercises: day.exercises.map((exercise) =>
-        exercise.exerciseId === exerciseId
-          ? {
-              ...exercise,
-              sets: exercise.sets.map((set, index) =>
-                index === setIndex ? { ...set, [field]: value } : set,
-              ),
-            }
-          : exercise,
-      ),
-    }));
+    fallbackPosition: number,
+  ): number {
+    return (
+      storedActiveDay?.exercises.find(
+        (exercise) => exercise.exercise.sourceId === exerciseId,
+      )?.position ?? fallbackPosition
+    );
   }
 
   function navigateToWeek(nextWeekStart: string) {
@@ -403,6 +364,11 @@ export function TrainingPlanner({
       </div>
     );
   }
+
+  const exerciseSelectionHref = buildExerciseSelectionHref(
+    activeDay,
+    weekStart,
+  );
 
   return (
     <section className={styles.planner} aria-labelledby="planner-title">
@@ -637,16 +603,27 @@ export function TrainingPlanner({
                 <p>Sets are performed in the order shown.</p>
               </div>
               {!isLocked && (
-                <Button
-                  type="button"
-                  size="compact"
-                  variant="secondary"
-                  disabled={isBusy || activeDay.exercises.length >= 12}
-                  onClick={() => setIsPickerOpen(true)}
-                >
-                  <Icon icon={Add01Icon} size={18} />
-                  Add exercise
-                </Button>
+                activeDay.exercises.length >= 12 ? (
+                  <span className={styles.addExerciseDisabled}>
+                    Exercise limit reached
+                  </span>
+                ) : (
+                  <Link
+                    className={styles.addExerciseLink}
+                    href={exerciseSelectionHref}
+                    aria-disabled={isBusy || undefined}
+                    onClick={(event) => {
+                      if (isBusy) {
+                        event.preventDefault();
+                        return;
+                      }
+                      confirmExercisePageNavigation(event);
+                    }}
+                  >
+                    <Icon icon={Add01Icon} size={18} />
+                    Add exercise
+                  </Link>
+                )
               )}
             </div>
 
@@ -673,109 +650,45 @@ export function TrainingPlanner({
                           {exercise.sets.length === 1 ? "set" : "sets"}
                         </p>
                       </div>
-                      {!isLocked && (
-                        <button
-                          className={styles.removeButton}
-                          type="button"
-                          aria-label={`Remove ${exercise.name}`}
-                          disabled={isBusy}
-                          onClick={() => removeExercise(exercise.exerciseId)}
-                        >
-                          <Icon icon={Delete02Icon} size={18} />
-                        </button>
-                      )}
+                      {!isLocked ? (
+                        <div className={styles.exerciseActions}>
+                          <Link
+                            className={styles.editExerciseLink}
+                            href={`/training/${weekStart}/${activeDay.plannedDate}/exercises/${getStoredExercisePosition(exercise.exerciseId, exerciseIndex + 1)}/edit`}
+                            aria-label={`Edit ${exercise.name}`}
+                            onClick={confirmExercisePageNavigation}
+                          >
+                            <Icon icon={Edit01Icon} size={18} />
+                          </Link>
+                          <button
+                            className={styles.removeButton}
+                            type="button"
+                            aria-label={`Remove ${exercise.name}`}
+                            disabled={isBusy}
+                            onClick={() => removeExercise(exercise.exerciseId)}
+                          >
+                            <Icon icon={Delete02Icon} size={18} />
+                          </button>
+                        </div>
+                      ) : null}
                     </header>
 
-                    <div className={styles.setList}>
-                      {exercise.sets.map((set, setIndex) => (
-                        <fieldset className={styles.setRow} key={setIndex}>
-                          <legend>Set {setIndex + 1}</legend>
-                          <Input
-                            id={`${activeDay.plannedDate}-${exerciseIndex}-${setIndex}-reps`}
-                            label="Reps"
-                            icon={RepeatIcon}
-                            type="number"
-                            inputMode="numeric"
-                            min={1}
-                            max={1000}
-                            value={set.repetitions}
-                            disabled={isLocked || isBusy}
-                            onChange={(event) =>
-                              updateSet(
-                                exercise.exerciseId,
-                                setIndex,
-                                "repetitions",
-                                event.target.value,
-                              )
-                            }
-                          />
-                          <Input
-                            id={`${activeDay.plannedDate}-${exerciseIndex}-${setIndex}-weight`}
-                            label="Weight (kg)"
-                            icon={WeightScale01Icon}
-                            type="number"
-                            inputMode="decimal"
-                            min={0}
-                            max={1000}
-                            step="0.001"
-                            placeholder="Bodyweight"
-                            value={set.weightKilograms}
-                            disabled={isLocked || isBusy}
-                            onChange={(event) =>
-                              updateSet(
-                                exercise.exerciseId,
-                                setIndex,
-                                "weightKilograms",
-                                event.target.value,
-                              )
-                            }
-                          />
-                          <Input
-                            id={`${activeDay.plannedDate}-${exerciseIndex}-${setIndex}-rest`}
-                            label="Rest (seconds)"
-                            icon={Clock01Icon}
-                            type="number"
-                            inputMode="numeric"
-                            min={0}
-                            max={3600}
-                            value={set.restSeconds}
-                            disabled={isLocked || isBusy}
-                            onChange={(event) =>
-                              updateSet(
-                                exercise.exerciseId,
-                                setIndex,
-                                "restSeconds",
-                                event.target.value,
-                              )
-                            }
-                          />
-                          {!isLocked && exercise.sets.length > 1 && (
-                            <button
-                              className={styles.removeSetButton}
-                              type="button"
-                              disabled={isBusy}
-                              onClick={() =>
-                                removeSet(exercise.exerciseId, setIndex)
-                              }
-                            >
-                              Remove set
-                            </button>
-                          )}
-                        </fieldset>
-                      ))}
+                    <div className={styles.exerciseMetrics}>
+                      <span>
+                        {exercise.sets.reduce(
+                          (total, set) =>
+                            total + (Number(set.repetitions) || 0),
+                          0,
+                        )} total reps
+                      </span>
+                      <span>
+                        {exercise.sets.some(
+                          (set) => set.weightKilograms.trim() !== "",
+                        )
+                          ? "External load planned"
+                          : "Bodyweight / no load"}
+                      </span>
                     </div>
-
-                    {!isLocked && exercise.sets.length < 20 && (
-                      <button
-                        className={styles.addSetButton}
-                        type="button"
-                        disabled={isBusy}
-                        onClick={() => addSet(exercise.exerciseId)}
-                      >
-                        <Icon icon={Add01Icon} size={18} />
-                        Add set
-                      </button>
-                    )}
                   </li>
                 ))}
               </ol>
@@ -813,13 +726,6 @@ export function TrainingPlanner({
           </Button>
         </footer>
       )}
-
-      <ExercisePicker
-        isOpen={isPickerOpen}
-        selectedExerciseIds={selectedExerciseIds}
-        onClose={() => setIsPickerOpen(false)}
-        onSelect={addExercise}
-      />
     </section>
   );
 }
