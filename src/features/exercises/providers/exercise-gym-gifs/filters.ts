@@ -12,10 +12,6 @@ import {
 
 const searchParamsSchema = z.object({
   search: z.string().trim().min(3).max(80).optional().catch(undefined),
-  muscle: z.enum(muscleIds).optional().catch(undefined),
-  bodyPart: z.enum(bodyPartIds).optional().catch(undefined),
-  equipment: z.enum(equipmentIds).optional().catch(undefined),
-  category: z.enum(exerciseCategoryIds).optional().catch(undefined),
   page: z.coerce.number().int().min(1).max(100).optional().catch(1),
 });
 
@@ -28,24 +24,39 @@ function firstValue(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
 }
 
+function selectedValues<TValue extends string>(
+  value: string | string[] | undefined,
+  allowedValues: readonly TValue[],
+): TValue[] | undefined {
+  const submittedValues = new Set(
+    Array.isArray(value) ? value : value ? [value] : [],
+  );
+  const values = allowedValues.filter((option) => submittedValues.has(option));
+
+  return values.length > 0 ? values : undefined;
+}
+
 export function parseExerciseQuery(
   searchParams: ExerciseSearchParams,
 ): ExerciseQuery {
   const parsed = searchParamsSchema.parse({
     search: firstValue(searchParams.search),
-    muscle: firstValue(searchParams.muscle),
-    bodyPart: firstValue(searchParams.bodyPart),
-    equipment: firstValue(searchParams.equipment),
-    category: firstValue(searchParams.category),
     page: firstValue(searchParams.page),
   });
+  const muscles = selectedValues(searchParams.muscle, muscleIds);
+  const bodyParts = selectedValues(searchParams.bodyPart, bodyPartIds);
+  const equipment = selectedValues(searchParams.equipment, equipmentIds);
+  const categories = selectedValues(
+    searchParams.category,
+    exerciseCategoryIds,
+  );
 
   return {
     ...(parsed.search ? { search: parsed.search } : {}),
-    ...(parsed.muscle ? { muscle: parsed.muscle } : {}),
-    ...(parsed.bodyPart ? { bodyPart: parsed.bodyPart } : {}),
-    ...(parsed.equipment ? { equipment: parsed.equipment } : {}),
-    ...(parsed.category ? { category: parsed.category } : {}),
+    ...(muscles ? { muscles } : {}),
+    ...(bodyParts ? { bodyParts } : {}),
+    ...(equipment ? { equipment } : {}),
+    ...(categories ? { categories } : {}),
     page: parsed.page ?? 1,
   };
 }
@@ -55,6 +66,10 @@ export function filterExercises(
   query: ExerciseQuery,
 ): Exercise[] {
   const normalizedSearch = query.search?.toLocaleLowerCase("en");
+  const selectedMuscles = new Set(query.muscles);
+  const selectedBodyParts = new Set(query.bodyParts);
+  const selectedEquipment = new Set(query.equipment);
+  const selectedCategories = new Set(query.categories);
 
   return exercises
     .filter((exercise) => {
@@ -66,10 +81,17 @@ export function filterExercises(
       }
 
       return (
-        (!query.muscle || exercise.primaryMuscle === query.muscle) &&
-        (!query.bodyPart || exercise.bodyPart === query.bodyPart) &&
-        (!query.equipment || exercise.equipment === query.equipment) &&
-        (!query.category || exercise.category === query.category)
+        (selectedMuscles.size === 0 ||
+          selectedMuscles.has(exercise.primaryMuscle)) &&
+        (selectedBodyParts.size === 0 ||
+          (exercise.bodyPart !== undefined &&
+            selectedBodyParts.has(exercise.bodyPart))) &&
+        (selectedEquipment.size === 0 ||
+          (exercise.equipment !== undefined &&
+            selectedEquipment.has(exercise.equipment))) &&
+        (selectedCategories.size === 0 ||
+          (exercise.category !== undefined &&
+            selectedCategories.has(exercise.category)))
       );
     })
     .sort(
@@ -101,44 +123,52 @@ export function createExerciseFacets(
   };
 }
 
+function appendFilterValues(
+  params: URLSearchParams,
+  key: string,
+  values: readonly string[] | undefined,
+) {
+  new Set(values).forEach((value) => params.append(key, value));
+}
+
 export function buildExerciseLibraryUrl(
   query: ExerciseQuery,
   page: number,
   overrides?: Readonly<{
-    bodyPart?: ExerciseQuery["bodyPart"] | null;
-    category?: ExerciseQuery["category"] | null;
+    bodyParts?: ExerciseQuery["bodyParts"] | null;
+    categories?: ExerciseQuery["categories"] | null;
     equipment?: ExerciseQuery["equipment"] | null;
-    muscle?: ExerciseQuery["muscle"] | null;
+    muscles?: ExerciseQuery["muscles"] | null;
     search?: string | null;
   }>,
 ): string {
   const params = new URLSearchParams();
-  const bodyPart =
-    overrides && "bodyPart" in overrides
-      ? (overrides.bodyPart ?? undefined)
-      : query.bodyPart;
-  const category =
-    overrides && "category" in overrides
-      ? (overrides.category ?? undefined)
-      : query.category;
+  const bodyParts =
+    overrides && "bodyParts" in overrides
+      ? (overrides.bodyParts ?? undefined)
+      : query.bodyParts;
+  const categories =
+    overrides && "categories" in overrides
+      ? (overrides.categories ?? undefined)
+      : query.categories;
   const equipment =
     overrides && "equipment" in overrides
       ? (overrides.equipment ?? undefined)
       : query.equipment;
-  const muscle =
-    overrides && "muscle" in overrides
-      ? (overrides.muscle ?? undefined)
-      : query.muscle;
+  const muscles =
+    overrides && "muscles" in overrides
+      ? (overrides.muscles ?? undefined)
+      : query.muscles;
   const search =
     overrides && "search" in overrides
       ? (overrides.search ?? undefined)
       : query.search;
 
   if (search) params.set("search", search);
-  if (muscle) params.set("muscle", muscle);
-  if (bodyPart) params.set("bodyPart", bodyPart);
-  if (equipment) params.set("equipment", equipment);
-  if (category) params.set("category", category);
+  appendFilterValues(params, "muscle", muscles);
+  appendFilterValues(params, "bodyPart", bodyParts);
+  appendFilterValues(params, "equipment", equipment);
+  appendFilterValues(params, "category", categories);
   if (page > 1) params.set("page", String(page));
   const queryString = params.toString();
   return queryString ? `/exercises?${queryString}` : "/exercises";
