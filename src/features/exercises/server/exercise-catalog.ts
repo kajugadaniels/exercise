@@ -1,5 +1,6 @@
 import "server-only";
 import type {
+  Exercise,
   ExerciseQuery,
   ExerciseSummaryPage,
 } from "../domain/exercise";
@@ -18,4 +19,10 @@ export async function getExerciseCatalogPage(
     pageSize: result.pageSize,
     total: result.total,
   };
+}
+
+export async function getExerciseCatalogItem(
+  exerciseId: string,
+): Promise<Exercise | null> {
+  return exerciseGymGifsAdapter.getById(exerciseId);
 }
