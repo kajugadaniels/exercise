@@ -66,28 +66,45 @@ export function createTrainingWeekEditor(
     return createEmptyTrainingWeek(weekStart);
   }
 
+  const storedDayByDate = new Map(
+    plan.days.map((day) => [day.plannedDate, day]),
+  );
+
   return {
     weekStart,
-    days: plan.days.map((day) => ({
-      plannedDate: day.plannedDate,
-      kind: day.kind,
-      availableMinutes:
-        day.availableMinutes === null ? "60" : String(day.availableMinutes),
-      preferredBodyPart: day.preferredBodyPart,
-      exercises: day.exercises.map((exercise) => ({
-        exerciseId: exercise.exercise.sourceId,
-        name: exercise.exercise.name,
-        sets: exercise.sets.map((set) => ({
-          repetitions: String(set.targetRepetitions),
-          weightKilograms:
-            set.targetWeightGrams === null
-              ? ""
-              : String(set.targetWeightGrams / 1_000),
-          restSeconds:
-            set.restSeconds === null ? "" : String(set.restSeconds),
+    days: getTrainingWeekDates(weekStart).map((plannedDate) => {
+      const day = storedDayByDate.get(plannedDate);
+      if (!day) {
+        return {
+          plannedDate,
+          kind: "rest" as const,
+          availableMinutes: "60",
+          preferredBodyPart: null,
+          exercises: [],
+        };
+      }
+
+      return {
+        plannedDate: day.plannedDate,
+        kind: day.kind,
+        availableMinutes:
+          day.availableMinutes === null ? "60" : String(day.availableMinutes),
+        preferredBodyPart: day.preferredBodyPart,
+        exercises: day.exercises.map((exercise) => ({
+          exerciseId: exercise.exercise.sourceId,
+          name: exercise.exercise.name,
+          sets: exercise.sets.map((set) => ({
+            repetitions: String(set.targetRepetitions),
+            weightKilograms:
+              set.targetWeightGrams === null
+                ? ""
+                : String(set.targetWeightGrams / 1_000),
+            restSeconds:
+              set.restSeconds === null ? "" : String(set.restSeconds),
+          })),
         })),
-      })),
-    })),
+      };
+    }),
   };
 }
 
