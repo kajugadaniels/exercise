@@ -89,7 +89,7 @@ A chat request alone does not relax level-one restrictions. Give the developer t
 | Muscle slug | Application identifier mapped explicitly to visualization identifiers. |
 | Exercise media | Third-party GIF/video referenced by a normalized record. Availability is not a usage license. |
 | Protected catalog | Exercise discovery pages that require a verified Clerk session under the confirmed authenticated-first route policy. |
-| Personal workout | User-owned Monday–Sunday training plan. Its owner-scoped planning API is implemented in code; calendar UI, execution, and recommendation behavior remain separate tasks. |
+| Personal workout | User-owned Monday–Sunday training plan. Its owner-scoped planning API and weekly calendar UI are implemented in code; execution and recommendation behavior remain separate tasks. |
 | Training preferences | Optional owner-scoped goal, experience, session duration, timezone, equipment, and preferred training days used as future recommendation inputs. |
 
 ## 8. Changelog
@@ -102,4 +102,5 @@ A chat request alone does not relax level-one restrictions. Give the developer t
 | 2026-10-28 | Approved the owner-scoped weekly training persistence foundation. |
 | 2026-10-28 | Approved optional owner-scoped training preferences and their protected API boundary. |
 | 2026-10-28 | Approved the protected Monday–Sunday weekly planning API and immutable-history boundary. |
+| 2026-10-28 | Added the protected, responsive Monday–Sunday manual planning calendar. |
 
