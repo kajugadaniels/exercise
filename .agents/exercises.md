@@ -3,7 +3,7 @@
 **Purpose:** Govern exercise data truth, provider mapping, filtering, media use, attribution, and licensing.  
 **Scope:** Every exercise record, instruction, category, muscle, equipment value, GIF/video, and related-exercise feature.  
 **Related:** [api.md](api.md), [muscle-visualization.md](muscle-visualization.md), [performance.md](performance.md)  
-**Last reviewed:** 2026-10-27
+**Last reviewed:** 2026-10-28
 
 ## 1. Verified primary source
 
@@ -60,7 +60,7 @@ Category and facet labels are presentation/localization data. Search indexes nor
 
 ## 6. Search, filters, and related exercises
 
-Search/filter normalized records only. Define result order and combination semantics. Related exercises may use shared verified facets (for example primary muscle and equipment) with a documented deterministic rule; label them as related by metadata, not personalized recommendations.
+Search and filter normalized records only. Exercise filters allow multiple canonical values per facet. Values selected within the same body-part, category, muscle, or equipment group use OR semantics; active groups and the optional search term combine with AND semantics. Preserve selections as repeated URL parameters, deduplicate them, and keep result ordering deterministic. Related exercises may use shared verified facets (for example primary muscle and equipment) with a documented deterministic rule; label them as related by metadata, not personalized recommendations.
 
 ## 7. Future licensed video provider
 
