@@ -1,6 +1,13 @@
 import { auth } from "@clerk/nextjs/server";
+import Link from "next/link";
+import { ChartLineData01Icon } from "@hugeicons/core-free-icons";
+import { Icon } from "@/components/ui/Icon/Icon";
+import { AUTH_ROUTES } from "@/features/auth/config/routes";
 import { TrainingPlanner } from "@/features/training/components/TrainingPlanner/TrainingPlanner";
-import { getTrainingWeekStartForDate } from "@/features/training/domain/training";
+import {
+  getCalendarDateInTimeZone,
+  getTrainingWeekStartForDate,
+} from "@/features/training/domain/training";
 import { getTrainingPreferencesForClerkUser } from "@/features/training/server/training-preferences-service";
 import { getTrainingWeekForClerkUser } from "@/features/training/server/training-week-service";
 import { trainingWeekStartSchema } from "@/features/training/training-week-schema";
@@ -9,22 +16,6 @@ import styles from "./page.module.css";
 type TrainingPageProps = Readonly<{
   searchParams: Promise<{ week?: string | string[] }>;
 }>;
-
-function getCalendarDateInTimeZone(timeZone: string): string {
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    day: "2-digit",
-    month: "2-digit",
-    timeZone,
-    year: "numeric",
-  }).formatToParts(new Date());
-  const partByType = new Map(parts.map((part) => [part.type, part.value]));
-
-  return [
-    partByType.get("year"),
-    partByType.get("month"),
-    partByType.get("day"),
-  ].join("-");
-}
 
 export default async function TrainingPage({
   searchParams,
@@ -53,6 +44,13 @@ export default async function TrainingPage({
         <div>
           <p className={styles.eyebrow}>Personal training</p>
           <h1>Build your week</h1>
+          <Link
+            className={styles.historyLink}
+            href={`${AUTH_ROUTES.trainingHistory}?week=${weekStart}`}
+          >
+            <Icon icon={ChartLineData01Icon} size={18} />
+            View training history
+          </Link>
         </div>
         <p>
           Plan one week at a time, keep recovery visible, and record the exact
