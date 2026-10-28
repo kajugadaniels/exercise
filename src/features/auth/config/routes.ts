@@ -5,6 +5,7 @@ export const AUTH_ROUTES = {
   progress: "/progress",
   profile: "/profile",
   training: "/training",
+  trainingHistory: "/training/history",
   signIn: "/sign-in",
   signUp: "/sign-up",
 } as const;
