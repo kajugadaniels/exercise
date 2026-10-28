@@ -26,7 +26,7 @@ import {
 
 const RECOMMENDATION_SESSION_LIMIT = 40;
 
-const historySessionInclude = {
+export const trainingHistorySessionInclude = {
   trainingDay: { select: { plannedDate: true } },
   setLogs: {
     orderBy: [{ completedAt: "asc" }, { setNumber: "asc" }],
@@ -45,8 +45,8 @@ const historySessionInclude = {
   },
 } satisfies Prisma.WorkoutSessionInclude;
 
-type StoredHistorySession = Prisma.WorkoutSessionGetPayload<{
-  include: typeof historySessionInclude;
+export type StoredTrainingHistorySession = Prisma.WorkoutSessionGetPayload<{
+  include: typeof trainingHistorySessionInclude;
 }>;
 
 function toCalendarDate(date: Date): string {
@@ -80,8 +80,8 @@ function toHistoryStatus(
   throw new Error("An active session cannot appear in workout history.");
 }
 
-function toSourceSession(
-  session: StoredHistorySession,
+export function toTrainingHistorySourceSession(
+  session: StoredTrainingHistorySession,
 ): TrainingHistorySourceSession {
   if (!session.completedAt) {
     throw new Error("An ended workout session is missing its end time.");
@@ -198,14 +198,14 @@ export async function getTrainingHistoryForClerkUser(
           },
         },
         orderBy: { completedAt: "desc" },
-        include: historySessionInclude,
+        include: trainingHistorySessionInclude,
       }),
       prisma.workoutSession.findMany({
         where: { ...ownerScope, ...endedStatusScope },
         orderBy: { completedAt: "desc" },
         skip: (page - 1) * TRAINING_HISTORY_PAGE_SIZE,
         take: TRAINING_HISTORY_PAGE_SIZE + 1,
-        include: historySessionInclude,
+        include: trainingHistorySessionInclude,
       }),
       prisma.workoutSession.findMany({
         where: {
@@ -215,16 +215,16 @@ export async function getTrainingHistoryForClerkUser(
         },
         orderBy: { completedAt: "desc" },
         take: RECOMMENDATION_SESSION_LIMIT,
-        include: historySessionInclude,
+        include: trainingHistorySessionInclude,
       }),
     ]);
 
   const hasNextPage = pageRecords.length > TRAINING_HISTORY_PAGE_SIZE;
   const sessions = pageRecords
     .slice(0, TRAINING_HISTORY_PAGE_SIZE)
-    .map(toSourceSession);
-  const weeklySessions = weekRecords.map(toSourceSession);
-  const insightSessions = insightRecords.map(toSourceSession);
+    .map(toTrainingHistorySourceSession);
+  const weeklySessions = weekRecords.map(toTrainingHistorySourceSession);
+  const insightSessions = insightRecords.map(toTrainingHistorySourceSession);
 
   return trainingHistoryViewSchema.parse({
     pagination: {
