@@ -3,7 +3,7 @@
 **Purpose:** Define the product mission, users, phased capabilities, exclusions, and unresolved decisions.  
 **Scope:** Every task and product decision.  
 **Related:** [architecture.md](architecture.md), [exercises.md](exercises.md), [privacy.md](privacy.md)  
-**Last reviewed:** 2026-10-27
+**Last reviewed:** 2026-10-28
 
 ## 1. Mission and vision
 
@@ -34,9 +34,10 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | Post-registration profile onboarding | MVP, approved 2026-10-27 | Mandatory male/female gender selection, height, weight, derived BMI, and country before protected product use |
 | Muscle highlighter on detail pages | MVP after dependency approval | Local React SVG package; explicit normalization |
 | Interactive muscle explorer | Future | Select muscle, filter catalog, open detail |
-| Favorites and workout plans | Future | Persist only after their product model is approved |
+| Favorites | Future | Persist only after their product model is approved |
 | Measurement progress/history | MVP, approved 2026-10-27 | Append when height or weight changes; owner-scoped and deleted with the fitness profile |
-| Sets, reps, rest, workout history, goals | Next phase | Define the training record before implementation |
+| Weekly workout planning and execution records | Foundation approved 2026-10-28, unverified | Owner-scoped Monday–Sunday plans, rest days, exercise snapshots, planned sets, completed set logs, and workout sessions; APIs and UI remain future tasks |
+| Training recommendations and goals | Next phase | Deterministic recommendation rules and optional preferences require separate task approval |
 | PWA | Future | Separate approval and offline/data policy |
 | Native mobile application | Future / pending framework decision | Not supplied by Next.js automatically |
 | RapidAPI muscle image generator | Optional / pending approval | Must never be a required dependency |
@@ -52,7 +53,7 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 
 ## 5. Explicit exclusions until approved
 
-- Persistence beyond the approved user and profile foundation
+- Persistence beyond the approved user, profile, measurement, and weekly training foundations
 - Native mobile framework or native app
 - Monetization, subscriptions, coaching marketplace, social feed, leaderboards
 - AI-generated exercise instructions, medical guidance, or inferred health conclusions
@@ -82,6 +83,7 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | Dependency installation | Clerk, Zod, Hugeicons, and React Muscle Highlighter versions are approved; developer installation/output pending |
 | Styling architecture | Plain CSS with semantic tokens and colocated CSS Modules is approved; Tailwind/CSS-in-JS/UI kits require a future stack-change approval |
 | Account onboarding scope | Mandatory male/female gender selection, height, weight, country, and derived BMI approved on 2026-10-27; correction and deletion are required |
+| Weekly training record | Owner-scoped Monday–Sunday plans, rest days, exercise snapshots, planned sets, completed set logs, and sessions approved on 2026-10-28; endpoints, UI, and recommendation behavior remain separate tasks |
 | Media commercial rights and alternative licensed provider | Blocking public use of ExerciseGymGifsDB GIFs |
 | Native framework | Unresolved |
 | Monetization | Unresolved |
