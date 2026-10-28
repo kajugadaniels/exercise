@@ -64,18 +64,38 @@ export function ExerciseSearch({
             type="search"
             value={search}
           />
-          {query.bodyPart ? (
-            <input name="bodyPart" type="hidden" value={query.bodyPart} />
-          ) : null}
-          {query.category ? (
-            <input name="category" type="hidden" value={query.category} />
-          ) : null}
-          {query.equipment ? (
-            <input name="equipment" type="hidden" value={query.equipment} />
-          ) : null}
-          {query.muscle ? (
-            <input name="muscle" type="hidden" value={query.muscle} />
-          ) : null}
+          {query.bodyParts?.map((bodyPart) => (
+            <input
+              key={bodyPart}
+              name="bodyPart"
+              type="hidden"
+              value={bodyPart}
+            />
+          ))}
+          {query.categories?.map((category) => (
+            <input
+              key={category}
+              name="category"
+              type="hidden"
+              value={category}
+            />
+          ))}
+          {query.equipment?.map((item) => (
+            <input
+              key={item}
+              name="equipment"
+              type="hidden"
+              value={item}
+            />
+          ))}
+          {query.muscles?.map((muscle) => (
+            <input
+              key={muscle}
+              name="muscle"
+              type="hidden"
+              value={muscle}
+            />
+          ))}
           <button
             className={styles.closeButton}
             onClick={closeSearch}
