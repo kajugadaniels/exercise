@@ -52,7 +52,7 @@ Optional internal fields are not claims that a provider supplies them. Map only 
 
 ## 3. Search and filtering
 
-Normalize case and whitespace with locale-aware deterministic rules. Filter on canonical enums while displaying readable labels. Combine filters with documented semantics and preserve them in URL search parameters. Bound query length, selected values, and page size. Unknown values produce validation errors or are safely ignored only where the UI contract explicitly permits it.
+Normalize case and whitespace with locale-aware deterministic rules. Filter on canonical enums while displaying readable labels. Repeated values within one facet use OR semantics; different active facets and search use AND semantics. Preserve selections as repeated URL search parameters. Bound query length, selected values, and page size. Unknown values produce validation errors or are safely ignored only where the UI contract explicitly permits it.
 
 ## 4. Route Handlers
 
@@ -85,13 +85,14 @@ The private HTTP surface is:
 | --- | --- | --- |
 | `GET /api/profile` | Return the current actor's profile or `null` | Authenticated |
 | `PUT /api/profile` | Validate and upsert the current actor's profile | Authenticated, same-origin |
-| `DELETE /api/profile` | Delete the current actor's profile | Authenticated, same-origin |
-| `GET /api/account/data` | Download the current actor's stored profile as JSON | Authenticated |
-| `DELETE /api/account/data` | Delete the current actor's local application user and cascaded profile | Authenticated, same-origin, exact confirmation phrase |
+| `DELETE /api/profile` | Delete the current actor's profile and scheduled sessions | Authenticated, same-origin |
+| `POST /api/training/sessions` | Add one verified exercise to the current actor's session on a calendar date | Authenticated, completed profile, same-origin |
+| `GET /api/account/data` | Download the current actor's stored profile and scheduled sessions as JSON | Authenticated |
+| `DELETE /api/account/data` | Delete the current actor's local application user and cascaded profile/sessions | Authenticated, same-origin, exact confirmation phrase |
 
-The server derives the Clerk user ID; no contract accepts an owner ID. Personalized responses use `Cache-Control: private, no-store`. Mutation bodies are strict JSON and limited to 16 KiB. Errors use lowercase stable codes and user-safe messages. The export omits internal database and Clerk identifiers and expresses stored weight in kilograms. Local data deletion does not delete the external Clerk sign-in account.
+The server derives the Clerk user ID; no contract accepts an owner ID. Personalized responses use `Cache-Control: private, no-store`. Mutation bodies are strict, bounded JSON. Errors use lowercase stable codes and user-safe messages. The scheduling endpoint accepts only a validated provider exercise ID and valid `YYYY-MM-DD` date, reloads exercise identity from the normalized provider, and relies on a database unique constraint to reject the same exercise twice for one owner and date. The export omits internal database and Clerk identifiers, expresses stored weight in kilograms, and includes scheduled exercise provenance. Local data deletion does not delete the external Clerk sign-in account.
 
-Training, workout, recommendation, history, analytics, and progress endpoints were removed on 2026-10-28. Reintroducing any of them requires a new product, privacy, schema, and API decision.
+Workout execution, recommendation, history, analytics, and progress endpoints remain removed. Reintroducing them requires a new product, privacy, schema, and API decision.
 
 ## 7. Caching and availability
 
