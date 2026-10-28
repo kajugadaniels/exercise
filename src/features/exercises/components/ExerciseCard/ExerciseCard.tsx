@@ -3,6 +3,7 @@ import { ArrowUpRight02Icon } from "@hugeicons/core-free-icons";
 import { Icon } from "@/components/ui/Icon/Icon";
 import type { ExerciseSummary } from "../../domain/exercise";
 import { ExerciseThumbnail } from "../ExerciseThumbnail/ExerciseThumbnail";
+import { ScheduleExerciseDialog } from "../ScheduleExerciseDialog/ScheduleExerciseDialog";
 import styles from "./ExerciseCard.module.css";
 
 type ExerciseCardProps = Readonly<{
@@ -26,6 +27,12 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
           </span>
         </span>
       </Link>
+      <div className={styles.scheduleAction}>
+        <ScheduleExerciseDialog
+          exerciseId={exercise.id}
+          exerciseName={exercise.name}
+        />
+      </div>
     </article>
   );
 }
