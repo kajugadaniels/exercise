@@ -1,0 +1,29 @@
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--color-border);
+}
+
+.actions button {
+  color: var(--color-danger-text);
+}
+
+.buttonContent {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+@media (max-width: 30rem) {
+  .actions,
+  .actions button {
+    inline-size: 100%;
+  }
+}
+
+@media (forced-colors: active) {
+  .actions button {
+    color: LinkText;
+  }
+}
