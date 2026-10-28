@@ -107,6 +107,28 @@ function getCalendarDateTimestamp(value: string): number | null {
   return normalizedValue === value ? timestamp : null;
 }
 
+export function getCalendarDateInTimeZone(
+  timeZone: string,
+  instant: Date = new Date(),
+): string {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    day: "2-digit",
+    month: "2-digit",
+    timeZone,
+    year: "numeric",
+  }).formatToParts(instant);
+  const partByType = new Map(parts.map((part) => [part.type, part.value]));
+  const year = partByType.get("year");
+  const month = partByType.get("month");
+  const day = partByType.get("day");
+
+  if (!year || !month || !day) {
+    throw new Error("The calendar date could not be determined.");
+  }
+
+  return `${year}-${month}-${day}`;
+}
+
 export function isMondayCalendarDate(value: string): boolean {
   const timestamp = getCalendarDateTimestamp(value);
 
