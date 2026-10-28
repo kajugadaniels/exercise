@@ -2,7 +2,7 @@ import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 
 type IconProps = {
   icon: IconSvgElement;
-  size?: 18 | 20 | 24;
+  size?: 18 | 20 | 24 | 64;
 };
 
 export function Icon({ icon, size = 20 }: IconProps) {
