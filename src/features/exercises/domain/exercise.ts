@@ -116,10 +116,10 @@ export const EXERCISE_PAGE_SIZE = 24;
 
 export type ExerciseQuery = {
   search?: string;
-  muscle?: MuscleId;
-  bodyPart?: BodyPartId;
-  equipment?: EquipmentId;
-  category?: ExerciseCategory;
+  muscles?: MuscleId[];
+  bodyParts?: BodyPartId[];
+  equipment?: EquipmentId[];
+  categories?: ExerciseCategory[];
   page: number;
 };
 
