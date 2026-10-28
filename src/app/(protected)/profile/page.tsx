@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { AUTH_ROUTES } from "@/features/auth/config/routes";
+import { AccountDataControls } from "@/features/account/components/AccountDataControls/AccountDataControls";
 import { ProfileForm } from "@/features/profile/components/ProfileForm/ProfileForm";
 import { getProfileForClerkUser } from "@/features/profile/server/profile-service";
 import { TrainingPreferencesForm } from "@/features/training/components/TrainingPreferencesForm/TrainingPreferencesForm";
@@ -56,6 +57,19 @@ export default async function ProfilePage() {
             </p>
           </header>
           <TrainingPreferencesForm initialPreferences={trainingPreferences} />
+        </section>
+
+        <section className={styles.formCard} aria-labelledby="data-card-title">
+          <header className={styles.cardHeader}>
+            <h2 className={styles.cardTitle} id="data-card-title">
+              Data controls
+            </h2>
+            <p className={styles.cardSummary}>
+              Download a portable copy or permanently remove the fitness data
+              stored by this application.
+            </p>
+          </header>
+          <AccountDataControls />
         </section>
       </div>
     </main>
