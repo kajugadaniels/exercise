@@ -235,6 +235,54 @@ export async function startWorkoutForClerkUser(
   return requireWorkoutView(clerkUserId, plannedDate);
 }
 
+export async function skipWorkoutForClerkUser(
+  clerkUserId: string,
+  plannedDate: string,
+): Promise<WorkoutExecutionView> {
+  const plannedDateValue = toDatabaseDate(plannedDate);
+
+  await prisma.$transaction(
+    async (transaction) => {
+      const day = await transaction.trainingDay.findFirst({
+        where: {
+          plannedDate: plannedDateValue,
+          trainingWeek: { user: { clerkUserId } },
+        },
+        select: {
+          id: true,
+          kind: true,
+          status: true,
+          session: { select: { id: true } },
+        },
+      });
+
+      if (!day) {
+        throw new WorkoutNotFoundError();
+      }
+
+      if (day.kind !== TrainingDayKind.WORKOUT) {
+        throw new WorkoutDayUnavailableError();
+      }
+
+      if (day.status === TrainingDayStatus.SKIPPED && !day.session) {
+        return;
+      }
+
+      if (day.status !== TrainingDayStatus.PLANNED || day.session) {
+        throw new WorkoutSessionConflictError();
+      }
+
+      await transaction.trainingDay.update({
+        where: { id: day.id },
+        data: { status: TrainingDayStatus.SKIPPED },
+      });
+    },
+    { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
+  );
+
+  return requireWorkoutView(clerkUserId, plannedDate);
+}
+
 export async function recordWorkoutSetForClerkUser(
   clerkUserId: string,
   plannedDate: string,
