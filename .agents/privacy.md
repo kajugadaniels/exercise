@@ -30,7 +30,9 @@ Before collection, explain what is collected, why, where it is stored, who recei
 
 ## 4. Access and deletion
 
-Private data is owner-scoped. Profile correction and profile deletion are part of the initial implementation. A deleted profile returns the account to mandatory onboarding. Profile records are retained until the user deletes the profile or application account deletion is processed. Training preferences can be cleared independently without deleting the profile or workout history. A planned week can be deleted independently until workout activity is recorded; after that point, the planning API protects the history from replacement or deletion. Training records attach to the internal user rather than the editable profile so profile correction does not rewrite history. User-facing training-history deletion, full account deletion synchronization, and export remain release gates before public release.
+Private data is owner-scoped. Profile correction and profile deletion are part of the initial implementation. A deleted profile returns the account to mandatory onboarding. Profile records are retained until the user deletes the profile or local application data. Training preferences can be cleared independently without deleting the profile or workout history. A planned week can be deleted independently until workout activity is recorded; after that point, the planning API protects the history from accidental replacement or deletion. An authenticated user can explicitly delete one ended workout record or delete all locally stored profile and training data after a strong confirmation. A portable JSON export contains the user's application-owned fitness data but omits internal owner identifiers. Training records attach to the internal user rather than the editable profile so profile correction does not rewrite history.
+
+Local deletion does not delete the external Clerk identity. Verified Clerk account-deletion synchronization, Neon backup expiry, and operational deletion verification remain release gates before public release.
 
 ## 5. Third parties
 
@@ -46,4 +48,4 @@ The platform provides general fitness information, not medical advice. Do not in
 
 ## 8. Future decision gate
 
-Neon PostgreSQL is approved for development and production. Before public release, document and verify the selected Neon regions, encryption posture, backup retention and deletion behavior, Clerk account-deletion synchronization, export process, and incident response. These are release blockers, not inferred guarantees.
+Neon PostgreSQL is approved for development and production. Before public release, document and verify the selected Neon regions, encryption posture, backup retention and deletion behavior, Clerk account-deletion synchronization, export runtime behavior, and incident response. These are release blockers, not inferred guarantees.
