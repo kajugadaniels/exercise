@@ -139,7 +139,7 @@ model WorkoutExercise {
   exerciseSourceId         String          @db.VarChar(200)
   exerciseSourceVersion    String          @db.VarChar(50)
   exerciseAttributionUrl   String          @db.VarChar(500)
-  exerciseName             String          @db.VarChar(160)
+  exerciseName             String          @db.VarChar(180)
   exerciseCategory         String?         @db.VarChar(50)
   exercisePrimaryMuscle    String          @db.VarChar(50)
   exerciseSecondaryMuscles String[]        @default([])
