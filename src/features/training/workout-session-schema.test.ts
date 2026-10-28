@@ -37,10 +37,21 @@ test("rejects unknown fields and invalid actual performance", () => {
   assert.equal(result.success, false);
 });
 
-test("accepts only supported session completion actions", () => {
+test("accepts only supported workout lifecycle actions", () => {
   assert.equal(
     workoutSessionActionSchema.safeParse({ action: "complete" }).success,
     true,
+  );
+  assert.equal(
+    workoutSessionActionSchema.safeParse({ action: "skip" }).success,
+    true,
+  );
+  assert.equal(
+    workoutSessionActionSchema.safeParse({
+      action: "skip",
+      userId: "not-accepted",
+    }).success,
+    false,
   );
   assert.equal(
     workoutSessionActionSchema.safeParse({ action: "pause" }).success,
