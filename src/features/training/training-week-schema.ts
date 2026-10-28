@@ -10,11 +10,11 @@ export const MAX_EXERCISES_PER_WEEK = 40;
 export const MAX_PLANNED_SETS_PER_EXERCISE = 20;
 export const MAX_PLANNED_SETS_PER_WEEK = 200;
 
-const calendarDateSchema = z
+export const trainingCalendarDateSchema = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/, "Use a calendar date in YYYY-MM-DD format.");
 
-export const trainingWeekStartSchema = calendarDateSchema.refine(
+export const trainingWeekStartSchema = trainingCalendarDateSchema.refine(
   isMondayCalendarDate,
   "The training week must start on a Monday.",
 );
@@ -73,14 +73,14 @@ const plannedExerciseSchema = z
 const restDaySchema = z
   .object({
     kind: z.literal("rest"),
-    plannedDate: calendarDateSchema,
+    plannedDate: trainingCalendarDateSchema,
   })
   .strict();
 
 const workoutDaySchema = z
   .object({
     kind: z.literal("workout"),
-    plannedDate: calendarDateSchema,
+    plannedDate: trainingCalendarDateSchema,
     availableMinutes: z
       .number()
       .int("Available time must be a whole number of minutes.")
