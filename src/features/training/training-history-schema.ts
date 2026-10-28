@@ -68,6 +68,7 @@ const weeklyReportSchema = z
               "in-progress",
               "completed",
               "abandoned",
+              "skipped",
             ]),
           })
           .strict(),
