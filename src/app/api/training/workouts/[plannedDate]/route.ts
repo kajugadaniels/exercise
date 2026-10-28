@@ -5,6 +5,7 @@ import {
   finishWorkoutForClerkUser,
   getWorkoutForClerkUser,
   recordWorkoutSetForClerkUser,
+  skipWorkoutForClerkUser,
   startWorkoutForClerkUser,
   WorkoutDayUnavailableError,
   WorkoutIncompleteError,
@@ -16,6 +17,8 @@ import {
 import {
   workoutDateSchema,
   workoutSessionActionSchema,
+  type WorkoutExecutionView,
+  type WorkoutSessionAction,
 } from "@/features/training/workout-session-schema";
 
 const MAX_WORKOUT_ACTION_BODY_BYTES = 16_384;
@@ -54,6 +57,32 @@ async function hasCompletedProfile(clerkUserId: string): Promise<boolean> {
   return Boolean(await getProfileForClerkUser(clerkUserId));
 }
 
+async function applyWorkoutAction(
+  clerkUserId: string,
+  plannedDate: string,
+  action: WorkoutSessionAction,
+): Promise<WorkoutExecutionView> {
+  switch (action.action) {
+    case "record-set":
+      return recordWorkoutSetForClerkUser(
+        clerkUserId,
+        plannedDate,
+        action,
+      );
+    case "skip":
+      return skipWorkoutForClerkUser(clerkUserId, plannedDate);
+    case "complete":
+    case "abandon":
+      return finishWorkoutForClerkUser(
+        clerkUserId,
+        plannedDate,
+        action.action,
+      );
+    default:
+      throw new Error("Unsupported validated workout action.");
+  }
+}
+
 function workoutErrorResponse(error: unknown) {
   if (error instanceof WorkoutNotFoundError) {
     return errorResponse(404, "workout_not_found", "This workout was not found.");
@@ -78,8 +107,8 @@ function workoutErrorResponse(error: unknown) {
   if (error instanceof WorkoutSessionConflictError) {
     return errorResponse(
       409,
-      "workout_already_ended",
-      "This workout has already ended and can no longer be changed.",
+      "workout_state_conflict",
+      "This workout state no longer allows that change.",
     );
   }
 
@@ -289,18 +318,11 @@ export async function PATCH(request: Request, context: RouteContext) {
       );
     }
 
-    const workout =
-      bodyResult.data.action === "record-set"
-        ? await recordWorkoutSetForClerkUser(
-            userId,
-            plannedDate,
-            bodyResult.data,
-          )
-        : await finishWorkoutForClerkUser(
-            userId,
-            plannedDate,
-            bodyResult.data.action,
-          );
+    const workout = await applyWorkoutAction(
+      userId,
+      plannedDate,
+      bodyResult.data,
+    );
 
     return NextResponse.json({ data: workout }, { headers: noStoreHeaders });
   } catch (error) {
