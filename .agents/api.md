@@ -102,15 +102,29 @@ The optional training-preference HTTP surface is:
 
 The server derives ownership from the Clerk session and never accepts a user ID. Responses are private and non-cacheable. Mutation bodies are JSON, bounded to 16 KiB, and return stable user-safe errors. Clearing preferences does not delete the profile or workout history.
 
-## 8. Caching and availability
+## 8. Weekly training plan contracts
+
+The private weekly planning surface is:
+
+| Endpoint | Purpose | Access |
+| --- | --- | --- |
+| `GET /api/training/weeks/{weekStart}` | Return the current actor's Monday–Sunday plan or `null` | Authenticated, completed profile |
+| `PUT /api/training/weeks/{weekStart}` | Strictly validate and atomically create or replace one complete Monday–Sunday plan | Authenticated, completed profile, same-origin |
+| `DELETE /api/training/weeks/{weekStart}` | Delete an unstarted weekly plan | Authenticated, completed profile, same-origin |
+
+`weekStart` is a valid Monday in `YYYY-MM-DD` format. A write contains exactly seven unique calendar days, each marked as a workout or rest day. Workout days contain bounded exercises and planned sets; weights enter the API in kilograms and are persisted as integer grams. The server reloads each exercise from the normalized provider before snapshotting supported metadata, assigns order and set numbers, and records the plan as manual. The browser cannot submit ownership, provider metadata, recommendation provenance, lifecycle status, or history.
+
+The server derives ownership from the Clerk session. A week with any workout session is immutable through the planning contract, preventing replacement or deletion of activity history. Writes are limited to 64 KiB, personalized responses are private and non-cacheable, and provider failures return safe errors.
+
+## 9. Caching and availability
 
 Version-pinned catalog data may use long-lived/revalidated caching after provider update behavior is verified. Never cache personalized results publicly. Define stale/fallback behavior explicitly; do not silently show a partial result as complete. Provider failure should preserve the application shell and offer retry.
 
-## 9. Future provider composition
+## 10. Future provider composition
 
 If a licensed MP4 provider is added, compose by stable application identity with documented matching confidence. Never join records solely by display name without review. Metadata conflicts retain provenance; do not overwrite verified data silently.
 
-## 10. Contract evolution
+## 11. Contract evolution
 
 Native-client APIs require explicit versioning and compatibility policy. Provider schema changes are contained within adapters; domain contract changes receive tests and documentation. Do not expose a provider's URL shape as the application's public contract.
 
