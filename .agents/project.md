@@ -36,7 +36,7 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | Interactive muscle explorer | Future | Select muscle, filter catalog, open detail |
 | Favorites | Future | Persist only after their product model is approved |
 | Measurement progress/history | MVP, approved 2026-10-27 | Append when height or weight changes; owner-scoped and deleted with the fitness profile |
-| Weekly workout planning and execution records | Foundation approved 2026-10-28, unverified | Owner-scoped Monday–Sunday plans, rest days, exercise snapshots, planned sets, completed set logs, and workout sessions; APIs and UI remain future tasks |
+| Weekly workout planning and execution records | MVP planning API implemented in code, unverified | Owner-scoped Monday–Sunday plans, rest days, verified exercise snapshots, and planned sets; execution APIs, history UI, and calendar UI remain future tasks |
 | Training preferences | MVP foundation approved 2026-10-28, unverified | Optional goal, experience, session duration, timezone, available equipment, and preferred training days; owner-scoped, editable, and independently deletable |
 | Training recommendations | Next phase | Deterministic recommendation rules require separate task approval and must consume approved preferences and completed training history |
 | PWA | Future | Separate approval and offline/data policy |
@@ -84,7 +84,7 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | Dependency installation | Clerk, Zod, Hugeicons, and React Muscle Highlighter versions are approved; developer installation/output pending |
 | Styling architecture | Plain CSS with semantic tokens and colocated CSS Modules is approved; Tailwind/CSS-in-JS/UI kits require a future stack-change approval |
 | Account onboarding scope | Mandatory male/female gender selection, height, weight, country, and derived BMI approved on 2026-10-27; correction and deletion are required |
-| Weekly training record | Owner-scoped Monday–Sunday plans, rest days, exercise snapshots, planned sets, completed set logs, and sessions approved on 2026-10-28; endpoints, UI, and recommendation behavior remain separate tasks |
+| Weekly training record | Owner-scoped Monday–Sunday plans, rest days, exercise snapshots, planned sets, completed set logs, and sessions approved on 2026-10-28; weekly plan read/write/delete contracts are approved, while execution UI and recommendation behavior remain separate tasks |
 | Training preferences | Optional owner-scoped goal, experience level, session duration, timezone, available equipment, and preferred training days approved on 2026-10-28; injury and medical fields remain excluded |
 | Media commercial rights and alternative licensed provider | Blocking public use of ExerciseGymGifsDB GIFs |
 | Native framework | Unresolved |
