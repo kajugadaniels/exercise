@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { TrainingWeekPlan } from "./domain/training";
 import {
+  applyTrainingExerciseChange,
   createEmptyTrainingWeek,
   createTrainingWeekEditor,
   getAdjacentWeekStart,
@@ -100,4 +101,58 @@ test("converts editor strings into the strict API input", () => {
 test("moves between adjacent Monday week boundaries", () => {
   assert.equal(getAdjacentWeekStart(weekStart, "previous"), "2026-10-19");
   assert.equal(getAdjacentWeekStart(weekStart, "next"), "2026-11-02");
+});
+
+test("adds an exercise while turning a rest day into a workout", () => {
+  const editor = createEmptyTrainingWeek(weekStart);
+  const updated = applyTrainingExerciseChange(editor, {
+    plannedDate: weekStart,
+    availableMinutes: 75,
+    preferredBodyPart: "chest",
+    exercise: {
+      id: "pectorals/barbell-bench-press",
+      name: "Barbell bench press",
+    },
+    sets: [
+      { repetitions: "8", restSeconds: "90", weightKilograms: "50" },
+    ],
+  });
+
+  assert.equal(updated.days[0].kind, "workout");
+  assert.equal(updated.days[0].availableMinutes, "75");
+  assert.equal(updated.days[0].preferredBodyPart, "chest");
+  assert.equal(updated.days[0].exercises[0].name, "Barbell bench press");
+});
+
+test("edits one exercise without changing its position", () => {
+  const editor = createEmptyTrainingWeek(weekStart);
+  editor.days[0] = {
+    ...editor.days[0],
+    kind: "workout",
+    exercises: [
+      {
+        exerciseId: "pectorals/barbell-bench-press",
+        name: "Barbell bench press",
+        sets: [
+          { repetitions: "8", restSeconds: "90", weightKilograms: "50" },
+        ],
+      },
+    ],
+  };
+
+  const updated = applyTrainingExerciseChange(editor, {
+    exerciseIndex: 0,
+    plannedDate: weekStart,
+    exercise: {
+      id: "pectorals/barbell-bench-press",
+      name: "Barbell bench press",
+    },
+    sets: [
+      { repetitions: "10", restSeconds: "75", weightKilograms: "52.5" },
+    ],
+  });
+
+  assert.equal(updated.days[0].exercises.length, 1);
+  assert.equal(updated.days[0].exercises[0].sets[0].repetitions, "10");
+  assert.equal(updated.days[0].exercises[0].sets[0].weightKilograms, "52.5");
 });
