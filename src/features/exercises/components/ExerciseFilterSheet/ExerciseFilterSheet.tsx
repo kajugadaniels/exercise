@@ -18,11 +18,15 @@ import {
   muscleIds,
   type ExerciseQuery,
 } from "../../domain/exercise";
-import { buildExerciseLibraryUrl } from "../../providers/exercise-gym-gifs/filters";
+import {
+  buildExerciseLibraryUrl,
+  type ExerciseSelectionContext,
+} from "../../providers/exercise-gym-gifs/filters";
 import styles from "./ExerciseFilterSheet.module.css";
 
 type ExerciseFilterSheetProps = Readonly<{
   query: ExerciseQuery;
+  selectionContext?: ExerciseSelectionContext;
 }>;
 
 type FilterGroupProps<TValue extends string> = Readonly<{
@@ -92,7 +96,10 @@ function readSelectedFilter<TValue extends string>(
   return allowedValues.find((value) => value === submittedValue);
 }
 
-export function ExerciseFilterSheet({ query }: ExerciseFilterSheetProps) {
+export function ExerciseFilterSheet({
+  query,
+  selectionContext,
+}: ExerciseFilterSheetProps) {
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -154,7 +161,10 @@ export function ExerciseFilterSheet({ query }: ExerciseFilterSheetProps) {
     };
 
     closeSheet();
-    router.push(buildExerciseLibraryUrl(nextQuery, 1), { scroll: false });
+    router.push(
+      buildExerciseLibraryUrl(nextQuery, 1, undefined, selectionContext),
+      { scroll: false },
+    );
   }
 
   function clearFilters() {
@@ -164,7 +174,10 @@ export function ExerciseFilterSheet({ query }: ExerciseFilterSheetProps) {
     };
 
     closeSheet();
-    router.push(buildExerciseLibraryUrl(nextQuery, 1), { scroll: false });
+    router.push(
+      buildExerciseLibraryUrl(nextQuery, 1, undefined, selectionContext),
+      { scroll: false },
+    );
   }
 
   return (
@@ -251,7 +264,9 @@ export function ExerciseFilterSheet({ query }: ExerciseFilterSheetProps) {
             >
               Clear all
             </button>
-            <Button type="submit">Apply filters</Button>
+            <Button className={styles.applyButton} type="submit">
+              Apply filters
+            </Button>
           </footer>
         </form>
       </dialog>
