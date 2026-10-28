@@ -7,7 +7,7 @@
 
 ## 1. Data minimization
 
-Collect only data required for an approved user-visible feature. The approved mandatory profile contains a male/female gender selection, height, weight, and country. BMI is derived on demand and not stored. Training plans, preferences, workout history, and progress history were removed on 2026-10-28 and must not be collected without a new review. Do not collect birth date, photos, injury/medical history, disability, precise location, contacts, wearable data, or additional measurements without a new review.
+Collect only data required for an approved user-visible feature. The approved mandatory profile contains a male/female gender selection, height, weight, and country. BMI is derived on demand and not stored. On 2026-10-28, the developer approved owner-scoped calendar dates and provider exercise snapshots for dated training sessions. Training preferences, workout execution, performance history, and progress history remain removed and must not be collected without a new review. Do not collect birth date, photos, injury/medical history, disability, precise location, contacts, wearable data, or additional measurements without a new review.
 
 ## 2. Data classes
 
@@ -17,7 +17,7 @@ Collect only data required for an approved user-visible feature. The approved ma
 | Gender, height, weight, country | Sensitive profile data; required for the approved profile, owner-scoped, editable, and deletable |
 | BMI | Derived in application code from height and weight; never stored independently or used diagnostically |
 | Display name/avatar | Personal; optional where possible |
-| Fitness preferences/goals | Potentially sensitive; optional, owner-scoped, purpose-limited, editable, and independently deletable; includes goal, experience, session duration, timezone, equipment, and preferred days |
+| Scheduled training date and exercises | Potentially sensitive fitness-planning data; owner-scoped, purpose-limited, included in export, and deleted with local application data |
 | Future saved content | Private user content; requires approval before collection |
 | Medical/injury information | Out of scope |
 | Search/filter events | Do not retain by default; analytics requires approval |
@@ -28,13 +28,13 @@ Before collection, explain what is collected, why, where it is stored, who recei
 
 ## 4. Access and deletion
 
-Private data is owner-scoped. Profile correction and profile deletion are part of the initial implementation. A deleted profile returns the account to mandatory onboarding. Profile records are retained until the user deletes the profile or local application data. An authenticated user can delete all locally stored application and profile data after a strong confirmation. A portable JSON export contains the user's stored profile but omits internal owner identifiers.
+Private data is owner-scoped. Profile correction and profile deletion are part of the initial implementation. Deleting the profile transactionally deletes its scheduled sessions and returns the account to mandatory onboarding. Profile and session records are otherwise retained until local-data deletion. An authenticated user can delete all locally stored application, profile, and session data after a strong confirmation. A portable JSON export contains the user's stored profile and scheduled sessions but omits internal owner identifiers.
 
 Local deletion does not delete the external Clerk identity. Verified Clerk account-deletion synchronization, Neon backup expiry, and operational deletion verification remain release gates before public release.
 
 ## 5. Third parties
 
-Do not send Clerk identity, profile data, IP-derived context, or search history to the public exercise CDN or optional RapidAPI provider. Review vendor privacy terms and data flow before adding analytics, crash reporting, storage, email, or video services.
+Do not send Clerk identity, profile data, scheduled dates, IP-derived context, or search history to the public exercise CDN or optional RapidAPI provider. The scheduling service sends only a validated source exercise ID through the existing provider adapter. Review vendor privacy terms and data flow before adding analytics, crash reporting, storage, email, or video services.
 
 ## 6. Logs, caches, and testing
 
