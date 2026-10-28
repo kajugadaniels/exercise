@@ -20,6 +20,7 @@ import {
 import { getTrainingHistoryForClerkUser } from "@/features/training/server/training-history-service";
 import { getTrainingPreferencesForClerkUser } from "@/features/training/server/training-preferences-service";
 import { trainingHistoryQuerySchema } from "@/features/training/training-history-schema";
+import { WorkoutHistoryActions } from "@/features/training/components/WorkoutHistoryActions/WorkoutHistoryActions";
 import { getAdjacentWeekStart } from "@/features/training/training-week-editor";
 import styles from "./page.module.css";
 
@@ -300,6 +301,9 @@ export default async function TrainingHistoryPage({
                         This session ended before a set was recorded.
                       </p>
                     )}
+                    <WorkoutHistoryActions
+                      plannedDate={session.plannedDate}
+                    />
                   </div>
                 </details>
               ))}
