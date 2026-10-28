@@ -94,7 +94,7 @@ Media is a separate capability within the normalized model so a future licensed 
 
 Clerk proves session identity; it does not confer ownership. Every future private mutation re-derives the actor server-side and scopes data access to that actor. Client-only visibility controls are never authorization.
 
-The application user is keyed internally and has one unique Clerk user ID. The profile references that internal user. Every personal query derives the Clerk ID from the verified server session and never accepts an owner ID from the browser.
+The application user is keyed internally and has one unique Clerk user ID. The profile and dated training sessions reference that internal user. Every personal query derives the Clerk ID from the verified server session and never accepts an owner ID from the browser. Scheduled exercises store a bounded provider identity snapshot and are unique per user session date and source exercise.
 
 Prisma is server-only. Use Neon's pooled URL for application traffic and its direct URL for Prisma CLI migration work. Development and production are the only approved database environments; do not add a test, preview, branch-per-PR, or shadow database without a new decision.
 
