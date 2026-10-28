@@ -1,0 +1,270 @@
+.form {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.formError {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-md);
+  background-color: var(--color-danger-soft);
+  color: var(--color-danger-text);
+  font-size: var(--text-sm);
+}
+
+.group {
+  display: grid;
+  gap: var(--space-3);
+  min-inline-size: 0;
+  padding: 0;
+  border: 0;
+}
+
+.group:disabled {
+  opacity: 0.62;
+}
+
+.legend {
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.groupHint {
+  max-inline-size: 64ch;
+  margin-block-start: calc(var(--space-2) * -1);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.goalGrid,
+.experienceGrid,
+.inputGrid,
+.chipGrid,
+.week {
+  display: grid;
+  gap: var(--space-2);
+  min-inline-size: 0;
+}
+
+.choiceCard {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+  min-block-size: 4.75rem;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-raised);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
+
+.nativeControl {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.choiceMarker {
+  display: grid;
+  inline-size: 1rem;
+  block-size: 1rem;
+  margin-block-start: 0.1rem;
+  place-items: center;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-full);
+}
+
+.choiceMarker::after {
+  inline-size: 0.45rem;
+  block-size: 0.45rem;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary);
+  content: "";
+  opacity: 0;
+}
+
+.choiceCard:has(.nativeControl:checked) {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+}
+
+.choiceCard:has(.nativeControl:checked) .choiceMarker {
+  border-color: var(--color-primary);
+}
+
+.choiceCard:has(.nativeControl:checked) .choiceMarker::after {
+  opacity: 1;
+}
+
+.choiceCard:has(.nativeControl:focus-visible),
+.chip:has(.nativeControl:focus-visible),
+.day:has(.nativeControl:focus-visible) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.choiceCopy {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.choiceTitle {
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.choiceDescription {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--leading-body);
+}
+
+.chipGrid {
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+}
+
+.chip,
+.day {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--control-height);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-raised);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.chip:has(.nativeControl:checked),
+.day:has(.nativeControl:checked) {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-text);
+}
+
+.week {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.day:last-child {
+  grid-column: 2;
+}
+
+.inputGrid {
+  align-items: start;
+}
+
+.fieldError {
+  color: var(--color-danger);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+}
+
+.privacyNote {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--space-2);
+  align-items: stretch;
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--color-border);
+}
+
+@media (hover: hover) {
+  .choiceCard:hover,
+  .chip:hover,
+  .day:hover {
+    border-color: var(--color-border-strong);
+    background-color: var(--color-surface-soft);
+  }
+
+  .choiceCard:has(.nativeControl:checked):hover,
+  .chip:has(.nativeControl:checked):hover,
+  .day:has(.nativeControl:checked):hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-soft);
+  }
+}
+
+@media (min-width: 40rem) {
+  .goalGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .inputGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  .week {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+
+  .day:last-child {
+    grid-column: auto;
+  }
+
+  .actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
+@media (min-width: 64rem) {
+  .experienceGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .choiceCard,
+  .chip,
+  .day {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .formError,
+  .choiceCard,
+  .chip,
+  .day {
+    border-color: CanvasText;
+  }
+
+  .choiceCard:has(.nativeControl:checked),
+  .chip:has(.nativeControl:checked),
+  .day:has(.nativeControl:checked) {
+    border-color: Highlight;
+    background-color: Canvas;
+    color: Highlight;
+  }
+
+  .choiceMarker::after {
+    background-color: Highlight;
+  }
+}
