@@ -60,6 +60,8 @@ test("converts stored grams into editable kilograms", () => {
   };
 
   const editor = createTrainingWeekEditor(weekStart, plan);
+  assert.equal(editor.days.length, 7);
+  assert.equal(editor.days.slice(1).every((day) => day.kind === "rest"), true);
   assert.equal(editor.days[0].exercises[0].sets[0].weightKilograms, "52.5");
 });
 
