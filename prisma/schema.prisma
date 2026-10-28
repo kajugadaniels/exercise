@@ -35,10 +35,24 @@ enum WorkoutSessionStatus {
   ABANDONED
 }
 
+enum TrainingGoal {
+  GENERAL_FITNESS
+  STRENGTH
+  MUSCLE_GAIN
+  ENDURANCE
+}
+
+enum TrainingExperienceLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
 model User {
   id                   String             @id @default(cuid())
   clerkUserId          String             @unique @db.VarChar(64)
   profile              UserProfile?
+  trainingPreferences  TrainingPreferences?
   measurementSnapshots MeasurementSnapshot[]
   trainingWeeks        TrainingWeek[]
   createdAt            DateTime           @default(now())
@@ -69,6 +83,20 @@ model UserProfile {
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([updatedAt])
+}
+
+model TrainingPreferences {
+  id                      String                  @id @default(cuid())
+  userId                  String                  @unique
+  goal                    TrainingGoal
+  experienceLevel         TrainingExperienceLevel
+  preferredSessionMinutes Int
+  timezone                String                  @db.VarChar(64)
+  availableEquipment      String[]                @default([])
+  preferredTrainingDays   Int[]                   @default([])
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+  user                    User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model TrainingWeek {
