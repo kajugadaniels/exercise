@@ -12,11 +12,35 @@ enum Gender {
   MALE
 }
 
+enum TrainingDayKind {
+  WORKOUT
+  REST
+}
+
+enum TrainingPlanSource {
+  MANUAL
+  RECOMMENDED
+}
+
+enum TrainingDayStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  SKIPPED
+}
+
+enum WorkoutSessionStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
+
 model User {
   id                   String             @id @default(cuid())
   clerkUserId          String             @unique @db.VarChar(64)
   profile              UserProfile?
   measurementSnapshots MeasurementSnapshot[]
+  trainingWeeks        TrainingWeek[]
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
 }
@@ -45,4 +69,111 @@ model UserProfile {
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([updatedAt])
+}
+
+model TrainingWeek {
+  id        String        @id @default(cuid())
+  userId    String
+  weekStart DateTime      @db.Date
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  days      TrainingDay[]
+
+  @@unique([userId, weekStart])
+}
+
+model TrainingDay {
+  id                          String               @id @default(cuid())
+  trainingWeekId              String
+  plannedDate                 DateTime             @db.Date
+  kind                        TrainingDayKind
+  source                      TrainingPlanSource
+  status                      TrainingDayStatus    @default(PLANNED)
+  availableMinutes            Int?
+  preferredBodyPart           String?              @db.VarChar(50)
+  recommendationEngineVersion String?              @db.VarChar(50)
+  createdAt                   DateTime             @default(now())
+  updatedAt                   DateTime             @updatedAt
+  trainingWeek                TrainingWeek         @relation(fields: [trainingWeekId], references: [id], onDelete: Cascade)
+  exercises                   WorkoutExercise[]
+  session                     WorkoutSession?
+
+  @@unique([trainingWeekId, plannedDate])
+  @@index([trainingWeekId, status])
+}
+
+model WorkoutExercise {
+  id                       String          @id @default(cuid())
+  trainingDayId            String
+  position                 Int
+  exerciseProvider         String          @db.VarChar(50)
+  exerciseSourceId         String          @db.VarChar(200)
+  exerciseSourceVersion    String          @db.VarChar(50)
+  exerciseAttributionUrl   String          @db.VarChar(500)
+  exerciseName             String          @db.VarChar(160)
+  exerciseCategory         String?         @db.VarChar(50)
+  exercisePrimaryMuscle    String          @db.VarChar(50)
+  exerciseSecondaryMuscles String[]        @default([])
+  exerciseBodyPart         String?         @db.VarChar(50)
+  exerciseEquipment        String?         @db.VarChar(50)
+  recommendationReasons    String[]        @default([])
+  createdAt                DateTime        @default(now())
+  updatedAt                DateTime        @updatedAt
+  trainingDay              TrainingDay     @relation(fields: [trainingDayId], references: [id], onDelete: Cascade)
+  plannedSets              PlannedSet[]
+  setLogs                  WorkoutSetLog[]
+
+  @@unique([trainingDayId, position])
+  @@index([exerciseProvider, exerciseSourceId])
+}
+
+model PlannedSet {
+  id                String          @id @default(cuid())
+  workoutExerciseId String
+  setNumber         Int
+  targetRepetitions Int
+  targetWeightGrams Int?
+  restSeconds       Int?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  workoutExercise   WorkoutExercise @relation(fields: [workoutExerciseId], references: [id], onDelete: Cascade)
+  setLog            WorkoutSetLog?
+
+  @@unique([workoutExerciseId, setNumber])
+}
+
+model WorkoutSession {
+  id            String               @id @default(cuid())
+  trainingDayId String               @unique
+  status        WorkoutSessionStatus @default(IN_PROGRESS)
+  startedAt     DateTime             @default(now())
+  completedAt   DateTime?
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  trainingDay   TrainingDay          @relation(fields: [trainingDayId], references: [id], onDelete: Cascade)
+  setLogs       WorkoutSetLog[]
+
+  @@index([status, startedAt])
+}
+
+model WorkoutSetLog {
+  id                String          @id @default(cuid())
+  sessionId         String
+  workoutExerciseId String
+  plannedSetId      String?         @unique
+  setNumber         Int
+  repetitions       Int
+  weightGrams       Int?
+  effortRir         Int?
+  completedAt       DateTime        @default(now())
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  session           WorkoutSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  workoutExercise   WorkoutExercise @relation(fields: [workoutExerciseId], references: [id], onDelete: Cascade)
+  plannedSet        PlannedSet?     @relation(fields: [plannedSetId], references: [id], onDelete: SetNull)
+
+  @@unique([sessionId, workoutExerciseId, setNumber])
+  @@index([sessionId, completedAt])
+  @@index([workoutExerciseId, completedAt])
 }
