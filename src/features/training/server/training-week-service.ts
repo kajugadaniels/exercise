@@ -39,6 +39,7 @@ const trainingWeekInclude = {
           plannedSets: { orderBy: { setNumber: "asc" } },
         },
       },
+      session: { select: { id: true } },
     },
   },
 } satisfies Prisma.TrainingWeekInclude;
@@ -206,6 +207,7 @@ function toTrainingWeekPlan(week: StoredTrainingWeek): TrainingWeekPlan {
   return {
     weekStart: toCalendarDate(week.weekStart),
     createdAt: week.createdAt.toISOString(),
+    isLocked: week.days.some((day) => day.session !== null),
     updatedAt: week.updatedAt.toISOString(),
     days: week.days.map((day) => ({
       plannedDate: toCalendarDate(day.plannedDate),
