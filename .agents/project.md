@@ -36,9 +36,9 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | Interactive muscle explorer | Future | Select muscle, filter catalog, open detail |
 | Favorites | Future | Persist only after their product model is approved |
 | Measurement progress/history | MVP, approved 2026-10-27 | Append when height or weight changes; owner-scoped and deleted with the fitness profile |
-| Weekly workout planning and execution records | MVP planner and execution flow implemented in code, unverified | Owner-scoped Monday–Sunday calendar, rest days, planned sets, actual set logging, completion, and abandonment; aggregated workout history UI remains a future task |
+| Weekly workout planning and execution records | MVP planner, execution, and history implemented in code, unverified | Owner-scoped Monday–Sunday calendar, rest days, planned sets, actual set logging, completion, abandonment, weekly reports, paginated history, and explainable progression guidance |
 | Training preferences | MVP foundation approved 2026-10-28, unverified | Optional goal, experience, session duration, timezone, available equipment, and preferred training days; owner-scoped, editable, and independently deletable |
-| Training recommendations | Next phase | Deterministic recommendation rules require separate task approval and must consume approved preferences and completed training history |
+| Training recommendations | Progression foundation implemented in code, unverified | Conservative next-load guidance consumes completed set history only; daily workout generation and body-part recovery recommendations remain a later task |
 | PWA | Future | Separate approval and offline/data policy |
 | Native mobile application | Future / pending framework decision | Not supplied by Next.js automatically |
 | RapidAPI muscle image generator | Optional / pending approval | Must never be a required dependency |
@@ -84,7 +84,7 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | Dependency installation | Clerk, Zod, Hugeicons, and React Muscle Highlighter versions are approved; developer installation/output pending |
 | Styling architecture | Plain CSS with semantic tokens and colocated CSS Modules is approved; Tailwind/CSS-in-JS/UI kits require a future stack-change approval |
 | Account onboarding scope | Mandatory male/female gender selection, height, weight, country, and derived BMI approved on 2026-10-27; correction and deletion are required |
-| Weekly training record | Owner-scoped Monday–Sunday plans, rest days, exercise snapshots, planned sets, completed set logs, and sessions approved on 2026-10-28; planning and workout execution are implemented in code, while aggregated history and recommendation behavior remain separate tasks |
+| Weekly training record | Owner-scoped Monday–Sunday plans, rest days, exercise snapshots, planned sets, completed set logs, sessions, weekly aggregation, and explainable next-load guidance approved on 2026-10-28 and implemented in code; daily workout generation remains separate |
 | Training preferences | Optional owner-scoped goal, experience level, session duration, timezone, available equipment, and preferred training days approved on 2026-10-28; injury and medical fields remain excluded |
 | Media commercial rights and alternative licensed provider | Blocking public use of ExerciseGymGifsDB GIFs |
 | Native framework | Unresolved |
