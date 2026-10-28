@@ -77,7 +77,7 @@ export function AccountDataControls() {
     }
     if (
       !window.confirm(
-        "Permanently delete your profile data? Your Clerk sign-in account will remain.",
+        "Permanently delete your profile and scheduled training sessions? Your Clerk sign-in account will remain.",
       )
     ) {
       return;
@@ -118,7 +118,8 @@ export function AccountDataControls() {
         <div>
           <h3>Download your fitness data</h3>
           <p>
-            Export your stored profile details as a readable JSON file.
+            Export your profile and scheduled training sessions as a readable
+            JSON file.
           </p>
         </div>
         <Button
@@ -142,8 +143,8 @@ export function AccountDataControls() {
           <div>
             <h3>Delete all fitness data</h3>
             <p>
-              Permanently removes this app&apos;s profile data. It does not delete
-              your Clerk sign-in account.
+              Permanently removes this app&apos;s profile and scheduled sessions.
+              It does not delete your Clerk sign-in account.
             </p>
           </div>
         </div>
