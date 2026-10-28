@@ -33,7 +33,7 @@ export type TrainingHistorySourceSession = Readonly<{
 
 export type ScheduledWorkoutDay = Readonly<{
   date: string;
-  status: "planned" | "in-progress";
+  status: "planned" | "in-progress" | "skipped";
 }>;
 
 function roundKilograms(value: number): number {
