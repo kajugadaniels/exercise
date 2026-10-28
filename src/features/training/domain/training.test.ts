@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  getCalendarDateInTimeZone,
   getPlannedSetIssues,
   getTrainingWeekDates,
   getTrainingWeekStartForDate,
@@ -9,6 +10,16 @@ import {
   trainingDayStatuses,
   workoutSessionStatuses,
 } from "./training";
+
+test("gets the calendar date in the user's timezone", () => {
+  const instant = new Date("2026-10-28T23:30:00.000Z");
+
+  assert.equal(getCalendarDateInTimeZone("UTC", instant), "2026-10-28");
+  assert.equal(
+    getCalendarDateInTimeZone("Africa/Kigali", instant),
+    "2026-10-29",
+  );
+});
 
 test("exposes stable plan and session lifecycle states", () => {
   assert.deepEqual(trainingDayStatuses, [
