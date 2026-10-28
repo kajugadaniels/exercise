@@ -13,11 +13,12 @@ enum Gender {
 }
 
 model User {
-  id          String       @id @default(cuid())
-  clerkUserId String       @unique @db.VarChar(64)
-  profile     UserProfile?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id               String            @id @default(cuid())
+  clerkUserId      String            @unique @db.VarChar(64)
+  profile          UserProfile?
+  trainingSessions TrainingSession[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 }
 
 model UserProfile {
@@ -33,4 +34,32 @@ model UserProfile {
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([updatedAt])
+}
+
+model TrainingSession {
+  id            String                    @id @default(cuid())
+  userId        String
+  scheduledDate DateTime                  @db.Date
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
+  user          User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercises     TrainingSessionExercise[]
+
+  @@unique([userId, scheduledDate])
+  @@index([userId, scheduledDate])
+}
+
+model TrainingSessionExercise {
+  id                     String          @id @default(cuid())
+  trainingSessionId      String
+  exerciseProvider       String          @db.VarChar(50)
+  exerciseSourceId       String          @db.VarChar(200)
+  exerciseSourceVersion  String          @db.VarChar(50)
+  exerciseAttributionUrl String          @db.VarChar(500)
+  exerciseName           String          @db.VarChar(180)
+  createdAt              DateTime        @default(now())
+  trainingSession        TrainingSession @relation(fields: [trainingSessionId], references: [id], onDelete: Cascade)
+
+  @@unique([trainingSessionId, exerciseProvider, exerciseSourceId])
+  @@index([trainingSessionId, createdAt])
 }
