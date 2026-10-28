@@ -46,13 +46,13 @@ const recordSetActionSchema = z
   })
   .strict();
 
-const finishWorkoutActionSchema = z
-  .object({ action: z.enum(["complete", "abandon"]) })
+const workoutLifecycleActionSchema = z
+  .object({ action: z.enum(["complete", "abandon", "skip"]) })
   .strict();
 
 export const workoutSessionActionSchema = z.discriminatedUnion("action", [
   recordSetActionSchema,
-  finishWorkoutActionSchema,
+  workoutLifecycleActionSchema,
 ]);
 
 const recordedSetSchema = z
