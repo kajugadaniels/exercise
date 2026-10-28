@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Add01Icon,
@@ -11,6 +12,7 @@ import {
   Clock01Icon,
   Delete02Icon,
   Dumbbell01Icon,
+  PlayIcon,
   RepeatIcon,
   WeightScale01Icon,
 } from "@hugeicons/core-free-icons";
@@ -105,6 +107,9 @@ export function TrainingPlanner({
   const isBusy = isSaving || isDeleting;
   const activeDay =
     editor.days.find((day) => day.plannedDate === activeDate) ?? editor.days[0];
+  const storedActiveDay = initialPlan?.days.find(
+    (day) => day.plannedDate === activeDate,
+  );
 
   const summary = useMemo(() => {
     const workoutDays = editor.days.filter((day) => day.kind === "workout");
@@ -477,6 +482,20 @@ export function TrainingPlanner({
             </label>
           </fieldset>
         </div>
+
+        {storedActiveDay?.kind === "workout" && !isDirty && (
+          <Link
+            className={styles.workoutAction}
+            href={`${AUTH_ROUTES.training}/workouts/${storedActiveDay.plannedDate}`}
+          >
+            <Icon icon={PlayIcon} size={18} />
+            {storedActiveDay.status === "planned"
+              ? "Start workout"
+              : storedActiveDay.status === "in-progress"
+                ? "Continue workout"
+                : "Review workout"}
+          </Link>
+        )}
 
         {activeDay.kind === "rest" ? (
           <div className={styles.restState}>
