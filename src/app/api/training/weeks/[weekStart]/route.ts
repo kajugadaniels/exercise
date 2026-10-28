@@ -203,7 +203,7 @@ export async function PUT(request: Request, context: RouteContext) {
       return errorResponse(
         409,
         "training_history_exists",
-        "This week has recorded workout activity and can no longer be replaced.",
+        "A week with started, completed, or skipped workouts cannot be replaced.",
       );
     }
 
@@ -267,7 +267,7 @@ export async function DELETE(request: Request, context: RouteContext) {
       return errorResponse(
         409,
         "training_history_exists",
-        "This week has recorded workout activity and cannot be deleted.",
+        "A week with started, completed, or skipped workouts cannot be deleted.",
       );
     }
 
