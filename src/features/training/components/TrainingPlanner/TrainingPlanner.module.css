@@ -166,8 +166,21 @@
   font-variant-numeric: tabular-nums;
 }
 
-.dayTab[data-kind="workout"] small {
+.dayTab[data-kind="workout"][data-status="planned"] small,
+.dayTab[data-kind="workout"]:not([data-status]) small {
   color: var(--color-primary-text);
+}
+
+.dayTab[data-status="in-progress"] small {
+  color: var(--color-info);
+}
+
+.dayTab[data-status="completed"] small {
+  color: var(--color-success-text);
+}
+
+.dayTab[data-status="skipped"] small {
+  color: var(--color-text-muted);
 }
 
 .editor {
