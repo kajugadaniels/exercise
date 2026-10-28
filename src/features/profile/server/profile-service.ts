@@ -101,7 +101,17 @@ export async function saveProfileForClerkUser(
 export async function deleteProfileForClerkUser(
   clerkUserId: string,
 ): Promise<void> {
-  await prisma.userProfile.deleteMany({
-    where: { user: { clerkUserId } },
+  const user = await prisma.user.findUnique({
+    where: { clerkUserId },
+    select: { id: true },
   });
+
+  if (!user) {
+    return;
+  }
+
+  await prisma.$transaction([
+    prisma.trainingSession.deleteMany({ where: { userId: user.id } }),
+    prisma.userProfile.deleteMany({ where: { userId: user.id } }),
+  ]);
 }
