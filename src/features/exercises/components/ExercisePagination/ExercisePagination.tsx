@@ -1,12 +1,16 @@
 import Link from "next/link";
 import type { ExerciseQuery } from "../../domain/exercise";
-import { buildExerciseLibraryUrl } from "../../providers/exercise-gym-gifs/filters";
+import {
+  buildExerciseLibraryUrl,
+  type ExerciseSelectionContext,
+} from "../../providers/exercise-gym-gifs/filters";
 import styles from "./ExercisePagination.module.css";
 
 type ExercisePaginationProps = Readonly<{
   page: number;
   pageCount: number;
   query: ExerciseQuery;
+  selectionContext?: ExerciseSelectionContext;
 }>;
 
 type PageItem = number | "end-gap" | "start-gap";
@@ -37,6 +41,7 @@ export function ExercisePagination({
   page,
   pageCount,
   query,
+  selectionContext,
 }: ExercisePaginationProps) {
   if (pageCount <= 1) {
     return null;
@@ -47,7 +52,12 @@ export function ExercisePagination({
       {page > 1 ? (
         <Link
           className={styles.direction}
-          href={buildExerciseLibraryUrl(query, page - 1)}
+          href={buildExerciseLibraryUrl(
+            query,
+            page - 1,
+            undefined,
+            selectionContext,
+          )}
           prefetch={false}
           rel="prev"
         >
@@ -63,7 +73,12 @@ export function ExercisePagination({
             <Link
               aria-current={item === page ? "page" : undefined}
               className={styles.page}
-              href={buildExerciseLibraryUrl(query, item)}
+              href={buildExerciseLibraryUrl(
+                query,
+                item,
+                undefined,
+                selectionContext,
+              )}
               key={item}
               prefetch={false}
             >
@@ -81,7 +96,12 @@ export function ExercisePagination({
       {page < pageCount ? (
         <Link
           className={styles.direction}
-          href={buildExerciseLibraryUrl(query, page + 1)}
+          href={buildExerciseLibraryUrl(
+            query,
+            page + 1,
+            undefined,
+            selectionContext,
+          )}
           prefetch={false}
           rel="next"
         >
