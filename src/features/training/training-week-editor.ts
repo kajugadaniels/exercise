@@ -30,10 +30,19 @@ export type TrainingWeekEditorValue = {
   weekStart: string;
 };
 
-export type ExercisePickerValue = {
+export type TrainingExerciseOption = {
   id: string;
   name: string;
 };
+
+export type TrainingExerciseChange = Readonly<{
+  availableMinutes?: number;
+  exercise: TrainingExerciseOption;
+  exerciseIndex?: number;
+  plannedDate: string;
+  preferredBodyPart?: BodyPartId;
+  sets: TrainingSetEditorValue[];
+}>;
 
 export function createDefaultSet(): TrainingSetEditorValue {
   return {
@@ -103,6 +112,44 @@ export function createTrainingWeekEditor(
               set.restSeconds === null ? "" : String(set.restSeconds),
           })),
         })),
+      };
+    }),
+  };
+}
+
+export function applyTrainingExerciseChange(
+  editor: TrainingWeekEditorValue,
+  change: TrainingExerciseChange,
+): TrainingWeekEditorValue {
+  return {
+    ...editor,
+    days: editor.days.map((day) => {
+      if (day.plannedDate !== change.plannedDate) {
+        return day;
+      }
+
+      const nextExercise: TrainingExerciseEditorValue = {
+        exerciseId: change.exercise.id,
+        name: change.exercise.name,
+        sets: change.sets,
+      };
+      const exercises = [...day.exercises];
+
+      if (change.exerciseIndex === undefined) {
+        exercises.push(nextExercise);
+      } else if (exercises[change.exerciseIndex]) {
+        exercises[change.exerciseIndex] = nextExercise;
+      }
+
+      return {
+        ...day,
+        kind: "workout",
+        availableMinutes: String(
+          change.availableMinutes ?? (Number(day.availableMinutes) || 60),
+        ),
+        preferredBodyPart:
+          change.preferredBodyPart ?? day.preferredBodyPart ?? null,
+        exercises,
       };
     }),
   };
