@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { getProfileForClerkUser } from "@/features/profile/server/profile-service";
 import {
+  deleteWorkoutRecordForClerkUser,
   finishWorkoutForClerkUser,
   getWorkoutForClerkUser,
   recordWorkoutSetForClerkUser,
@@ -83,7 +84,10 @@ async function applyWorkoutAction(
   }
 }
 
-function workoutErrorResponse(error: unknown) {
+function workoutErrorResponse(
+  error: unknown,
+  operation: "updated" | "deleted" = "updated",
+) {
   if (error instanceof WorkoutNotFoundError) {
     return errorResponse(404, "workout_not_found", "This workout was not found.");
   }
@@ -131,7 +135,7 @@ function workoutErrorResponse(error: unknown) {
   return errorResponse(
     500,
     "internal",
-    "Your workout could not be updated.",
+    `Your workout could not be ${operation}.`,
   );
 }
 
@@ -327,5 +331,43 @@ export async function PATCH(request: Request, context: RouteContext) {
     return NextResponse.json({ data: workout }, { headers: noStoreHeaders });
   } catch (error) {
     return workoutErrorResponse(error);
+  }
+}
+
+export async function DELETE(request: Request, context: RouteContext) {
+  const { userId } = await auth();
+  if (!userId) {
+    return errorResponse(
+      401,
+      "unauthenticated",
+      "Sign in to delete this workout record.",
+    );
+  }
+
+  if (!hasTrustedOrigin(request)) {
+    return errorResponse(403, "forbidden", "This request is not allowed.");
+  }
+
+  const plannedDate = await getPlannedDate(context);
+  if (!plannedDate) {
+    return errorResponse(
+      400,
+      "invalid_planned_date",
+      "Use a valid workout date in YYYY-MM-DD format.",
+    );
+  }
+
+  try {
+    if (!(await hasCompletedProfile(userId))) {
+      return errorResponse(
+        428,
+        "profile_required",
+        "Complete your profile before managing workout records.",
+      );
+    }
+    await deleteWorkoutRecordForClerkUser(userId, plannedDate);
+    return new NextResponse(null, { status: 204, headers: noStoreHeaders });
+  } catch (error) {
+    return workoutErrorResponse(error, "deleted");
   }
 }
