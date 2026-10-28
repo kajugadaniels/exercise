@@ -26,6 +26,8 @@
 }
 
 .formCard {
+  display: grid;
+  gap: var(--space-6);
   min-inline-size: 0;
   padding: clamp(1rem, 4vw, 2rem);
   border: 1px solid var(--color-glass-border-strong);
@@ -33,6 +35,28 @@
   background-color: var(--color-glass-surface);
   box-shadow: var(--shadow-glass-inset);
   backdrop-filter: var(--glass-filter);
+}
+
+.settingsStack {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.cardHeader {
+  display: grid;
+  gap: var(--space-2);
+  max-inline-size: var(--reading-max);
+  padding-block-end: var(--space-4);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.cardTitle {
+  font-size: var(--text-md);
+}
+
+.cardSummary {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
 }
 
 @media (forced-colors: active) {
