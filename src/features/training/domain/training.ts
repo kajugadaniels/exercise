@@ -63,6 +63,13 @@ export type TrainingDayPlan = Readonly<{
   status: TrainingDayStatus;
 }>;
 
+export type TrainingWeekPlan = Readonly<{
+  createdAt: string;
+  days: readonly TrainingDayPlan[];
+  updatedAt: string;
+  weekStart: string;
+}>;
+
 export type CompletedWorkoutSet = Readonly<{
   completedAt: string;
   effortRir: number | null;
