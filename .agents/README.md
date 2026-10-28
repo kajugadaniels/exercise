@@ -105,4 +105,6 @@ A chat request alone does not relax level-one restrictions. Give the developer t
 | 2026-10-28 | Added the protected, responsive Monday–Sunday manual planning calendar. |
 | 2026-10-28 | Added protected workout execution with actual set logging and immutable ended sessions. |
 | 2026-10-28 | Added private weekly training reports, paginated session history, and explainable next-load guidance. |
+| 2026-10-28 | Added bounded completed-workout analytics, exercise progression, and muscle distribution. |
+| 2026-10-28 | Added local fitness-data export, explicit workout-record deletion, and confirmed full local-data deletion. |
 
