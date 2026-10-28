@@ -80,16 +80,23 @@ test("drops malformed media without dropping valid exercise metadata", () => {
   assert.equal(exercise.name, "Barbell Curl");
 });
 
-test("filters normalized exercises with AND semantics", () => {
+test("uses OR within filter groups and AND between different groups", () => {
   const exercises = [providerExerciseFixture, secondProviderExerciseFixture].map(
     (fixture) => normalizeProviderExercise(providerExerciseSchema.parse(fixture)),
   );
   const cases: Array<[Partial<ExerciseQuery>, string[]]> = [
-    [{ category: "strength" }, ["Barbell Curl", "Dumbbell Bench Press"]],
-    [{ equipment: "barbell" }, ["Barbell Curl"]],
-    [{ bodyPart: "chest" }, ["Dumbbell Bench Press"]],
-    [{ muscle: "biceps" }, ["Barbell Curl"]],
-    [{ search: "bench", equipment: "dumbbell" }, ["Dumbbell Bench Press"]],
+    [{ categories: ["strength"] }, ["Barbell Curl", "Dumbbell Bench Press"]],
+    [{ equipment: ["barbell"] }, ["Barbell Curl"]],
+    [{ bodyParts: ["chest"] }, ["Dumbbell Bench Press"]],
+    [{ muscles: ["biceps"] }, ["Barbell Curl"]],
+    [
+      { bodyParts: ["arms", "chest"] },
+      ["Barbell Curl", "Dumbbell Bench Press"],
+    ],
+    [
+      { search: "bench", equipment: ["dumbbell", "barbell"] },
+      ["Dumbbell Bench Press"],
+    ],
   ];
 
   for (const [query, expectedNames] of cases) {
@@ -104,18 +111,19 @@ test("filters normalized exercises with AND semantics", () => {
 test("bounds and normalizes URL filter input", () => {
   assert.deepEqual(
     parseExerciseQuery({
-      bodyPart: "arms",
-      category: "cardio",
+      bodyPart: ["chest", "arms", "arms"],
+      category: ["cardio", "strength"],
       search: "  curl  ",
-      muscle: "biceps",
-      equipment: "not-supported",
+      muscle: ["biceps", "not-supported"],
+      equipment: ["not-supported", "barbell"],
       page: "999",
     }),
     {
-      bodyPart: "arms",
-      category: "cardio",
+      bodyParts: ["arms", "chest"],
+      categories: ["cardio", "strength"],
+      equipment: ["barbell"],
       search: "curl",
-      muscle: "biceps",
+      muscles: ["biceps"],
       page: 1,
     },
   );
@@ -127,17 +135,19 @@ test("ignores search terms shorter than three characters", () => {
 
 test("changes category filters while preserving search and resetting pagination", () => {
   const query: ExerciseQuery = {
-    category: "strength",
+    categories: ["strength"],
     page: 4,
     search: "press",
   };
 
   assert.equal(
-    buildExerciseLibraryUrl(query, 1, { category: "cardio" }),
-    "/exercises?search=press&category=cardio",
+    buildExerciseLibraryUrl(query, 1, {
+      categories: ["cardio", "stretching", "cardio"],
+    }),
+    "/exercises?search=press&category=cardio&category=stretching",
   );
   assert.equal(
-    buildExerciseLibraryUrl(query, 1, { category: null }),
+    buildExerciseLibraryUrl(query, 1, { categories: null }),
     "/exercises?search=press",
   );
   assert.equal(
@@ -148,51 +158,55 @@ test("changes category filters while preserving search and resetting pagination"
 
 test("changes body-part filters while preserving category and search", () => {
   const query: ExerciseQuery = {
-    bodyPart: "chest",
-    category: "strength",
+    bodyParts: ["chest"],
+    categories: ["strength"],
     page: 3,
     search: "press",
   };
 
   assert.equal(
-    buildExerciseLibraryUrl(query, 1, { bodyPart: "back" }),
-    "/exercises?search=press&bodyPart=back&category=strength",
+    buildExerciseLibraryUrl(query, 1, { bodyParts: ["back", "arms"] }),
+    "/exercises?search=press&bodyPart=back&bodyPart=arms&category=strength",
   );
   assert.equal(
-    buildExerciseLibraryUrl(query, 1, { bodyPart: null }),
+    buildExerciseLibraryUrl(query, 1, { bodyParts: null }),
     "/exercises?search=press&category=strength",
   );
 });
 
 test("changes muscle filters while preserving the other active filters", () => {
   const query: ExerciseQuery = {
-    bodyPart: "arms",
-    equipment: "barbell",
-    muscle: "biceps",
+    bodyParts: ["arms"],
+    equipment: ["barbell"],
+    muscles: ["biceps"],
     page: 2,
   };
 
   assert.equal(
-    buildExerciseLibraryUrl(query, 1, { muscle: "forearms" }),
-    "/exercises?muscle=forearms&bodyPart=arms&equipment=barbell",
+    buildExerciseLibraryUrl(query, 1, {
+      muscles: ["forearms", "biceps"],
+    }),
+    "/exercises?muscle=forearms&muscle=biceps&bodyPart=arms&equipment=barbell",
   );
   assert.equal(
-    buildExerciseLibraryUrl(query, 1, { muscle: null }),
+    buildExerciseLibraryUrl(query, 1, { muscles: null }),
     "/exercises?bodyPart=arms&equipment=barbell",
   );
 });
 
 test("changes equipment filters while preserving the other active filters", () => {
   const query: ExerciseQuery = {
-    category: "strength",
-    equipment: "barbell",
-    muscle: "biceps",
+    categories: ["strength"],
+    equipment: ["barbell"],
+    muscles: ["biceps"],
     page: 2,
   };
 
   assert.equal(
-    buildExerciseLibraryUrl(query, 1, { equipment: "dumbbell" }),
-    "/exercises?muscle=biceps&equipment=dumbbell&category=strength",
+    buildExerciseLibraryUrl(query, 1, {
+      equipment: ["dumbbell", "barbell"],
+    }),
+    "/exercises?muscle=biceps&equipment=dumbbell&equipment=barbell&category=strength",
   );
   assert.equal(
     buildExerciseLibraryUrl(query, 1, { equipment: null }),
