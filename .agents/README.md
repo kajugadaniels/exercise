@@ -2,7 +2,7 @@
 
 **Purpose:** Provide the authoritative rule index and precedence for every human and coding agent working on the platform.  
 **Scope:** Every task, without exception.  
-**Last reviewed:** 2026-10-27
+**Last reviewed:** 2026-10-28
 
 These documents are project policy. Read this file first, then the documents required for the task.
 
@@ -47,7 +47,7 @@ These documents are project policy. Read this file first, then the documents req
 | Exercise catalog or search | exercises, api, architecture, performance, testing |
 | GIF/video media | exercises, security, performance, accessibility |
 | Muscle explorer | muscle-visualization, exercises, design, accessibility, testing |
-| Workout or progress planning | project, privacy, security; database remains pending approval |
+| Workout or progress planning | project, privacy, security; weekly training persistence approved 2026-10-28 |
 | Deployment/configuration | deployment, security, performance |
 | Rulebook/documentation | workflow, project, and each edited document's owner topic |
 
@@ -89,7 +89,7 @@ A chat request alone does not relax level-one restrictions. Give the developer t
 | Muscle slug | Application identifier mapped explicitly to visualization identifiers. |
 | Exercise media | Third-party GIF/video referenced by a normalized record. Availability is not a usage license. |
 | Protected catalog | Exercise discovery pages that require a verified Clerk session under the confirmed authenticated-first route policy. |
-| Personal workout | User-owned saved routine. Planned, not part of the initial catalog MVP and not persisted until a database is approved. |
+| Personal workout | User-owned Monday–Sunday training plan. Its persistence foundation is approved; APIs, UI, and recommendation behavior remain separate tasks. |
 
 ## 8. Changelog
 
@@ -98,4 +98,5 @@ A chat request alone does not relax level-one restrictions. Give the developer t
 | 2026-10-27 | Created the Phase 0 rulebook, adapted from CareBasket governance for the fitness domain. |
 | 2026-10-27 | Adopted plain CSS with colocated CSS Modules and added page, layout, component, token, cascade, and responsive styling rules. |
 | 2026-10-27 | Approved Outfit, the logo coral/navy palette, compact accessible type, Hugeicons, responsive foundation, light/dark themes, and safe environment templates. |
+| 2026-10-28 | Approved the owner-scoped weekly training persistence foundation. |
 
