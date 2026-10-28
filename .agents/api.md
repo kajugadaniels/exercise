@@ -125,10 +125,13 @@ The private workout-execution surface is:
 | `GET /api/training/workouts/{plannedDate}` | Return the current actor's planned workout and recorded set state | Authenticated, completed profile |
 | `POST /api/training/workouts/{plannedDate}` | Idempotently start the planned workout session | Authenticated, completed profile, same-origin |
 | `PATCH /api/training/workouts/{plannedDate}` | Record one planned set, complete the workout, or abandon it | Authenticated, completed profile, same-origin |
+| `GET /api/training/history?week={weekStart}&page={page}` | Return an owner-scoped weekly report, ended-session page, and deterministic progression guidance | Authenticated, completed profile |
 
 `plannedDate` is a valid calendar date in `YYYY-MM-DD` format. Set actions identify only the planned exercise position and set number; ownership, internal IDs, planned targets, and lifecycle state are resolved server-side. Actual repetitions, optional weight, and optional reps-in-reserve are strictly bounded. Completing a workout requires every planned set to have a record. Abandoning retains completed sets and ends the session without manufacturing missing performance.
 
 One session is permitted per planned day. Ended sessions and their set logs are immutable through this contract. Responses are private and non-cacheable, request bodies are limited to 16 KiB, and the server never sends workout data to the exercise provider.
+
+Training history pages contain at most ten ended sessions, and page numbers are bounded. Weekly reports include only the selected Monday–Sunday boundary. Loaded volume includes external weight only and never invents a bodyweight value. Progression guidance uses a bounded window of completed sessions and never uses abandoned workouts. A load increase requires two completed exposures with every repetition target met, a non-decreasing latest load, and at least two recorded reps in reserve on every latest set. The response explains whether to hold or increase; it is training guidance, not medical advice.
 
 ## 10. Caching and availability
 
