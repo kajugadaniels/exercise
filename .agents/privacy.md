@@ -3,11 +3,11 @@
 **Purpose:** Minimize collection and protect account, preference, workout, and activity information.  
 **Scope:** Profiles, saved content, workout history, goals, telemetry, support, and third-party disclosure.  
 **Related:** [security.md](security.md), [authentication.md](authentication.md), [project.md](project.md)  
-**Last reviewed:** 2026-10-27
+**Last reviewed:** 2026-10-28
 
 ## 1. Data minimization
 
-Collect only data required for an approved user-visible feature. On 2026-10-27, the developer explicitly approved a mandatory profile containing a male/female gender selection, height, weight, and country so future progress and training records can be personalized and owned. BMI is derived on demand and not stored. Do not collect birth date, photos, injury/medical history, disability, precise location, contacts, wearable data, or additional measurements without a new review.
+Collect only data required for an approved user-visible feature. On 2026-10-27, the developer explicitly approved a mandatory profile containing a male/female gender selection, height, weight, and country. On 2026-10-28, the developer approved owner-scoped weekly plans and execution history. BMI is derived on demand and not stored. Do not collect birth date, photos, injury/medical history, disability, precise location, contacts, wearable data, or additional measurements without a new review.
 
 ## 2. Data classes
 
@@ -20,7 +20,7 @@ Collect only data required for an approved user-visible feature. On 2026-10-27, 
 | Fitness preferences/goals | Potentially sensitive; optional, purpose-limited, editable |
 | Favorites/workout plans | Private user content |
 | Measurement history | Sensitive profile history; owner-scoped, retained with the fitness profile, deleted with it |
-| Sets/reps/workout history/frequency | Sensitive behavioral fitness data; future only |
+| Sets/reps/workout history/frequency | Sensitive behavioral fitness data; weekly training foundation approved 2026-10-28, owner-scoped, purpose-limited, and never disclosed to exercise providers |
 | Medical/injury information | Out of scope |
 | Search/filter events | Do not retain by default; analytics requires approval |
 
@@ -30,7 +30,7 @@ Before collection, explain what is collected, why, where it is stored, who recei
 
 ## 4. Access and deletion
 
-Private data is owner-scoped. Profile correction and profile deletion are part of the initial implementation. A deleted profile returns the account to mandatory onboarding. Profile records are retained until the user deletes the profile or application account deletion is processed. Full account deletion synchronization and export remain release gates.
+Private data is owner-scoped. Profile correction and profile deletion are part of the initial implementation. A deleted profile returns the account to mandatory onboarding. Profile records are retained until the user deletes the profile or application account deletion is processed. Training records attach to the internal user rather than the editable profile so profile correction does not rewrite history. User-facing training-history deletion, full account deletion synchronization, and export remain release gates before public release.
 
 ## 5. Third parties
 
