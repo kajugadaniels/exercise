@@ -29,46 +29,30 @@ type FilterGroupProps<TValue extends string> = Readonly<{
   legend: string;
   name: string;
   options: readonly TValue[];
-  selectedValue?: TValue;
+  selectedValues?: readonly TValue[];
 }>;
-
-const ALL_FILTERS_VALUE = "all";
 
 function FilterGroup<TValue extends string>({
   legend,
   name,
   options,
-  selectedValue,
+  selectedValues = [],
 }: FilterGroupProps<TValue>) {
   return (
     <fieldset className={styles.group}>
       <legend className={styles.legend}>{legend}</legend>
       <div className={styles.options}>
-        <label className={styles.choice}>
-          <input
-            className={styles.radio}
-            defaultChecked={!selectedValue}
-            name={name}
-            type="radio"
-            value={ALL_FILTERS_VALUE}
-          />
-          <span className={styles.option}>
-            <span className={styles.radioMark} aria-hidden="true" />
-            All
-          </span>
-        </label>
-
         {options.map((option) => (
           <label className={styles.choice} key={option}>
             <input
-              className={styles.radio}
-              defaultChecked={selectedValue === option}
+              className={styles.checkbox}
+              defaultChecked={selectedValues.includes(option)}
               name={name}
-              type="radio"
+              type="checkbox"
               value={option}
             />
             <span className={styles.option}>
-              <span className={styles.radioMark} aria-hidden="true" />
+              <span className={styles.checkMark} aria-hidden="true" />
               {formatExerciseValue(option)}
             </span>
           </label>
@@ -78,18 +62,17 @@ function FilterGroup<TValue extends string>({
   );
 }
 
-function readSelectedFilter<TValue extends string>(
+function readSelectedFilters<TValue extends string>(
   formData: FormData,
   name: string,
   allowedValues: readonly TValue[],
-): TValue | undefined {
-  const submittedValue = formData.get(name);
+): TValue[] | undefined {
+  const submittedValues = new Set(formData.getAll(name));
+  const selectedValues = allowedValues.filter((value) =>
+    submittedValues.has(value),
+  );
 
-  if (typeof submittedValue !== "string") {
-    return undefined;
-  }
-
-  return allowedValues.find((value) => value === submittedValue);
+  return selectedValues.length > 0 ? selectedValues : undefined;
 }
 
 export function ExerciseFilterSheet({ query }: ExerciseFilterSheetProps) {
@@ -97,12 +80,11 @@ export function ExerciseFilterSheet({ query }: ExerciseFilterSheetProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const activeFilterCount = [
-    query.bodyPart,
-    query.category,
-    query.muscle,
-    query.equipment,
-  ].filter(Boolean).length;
+  const activeFilterCount =
+    (query.bodyParts?.length ?? 0) +
+    (query.categories?.length ?? 0) +
+    (query.muscles?.length ?? 0) +
+    (query.equipment?.length ?? 0);
 
   function openSheet() {
     const dialog = dialogRef.current;
@@ -132,23 +114,23 @@ export function ExerciseFilterSheet({ query }: ExerciseFilterSheetProps) {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const bodyPart = readSelectedFilter(formData, "bodyPart", bodyPartIds);
-    const category = readSelectedFilter(
+    const bodyParts = readSelectedFilters(formData, "bodyPart", bodyPartIds);
+    const categories = readSelectedFilters(
       formData,
       "category",
       exerciseCategoryIds,
     );
-    const equipment = readSelectedFilter(
+    const equipment = readSelectedFilters(
       formData,
       "equipment",
       equipmentIds,
     );
-    const muscle = readSelectedFilter(formData, "muscle", muscleIds);
+    const muscles = readSelectedFilters(formData, "muscle", muscleIds);
     const nextQuery: ExerciseQuery = {
-      ...(bodyPart ? { bodyPart } : {}),
-      ...(category ? { category } : {}),
+      ...(bodyParts ? { bodyParts } : {}),
+      ...(categories ? { categories } : {}),
       ...(equipment ? { equipment } : {}),
-      ...(muscle ? { muscle } : {}),
+      ...(muscles ? { muscles } : {}),
       page: 1,
       ...(query.search ? { search: query.search } : {}),
     };
@@ -180,7 +162,7 @@ export function ExerciseFilterSheet({ query }: ExerciseFilterSheetProps) {
         aria-haspopup="dialog"
         aria-label={
           activeFilterCount > 0
-            ? `Exercise filters, ${activeFilterCount} active`
+            ? `Exercise filters, ${activeFilterCount} selected`
             : "Exercise filters"
         }
       >
@@ -202,7 +184,7 @@ export function ExerciseFilterSheet({ query }: ExerciseFilterSheetProps) {
                 Filter exercises
               </h2>
               <p className={styles.description}>
-                Choose one option from each group.
+                Select one or more options. Empty groups include everything.
               </p>
             </div>
             <button
@@ -221,25 +203,25 @@ export function ExerciseFilterSheet({ query }: ExerciseFilterSheetProps) {
               legend="Body parts"
               name="bodyPart"
               options={bodyPartIds}
-              selectedValue={query.bodyPart}
+              selectedValues={query.bodyParts}
             />
             <FilterGroup
               legend="Categories"
               name="category"
               options={exerciseCategoryIds}
-              selectedValue={query.category}
+              selectedValues={query.categories}
             />
             <FilterGroup
               legend="Muscles"
               name="muscle"
               options={muscleIds}
-              selectedValue={query.muscle}
+              selectedValues={query.muscles}
             />
             <FilterGroup
               legend="Equipment"
               name="equipment"
               options={equipmentIds}
-              selectedValue={query.equipment}
+              selectedValues={query.equipment}
             />
           </div>
 
