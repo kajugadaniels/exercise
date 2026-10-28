@@ -1,0 +1,524 @@
+.planner {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.weekIdentity {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.weekIdentity h2 {
+  font-size: var(--text-lg);
+  letter-spacing: var(--tracking-tight);
+}
+
+.weekIdentity > p:last-child,
+.dayHeader p,
+.exerciseHeading p,
+.exerciseCardHeader p,
+.restState p {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.kicker {
+  color: var(--color-primary-text);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.weekNavigation {
+  display: grid;
+  grid-template-columns: var(--control-height) auto var(--control-height);
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.iconButton,
+.todayButton,
+.removeButton,
+.removeSetButton,
+.addSetButton {
+  min-block-size: var(--control-height);
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.iconButton,
+.removeButton {
+  display: grid;
+  inline-size: var(--control-height);
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface);
+}
+
+.todayButton {
+  padding-inline: var(--space-4);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-raised);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+}
+
+.todayButton[aria-current="date"] {
+  color: var(--color-primary-text);
+}
+
+.lockedMessage,
+.formError {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+}
+
+.lockedMessage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.lockedMessage span {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.dayRail {
+  display: grid;
+  grid-auto-columns: minmax(6.75rem, 1fr);
+  grid-auto-flow: column;
+  gap: 1px;
+  padding: 1px;
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  background-color: var(--color-border);
+  scrollbar-width: thin;
+  scroll-snap-type: inline mandatory;
+}
+
+.dayTab {
+  position: relative;
+  display: grid;
+  gap: var(--space-1);
+  min-block-size: 6.5rem;
+  padding: var(--space-3);
+  scroll-snap-align: start;
+  border: 0;
+  background-color: var(--color-background);
+  color: var(--color-text-muted);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.dayTab:first-child {
+  border-start-start-radius: calc(var(--radius-md) - 1px);
+  border-end-start-radius: calc(var(--radius-md) - 1px);
+}
+
+.dayTab:last-child {
+  border-start-end-radius: calc(var(--radius-md) - 1px);
+  border-end-end-radius: calc(var(--radius-md) - 1px);
+}
+
+.dayTab::after {
+  position: absolute;
+  inset-inline: var(--space-3);
+  inset-block-end: 0;
+  block-size: 2px;
+  background-color: transparent;
+  content: "";
+}
+
+.dayTab[aria-pressed="true"] {
+  background-color: var(--color-surface-raised);
+  color: var(--color-text);
+}
+
+.dayTab[aria-pressed="true"]::after {
+  background-color: var(--color-primary);
+}
+
+.dayTab > span,
+.dayTab small {
+  font-size: var(--text-xs);
+}
+
+.dayTab strong {
+  font-size: var(--text-md);
+  font-variant-numeric: tabular-nums;
+}
+
+.dayTab[data-kind="workout"] small {
+  color: var(--color-primary-text);
+}
+
+.editor {
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface);
+}
+
+.dayHeader,
+.exerciseHeading,
+.exerciseCardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.dayHeader > div,
+.exerciseHeading > div,
+.exerciseCardHeader > div {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.dayHeader h3 {
+  font-size: var(--text-md);
+}
+
+.kindSelector {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  inline-size: 100%;
+  padding: 0;
+  border: 0;
+}
+
+.kindSelector label {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--control-height);
+  padding-inline: var(--space-4);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+
+.kindSelector label:first-of-type {
+  border-radius: var(--radius-full) 0 0 var(--radius-full);
+}
+
+.kindSelector label:last-of-type {
+  margin-inline-start: -1px;
+  border-radius: 0 var(--radius-full) var(--radius-full) 0;
+}
+
+.kindSelector label:has(input:checked) {
+  z-index: 1;
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-text);
+}
+
+.kindSelector:disabled label {
+  cursor: default;
+  opacity: 0.65;
+}
+
+.visuallyHidden,
+.kindSelector input {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  border: 0;
+  white-space: nowrap;
+}
+
+.restState,
+.exerciseEmpty {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  padding: var(--space-5);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-background);
+}
+
+.restState > span,
+.exerciseEmpty > svg {
+  flex: 0 0 auto;
+  color: var(--color-primary-text);
+}
+
+.restState > span {
+  display: grid;
+  inline-size: var(--control-height);
+  block-size: var(--control-height);
+  place-items: center;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary-soft);
+}
+
+.restState div,
+.exerciseEmpty div {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.restState h4,
+.exerciseEmpty h4,
+.exerciseHeading h4,
+.exerciseCard h4 {
+  font-size: var(--text-sm);
+}
+
+.daySettings {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.selectField {
+  display: grid;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+}
+
+.selectControl {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: center;
+  min-block-size: var(--control-height);
+  padding-inline: var(--space-4);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-soft);
+  color: var(--color-text-muted);
+}
+
+.selectControl select {
+  inline-size: 100%;
+  min-inline-size: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+}
+
+.exerciseHeading {
+  padding-block-start: var(--space-2);
+  border-block-start: 1px solid var(--color-border);
+}
+
+.exerciseList,
+.setList {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.exerciseCard {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-background);
+}
+
+.exerciseCardHeader {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.exercisePosition {
+  display: grid;
+  inline-size: 2rem;
+  block-size: 2rem;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-text);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+}
+
+.removeButton {
+  color: var(--color-danger-text);
+}
+
+.setRow {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.setRow legend {
+  padding-inline: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+}
+
+.removeSetButton,
+.addSetButton {
+  inline-size: fit-content;
+  padding-inline: var(--space-2);
+  color: var(--color-danger-text);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+}
+
+.addSetButton {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  color: var(--color-primary-text);
+}
+
+.formError {
+  border: 1px solid var(--color-danger);
+  background-color: var(--color-danger-soft);
+  color: var(--color-danger-text);
+}
+
+.actions {
+  position: sticky;
+  z-index: 2;
+  inset-block-end: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: flex-end;
+  padding-block: var(--space-3);
+  border-block-start: 1px solid var(--color-border);
+  background-color: rgb(0 0 0 / 0.92);
+  backdrop-filter: var(--glass-filter-compact);
+}
+
+.actions > :last-child {
+  flex: 1 1 auto;
+}
+
+.iconButton:disabled,
+.todayButton:disabled,
+.removeButton:disabled,
+.removeSetButton:disabled,
+.addSetButton:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.iconButton:focus-visible,
+.todayButton:focus-visible,
+.dayTab:focus-visible,
+.kindSelector label:has(input:focus-visible),
+.selectControl:focus-within,
+.removeButton:focus-visible,
+.removeSetButton:focus-visible,
+.addSetButton:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .iconButton:hover:not(:disabled),
+  .todayButton:hover:not(:disabled),
+  .removeButton:hover:not(:disabled) {
+    background-color: var(--color-surface-soft);
+  }
+
+  .dayTab:hover:not([aria-pressed="true"]) {
+    color: var(--color-text);
+  }
+
+  .removeSetButton:hover:not(:disabled),
+  .addSetButton:hover:not(:disabled) {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+
+@media (min-width: 40rem) {
+  .toolbar,
+  .dayHeader,
+  .exerciseHeading {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .kindSelector {
+    inline-size: auto;
+  }
+
+  .daySettings {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .actions > :last-child {
+    flex: 0 0 auto;
+  }
+}
+
+@media (min-width: 56rem) {
+  .dayRail {
+    grid-auto-flow: initial;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    overflow: visible;
+  }
+
+  .setRow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: end;
+  }
+
+  .setRow legend,
+  .removeSetButton {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (forced-colors: active) {
+  .dayRail,
+  .dayTab,
+  .editor,
+  .exerciseCard,
+  .setRow,
+  .restState,
+  .exerciseEmpty,
+  .lockedMessage {
+    border-color: CanvasText;
+    background-color: Canvas;
+  }
+}
