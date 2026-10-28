@@ -241,6 +241,8 @@ export async function getTrainingHistoryForClerkUser(
         status:
           day.status === TrainingDayStatus.IN_PROGRESS
             ? "in-progress"
+            : day.status === TrainingDayStatus.SKIPPED
+              ? "skipped"
             : "planned",
       })),
       weeklySessions,
