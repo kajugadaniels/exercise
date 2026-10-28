@@ -15,6 +15,7 @@ import {
   Clock01Icon,
   Dumbbell01Icon,
   RepeatIcon,
+  SkipForwardIcon,
   Timer02Icon,
   WeightScale01Icon,
 } from "@hugeicons/core-free-icons";
@@ -127,6 +128,7 @@ export function WorkoutSession({
   );
   const [isStarting, setIsStarting] = useState(false);
   const [isFinishing, setIsFinishing] = useState(false);
+  const [isSkipping, setIsSkipping] = useState(false);
   const [savingSetKey, setSavingSetKey] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [restSecondsRemaining, setRestSecondsRemaining] = useState(0);
@@ -144,9 +146,14 @@ export function WorkoutSession({
       (exercise) => exercise.position === selectedExercisePosition,
     ) ?? workout.exercises[0];
   const isActive = workout.session?.status === "in-progress";
+  const isSkipped = workout.status === "skipped" && workout.session === null;
   const hasEnded =
     workout.session?.status === "completed" ||
-    workout.session?.status === "abandoned";
+    workout.session?.status === "abandoned" ||
+    isSkipped;
+  const selectedNextSet = selectedExercise.sets.find(
+    (set) => set.actual === null,
+  );
   const sessionEndTime = workout.session?.completedAt
     ? new Date(workout.session.completedAt).getTime()
     : clockTime;
@@ -342,6 +349,38 @@ export function WorkoutSession({
     }
   }
 
+  async function skipWorkout() {
+    if (
+      !window.confirm(
+        "Skip this workout? The day will remain in your weekly history as skipped.",
+      )
+    ) {
+      return;
+    }
+
+    setIsSkipping(true);
+    setFormError(null);
+
+    try {
+      const nextWorkout = await requestWorkout("PATCH", { action: "skip" });
+      applyWorkout(nextWorkout);
+      showToast({
+        tone: "info",
+        title: "Workout skipped",
+        message: "This day is now marked as skipped in your weekly record.",
+      });
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "The workout could not be skipped.";
+      setFormError(message);
+      showToast({ tone: "error", title: "Skip failed", message });
+    } finally {
+      setIsSkipping(false);
+    }
+  }
+
   return (
     <section className={styles.session} aria-labelledby="workout-session-title">
       <header className={styles.sessionHeader}>
@@ -352,9 +391,11 @@ export function WorkoutSession({
               ? "Workout completed"
               : workout.session?.status === "abandoned"
                 ? "Workout ended early"
-                : workout.session
-                  ? "Workout in progress"
-                  : "Ready when you are"}
+                : isSkipped
+                  ? "Workout skipped"
+                  : workout.session
+                    ? "Workout in progress"
+                    : "Ready when you are"}
           </h2>
         </div>
 
@@ -385,7 +426,7 @@ export function WorkoutSession({
         {progress.percentage}% complete
       </p>
 
-      {!workout.session && (
+      {!workout.session && workout.status === "planned" && (
         <div className={styles.readyState}>
           <span className={styles.readyIcon} aria-hidden="true">
             <Icon icon={Dumbbell01Icon} size={24} />
@@ -397,9 +438,39 @@ export function WorkoutSession({
               Actual sets are saved one at a time.
             </p>
           </div>
-          <Button isLoading={isStarting} onClick={startWorkout}>
-            Start workout
-          </Button>
+          <div className={styles.readyActions}>
+            <Button
+              variant="ghost"
+              disabled={isStarting || isSkipping}
+              isLoading={isSkipping}
+              onClick={skipWorkout}
+            >
+              <Icon icon={SkipForwardIcon} size={18} />
+              Skip today
+            </Button>
+            <Button
+              disabled={isSkipping}
+              isLoading={isStarting}
+              onClick={startWorkout}
+            >
+              Start workout
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {isSkipped && (
+        <div className={styles.skippedState} role="status">
+          <span aria-hidden="true">
+            <Icon icon={SkipForwardIcon} size={22} />
+          </span>
+          <div>
+            <h3>This workout was skipped</h3>
+            <p>
+              No session or performance was created. The status remains in your
+              weekly report so your training record stays accurate.
+            </p>
+          </div>
         </div>
       )}
 
@@ -420,48 +491,91 @@ export function WorkoutSession({
         </section>
       )}
 
-      <nav className={styles.exerciseRail} aria-label="Workout exercises">
-        {workout.exercises.map((exercise) => {
-          const completedSets = exercise.sets.filter(
-            (set) => set.actual !== null,
-          ).length;
+      <div className={styles.sessionWorkspace}>
+        <nav className={styles.exerciseRail} aria-label="Workout exercises">
+          {workout.exercises.map((exercise) => {
+            const completedSets = exercise.sets.filter(
+              (set) => set.actual !== null,
+            ).length;
 
-          return (
-            <button
-              type="button"
-              aria-pressed={exercise.position === selectedExercise.position}
-              key={exercise.position}
-              onClick={() => setSelectedExercisePosition(exercise.position)}
+            return (
+              <button
+                type="button"
+                aria-pressed={exercise.position === selectedExercise.position}
+                key={exercise.position}
+                onClick={() => setSelectedExercisePosition(exercise.position)}
+              >
+                <span>{exercise.position}</span>
+                <strong>{exercise.name}</strong>
+                <small>
+                  {completedSets}/{exercise.sets.length} sets
+                </small>
+              </button>
+            );
+          })}
+        </nav>
+
+        <article className={styles.exerciseLane}>
+          <header className={styles.exerciseHeader}>
+            <div>
+              <p>Exercise {selectedExercise.position}</p>
+              <h3>{selectedExercise.name}</h3>
+            </div>
+            {selectedExercise.equipment && (
+              <span>{formatExerciseValue(selectedExercise.equipment)}</span>
+            )}
+          </header>
+
+          {isActive && selectedNextSet && (
+            <section
+              className={styles.activeSetConsole}
+              aria-labelledby="active-set-title"
             >
-              <span>{exercise.position}</span>
-              <strong>{exercise.name}</strong>
-              <small>
-                {completedSets}/{exercise.sets.length} sets
-              </small>
-            </button>
-          );
-        })}
-      </nav>
-
-      <article className={styles.exerciseLane}>
-        <header className={styles.exerciseHeader}>
-          <div>
-            <p>Exercise {selectedExercise.position}</p>
-            <h3>{selectedExercise.name}</h3>
-          </div>
-          {selectedExercise.equipment && (
-            <span>{formatExerciseValue(selectedExercise.equipment)}</span>
+              <div>
+                <p>Up next</p>
+                <h4 id="active-set-title">Set {selectedNextSet.setNumber}</h4>
+              </div>
+              <dl>
+                <div>
+                  <dt>Target</dt>
+                  <dd>{selectedNextSet.targetRepetitions} reps</dd>
+                </div>
+                <div>
+                  <dt>Load</dt>
+                  <dd>
+                    {selectedNextSet.targetWeightGrams === null
+                      ? "Bodyweight"
+                      : `${selectedNextSet.targetWeightGrams / 1_000} kg`}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Rest after</dt>
+                  <dd>
+                    {selectedNextSet.restSeconds === null
+                      ? "As needed"
+                      : `${selectedNextSet.restSeconds}s`}
+                  </dd>
+                </div>
+              </dl>
+            </section>
           )}
-        </header>
 
-        <ol className={styles.sets}>
+          <ol className={styles.sets}>
           {selectedExercise.sets.map((set) => {
             const key = getSetKey(selectedExercise.position, set.setNumber);
             const draft = drafts[key];
             const isRecorded = set.actual !== null;
+            const isCurrent =
+              isActive && selectedNextSet?.setNumber === set.setNumber;
 
             return (
-              <li className={styles.set} data-recorded={isRecorded} key={key}>
+              <li
+                className={styles.set}
+                data-current={isCurrent}
+                data-recorded={isRecorded}
+                aria-current={isCurrent ? "step" : undefined}
+                key={key}
+              >
                 <div className={styles.setIdentity}>
                   <span aria-hidden="true">
                     {isRecorded ? (
@@ -479,7 +593,11 @@ export function WorkoutSession({
                         : ` · ${set.targetWeightGrams / 1_000} kg`}
                     </p>
                     <span className={styles.setStatus}>
-                      {isRecorded ? "Recorded" : "Not recorded"}
+                      {isRecorded
+                        ? "Recorded"
+                        : isCurrent
+                          ? "Up next"
+                          : "Not recorded"}
                     </span>
                   </div>
                 </div>
@@ -567,8 +685,9 @@ export function WorkoutSession({
               </li>
             );
           })}
-        </ol>
-      </article>
+          </ol>
+        </article>
+      </div>
 
       {formError && (
         <p className={styles.formError} role="alert">
