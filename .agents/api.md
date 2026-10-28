@@ -87,8 +87,13 @@ The initial private HTTP surface is:
 | `PUT /api/profile` | Validate and upsert the current actor's profile; append a snapshot only when measurements change | Authenticated, same-origin |
 | `DELETE /api/profile` | Delete the current actor's profile and measurement history | Authenticated, same-origin |
 | `GET /api/progress` | Return up to 100 of the current actor's newest measurement snapshots | Authenticated, completed profile |
+| `GET /api/training/analytics?weeks={4|8|12}` | Return bounded completed-workout trends, exercise progression, and muscle distribution | Authenticated, completed profile |
+| `GET /api/account/data` | Download the current actor's local fitness data as JSON | Authenticated |
+| `DELETE /api/account/data` | Permanently delete the current actor's local application user and cascaded fitness data | Authenticated, same-origin, exact confirmation phrase |
 
-The server derives the Clerk user ID; none of these contracts accepts an owner ID. Personalized responses use `Cache-Control: no-store`. Mutation bodies are strict JSON and limited to 16 KiB. Errors use lowercase stable codes and user-safe messages.
+The server derives the Clerk user ID; none of these contracts accepts an owner ID. Personalized responses use `Cache-Control: private, no-store`. Mutation bodies are strict JSON and limited to 16 KiB. Errors use lowercase stable codes and user-safe messages. The export omits internal database and Clerk identifiers and expresses stored weights in kilograms. Local data deletion does not delete the external Clerk sign-in account; Clerk synchronization remains a separate release gate.
+
+Training analytics accept only 4, 8, or 12 weeks. They query a bounded calendar range, count only completed sessions as performance, treat loaded volume as external weight only, and never manufacture bodyweight load. Scheduled workouts are used only as the completion-rate denominator.
 
 ## 7. Training preference contracts
 
@@ -125,11 +130,12 @@ The private workout-execution surface is:
 | `GET /api/training/workouts/{plannedDate}` | Return the current actor's planned workout and recorded set state | Authenticated, completed profile |
 | `POST /api/training/workouts/{plannedDate}` | Idempotently start the planned workout session | Authenticated, completed profile, same-origin |
 | `PATCH /api/training/workouts/{plannedDate}` | Record one planned set, complete or abandon an active workout, or skip an unstarted workout | Authenticated, completed profile, same-origin |
+| `DELETE /api/training/workouts/{plannedDate}` | Permanently delete an ended workout session and its logged sets, then return the planned day to a reusable planned state | Authenticated, completed profile, same-origin |
 | `GET /api/training/history?week={weekStart}&page={page}` | Return an owner-scoped weekly report, ended-session page, and deterministic progression guidance | Authenticated, completed profile |
 
 `plannedDate` is a valid calendar date in `YYYY-MM-DD` format. Set actions identify only the planned exercise position and set number; ownership, internal IDs, planned targets, and lifecycle state are resolved server-side. Actual repetitions, optional weight, and optional reps-in-reserve are strictly bounded. Completing a workout requires every planned set to have a record. Abandoning retains completed sets and ends the session without manufacturing missing performance. Skipping is allowed only before a session starts, creates no performance record, appears in the weekly report, and locks the affected week against replacement or deletion.
 
-One session is permitted per planned day. Ended sessions and their set logs are immutable through this contract. Responses are private and non-cacheable, request bodies are limited to 16 KiB, and the server never sends workout data to the exercise provider.
+One session is permitted per planned day. Normal execution updates cannot rewrite ended sessions or set logs. The explicit deletion contract is the privacy exception: it owner-scopes the date, rejects active sessions, removes the ended session and cascaded logs transactionally, and resets only that planned day. Responses are private and non-cacheable, request bodies are limited to 16 KiB, and the server never sends workout data to the exercise provider.
 
 Training history pages contain at most ten ended sessions, and page numbers are bounded. Weekly reports include only the selected Monday–Sunday boundary. Loaded volume includes external weight only and never invents a bodyweight value. Progression guidance uses a bounded window of completed sessions and never uses abandoned workouts. A load increase requires two completed exposures with every repetition target met, a non-decreasing latest load, and at least two recorded reps in reserve on every latest set. The response explains whether to hold or increase; it is training guidance, not medical advice.
 
