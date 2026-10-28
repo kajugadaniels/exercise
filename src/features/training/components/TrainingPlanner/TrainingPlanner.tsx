@@ -469,8 +469,11 @@ export function TrainingPlanner({
 
       {isLocked && (
         <div className={styles.lockedMessage} role="status">
-          <strong>This week contains recorded activity.</strong>
-          <span>The plan is read-only so your workout history stays intact.</span>
+          <strong>This week contains protected workout history.</strong>
+          <span>
+            Started, completed, and skipped workout days stay read-only so the
+            weekly record remains accurate.
+          </span>
         </div>
       )}
 
@@ -478,12 +481,30 @@ export function TrainingPlanner({
         {editor.days.map((day) => {
           const date = toDisplayDate(day.plannedDate);
           const isActive = day.plannedDate === activeDate;
+          const storedDay = initialPlan?.days.find(
+            (candidate) => candidate.plannedDate === day.plannedDate,
+          );
+          const dayStatus = day.kind === "rest" ? "rest" : storedDay?.status;
+          const daySummary =
+            day.kind === "rest"
+              ? "Rest"
+              : dayStatus === "in-progress"
+                ? "In progress"
+                : dayStatus === "completed"
+                  ? "Completed"
+                  : dayStatus === "skipped"
+                    ? "Skipped"
+                    : `${day.exercises.length} ${
+                        day.exercises.length === 1 ? "exercise" : "exercises"
+                      }`;
 
           return (
             <button
               className={styles.dayTab}
               data-kind={day.kind}
+              data-status={dayStatus}
               type="button"
+              aria-label={`${dayFormatter.format(date)} ${dayNumberFormatter.format(date)}, ${daySummary}`}
               aria-pressed={isActive}
               aria-controls="active-training-day"
               key={day.plannedDate}
@@ -491,13 +512,7 @@ export function TrainingPlanner({
             >
               <span>{dayFormatter.format(date)}</span>
               <strong>{dayNumberFormatter.format(date)}</strong>
-              <small>
-                {day.kind === "rest"
-                  ? "Rest"
-                  : `${day.exercises.length} ${
-                      day.exercises.length === 1 ? "exercise" : "exercises"
-                    }`}
-              </small>
+              <small>{daySummary}</small>
             </button>
           );
         })}
