@@ -59,6 +59,9 @@ export async function scheduleExerciseForClerkUser(
           exerciseSourceVersion: exercise.source.version,
           exerciseAttributionUrl: exercise.source.attributionUrl,
           exerciseName: exercise.name,
+          plannedSets: input.sets,
+          plannedRepetitionsPerSet: input.repetitionsPerSet,
+          plannedWeightGrams: Math.round(input.weightKilograms * 1_000),
         },
       });
     });
