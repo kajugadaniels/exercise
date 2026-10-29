@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { scheduleExerciseSchema } from "./session-schema";
+import {
+  scheduleExerciseSchema,
+  trainingSessionMonthSchema,
+} from "./session-schema";
 
 const validSchedule = {
   exerciseId: "biceps/barbell-curl",
@@ -73,4 +76,10 @@ test("rejects missing, fractional, and out-of-range prescription values", () => 
     }).success,
     true,
   );
+});
+
+test("accepts only real calendar months", () => {
+  assert.equal(trainingSessionMonthSchema.safeParse("2026-10").success, true);
+  assert.equal(trainingSessionMonthSchema.safeParse("2026-13").success, false);
+  assert.equal(trainingSessionMonthSchema.safeParse("2026-10-01").success, false);
 });
