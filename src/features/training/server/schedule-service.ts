@@ -1,11 +1,16 @@
 import "server-only";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/server/database/prisma";
+import { toExerciseSummary } from "@/features/exercises/catalog/exercise-summary";
 import { getExerciseCatalogItem } from "@/features/exercises/server/exercise-catalog";
 import type {
   ScheduleExerciseInput,
+  TrainingSessionCalendarExercise,
   TrainingSessionCalendarItem,
 } from "../session-schema";
+
+const MAX_CALENDAR_MEDIA_LOOKUPS = 120;
+const CALENDAR_MEDIA_CONCURRENCY = 6;
 
 export type ScheduleExerciseResult =
   | Readonly<{
@@ -32,6 +37,45 @@ function calendarMonthBounds(month: string) {
     end: new Date(Date.UTC(year, monthNumber, 1)),
     start: new Date(Date.UTC(year, monthNumber - 1, 1)),
   };
+}
+
+async function loadCalendarExerciseImages(exerciseIds: readonly string[]) {
+  const uniqueIds = Array.from(new Set(exerciseIds)).slice(
+    0,
+    MAX_CALENDAR_MEDIA_LOOKUPS,
+  );
+  const images = new Map<
+    string,
+    TrainingSessionCalendarExercise["image"]
+  >();
+  let nextIndex = 0;
+  let providerUnavailable = false;
+
+  async function worker() {
+    while (!providerUnavailable && nextIndex < uniqueIds.length) {
+      const exerciseId = uniqueIds[nextIndex];
+      nextIndex += 1;
+
+      try {
+        const exercise = await getExerciseCatalogItem(exerciseId);
+        images.set(
+          exerciseId,
+          exercise ? toExerciseSummary(exercise).image : null,
+        );
+      } catch {
+        providerUnavailable = true;
+      }
+    }
+  }
+
+  await Promise.all(
+    Array.from(
+      { length: Math.min(CALENDAR_MEDIA_CONCURRENCY, uniqueIds.length) },
+      () => worker(),
+    ),
+  );
+
+  return images;
 }
 
 export async function getTrainingSessionsForClerkUser(
@@ -67,12 +111,19 @@ export async function getTrainingSessionsForClerkUser(
     return { status: "profile-required" };
   }
 
+  const images = await loadCalendarExerciseImages(
+    user.trainingSessions.flatMap((session) =>
+      session.exercises.map((exercise) => exercise.exerciseSourceId),
+    ),
+  );
+
   return {
     status: "ok",
     sessions: user.trainingSessions.map((session) => ({
       date: session.scheduledDate.toISOString().slice(0, 10),
       exercises: session.exercises.map((exercise) => ({
         exerciseId: exercise.exerciseSourceId,
+        image: images.get(exercise.exerciseSourceId) ?? null,
         name: exercise.exerciseName,
         repetitionsPerSet: exercise.plannedRepetitionsPerSet,
         sets: exercise.plannedSets,
