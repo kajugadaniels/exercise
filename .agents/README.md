@@ -90,6 +90,7 @@ A chat request alone does not relax level-one restrictions. Give the developer t
 | Exercise media | Third-party GIF/video referenced by a normalized record. Availability is not a usage license. |
 | Protected catalog | Exercise discovery pages that require a verified Clerk session under the confirmed authenticated-first route policy. |
 | Dated training session | Owner-scoped calendar date containing provider-verified exercises and their planned sets, repetitions per set, and weight; the same source exercise is unique within that date. |
+| Training calendar | Protected, owner-scoped monthly view of dated training sessions; it is planning UI, not workout execution or progress history. |
 
 ## 8. Changelog
 
@@ -109,4 +110,5 @@ A chat request alone does not relax level-one restrictions. Give the developer t
 | 2026-10-28 | Removed training, workout, recommendation, and progress pages, APIs, feature modules, and persisted tables by developer request. Profile export and deletion remain. |
 | 2026-10-28 | Re-approved minimal dated training sessions with duplicate-safe exercise scheduling; broader training and progress features remain removed. |
 | 2026-10-29 | Added a bounded planned sets, repetitions-per-set, and weight prescription to each newly scheduled exercise. |
+| 2026-10-29 | Added the protected monthly training calendar and its bounded owner-scoped read contract. |
 
