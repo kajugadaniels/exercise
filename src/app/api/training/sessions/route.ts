@@ -68,7 +68,7 @@ export async function POST(request: Request) {
     return errorResponse(
       422,
       "invalid_input",
-      "Choose a valid exercise and training date.",
+      "Choose a valid exercise, date, sets, reps, and weight.",
     );
   }
 
