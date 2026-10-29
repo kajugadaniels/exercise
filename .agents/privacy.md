@@ -3,11 +3,11 @@
 **Purpose:** Minimize collection and protect account and profile information.
 **Scope:** Profiles, saved content, telemetry, support, and third-party disclosure.
 **Related:** [security.md](security.md), [authentication.md](authentication.md), [project.md](project.md)  
-**Last reviewed:** 2026-10-28
+**Last reviewed:** 2026-10-29
 
 ## 1. Data minimization
 
-Collect only data required for an approved user-visible feature. The approved mandatory profile contains a male/female gender selection, height, weight, and country. BMI is derived on demand and not stored. On 2026-10-28, the developer approved owner-scoped calendar dates and provider exercise snapshots for dated training sessions. Training preferences, workout execution, performance history, and progress history remain removed and must not be collected without a new review. Do not collect birth date, photos, injury/medical history, disability, precise location, contacts, wearable data, or additional measurements without a new review.
+Collect only data required for an approved user-visible feature. The approved mandatory profile contains a male/female gender selection, height, weight, and country. BMI is derived on demand and not stored. On 2026-10-28, the developer approved owner-scoped calendar dates and provider exercise snapshots for dated training sessions. On 2026-10-29, the developer approved planned sets, repetitions per set, and weight for each newly scheduled exercise. Training preferences, workout execution, completed performance history, and progress history remain removed and must not be collected without a new review. Do not collect birth date, photos, injury/medical history, disability, precise location, contacts, wearable data, or additional measurements without a new review.
 
 ## 2. Data classes
 
@@ -17,7 +17,7 @@ Collect only data required for an approved user-visible feature. The approved ma
 | Gender, height, weight, country | Sensitive profile data; required for the approved profile, owner-scoped, editable, and deletable |
 | BMI | Derived in application code from height and weight; never stored independently or used diagnostically |
 | Display name/avatar | Personal; optional where possible |
-| Scheduled training date and exercises | Potentially sensitive fitness-planning data; owner-scoped, purpose-limited, included in export, and deleted with local application data |
+| Scheduled training date, exercises, and planned prescription | Potentially sensitive fitness-planning data; sets, repetitions per set, and weight are owner-scoped, purpose-limited, included in export, and deleted with local application data |
 | Future saved content | Private user content; requires approval before collection |
 | Medical/injury information | Out of scope |
 | Search/filter events | Do not retain by default; analytics requires approval |
