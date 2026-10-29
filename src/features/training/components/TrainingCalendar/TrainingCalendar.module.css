@@ -1,0 +1,400 @@
+.calendarShell {
+  display: grid;
+  gap: var(--space-4);
+  min-inline-size: 0;
+}
+
+.calendarHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+  justify-content: space-between;
+  inline-size: 100%;
+}
+
+.monthIdentity,
+.calendarControls,
+.dayHeader,
+.exerciseIdentity {
+  display: flex;
+  align-items: center;
+}
+
+.monthIdentity {
+  gap: var(--space-3);
+  min-inline-size: 0;
+}
+
+.calendarIcon,
+.iconButton,
+.closeButton,
+.exerciseIcon {
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+}
+
+.calendarIcon {
+  inline-size: var(--control-height);
+  block-size: var(--control-height);
+  flex: 0 0 auto;
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-text);
+}
+
+.monthTitle,
+.monthSummary,
+.errorState p,
+.scrollHint,
+.dialogContext,
+.dialogTitle,
+.exerciseIdentity h3,
+.prescription,
+.prescription dd {
+  margin: 0;
+}
+
+.monthTitle {
+  font-size: var(--text-xl);
+  letter-spacing: var(--tracking-tight);
+}
+
+.monthSummary {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.calendarControls {
+  gap: var(--space-2);
+  justify-content: space-between;
+  inline-size: 100%;
+}
+
+.iconButton,
+.closeButton {
+  inline-size: var(--control-height);
+  block-size: var(--control-height);
+  padding: 0;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface-raised);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.iconButton:focus-visible,
+.closeButton:focus-visible,
+.sessionDay:focus-visible,
+.calendarViewport:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.errorState {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-md);
+  background-color: var(--color-danger-soft);
+  color: var(--color-danger-text);
+  font-size: var(--text-sm);
+}
+
+.scrollHint {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.calendarViewport {
+  min-inline-size: 0;
+  overflow-x: auto;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-background);
+  overscroll-behavior-inline: contain;
+  scrollbar-color: var(--color-border-strong) transparent;
+}
+
+.calendar {
+  inline-size: 100%;
+  min-inline-size: 46rem;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.weekday {
+  block-size: var(--control-height);
+  border-block-end: 1px solid var(--color-border-strong);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-align: start;
+}
+
+.weekday abbr {
+  padding-inline: var(--space-3);
+  text-decoration: none;
+}
+
+.dayCell {
+  block-size: clamp(7rem, 11vw, 10rem);
+  padding: 0;
+  border-inline-end: 1px solid var(--color-border);
+  border-block-end: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+.dayCell:nth-child(7n) {
+  border-inline-end: 0;
+}
+
+.dayCell[data-outside="true"] {
+  background-color: var(--color-surface);
+}
+
+.emptyDay,
+.sessionDay {
+  inline-size: 100%;
+  block-size: 100%;
+  padding: var(--space-3);
+}
+
+.emptyDay {
+  color: var(--color-text-muted);
+}
+
+.sessionDay {
+  display: grid;
+  gap: var(--space-3);
+  align-content: space-between;
+  border: 0;
+  background-color: var(--color-surface-raised);
+  color: var(--color-text);
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.dayHeader {
+  justify-content: space-between;
+}
+
+.dayNumber {
+  position: relative;
+  display: inline-grid;
+  min-inline-size: 2rem;
+  min-block-size: 2rem;
+  place-items: center;
+  font-size: var(--text-lg);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-semibold);
+}
+
+.dayNumber[data-today="true"]::after {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: -0.2rem;
+  block-size: 2px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary);
+  content: "";
+}
+
+.sessionCount {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  min-block-size: 2rem;
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-bold);
+}
+
+.sessionPreview {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
+}
+
+.dialog {
+  position: fixed;
+  inset: 0;
+  inline-size: min(calc(100% - var(--space-6)), 38rem);
+  max-inline-size: none;
+  max-block-size: calc(100dvh - var(--space-6));
+  padding: 0;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  margin: auto;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  overflow: hidden auto;
+}
+
+.dialog::backdrop {
+  background-color: rgb(0 0 0 / 78%);
+  -webkit-backdrop-filter: blur(0.45rem);
+  backdrop-filter: blur(0.45rem);
+}
+
+.dialogContent {
+  display: grid;
+}
+
+.dialogHeader {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--space-5);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.dialogContext {
+  color: var(--color-primary-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.dialogTitle {
+  margin-block-start: var(--space-1);
+  font-size: var(--text-lg);
+}
+
+.exerciseList {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.exerciseItem {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.exerciseItem:last-child {
+  border-block-end: 0;
+}
+
+.exerciseIdentity {
+  gap: var(--space-3);
+  min-inline-size: 0;
+}
+
+.exerciseIcon {
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  flex: 0 0 auto;
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-text);
+}
+
+.exerciseIdentity h3 {
+  font-size: var(--text-md);
+  overflow-wrap: anywhere;
+}
+
+.prescription {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+}
+
+.prescription > div {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-raised);
+}
+
+.prescription dt {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.prescription dd {
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-semibold);
+}
+
+.monthPlaceholder,
+.controlsPlaceholder,
+.calendarPlaceholder {
+  background-color: var(--color-surface-raised);
+}
+
+.monthPlaceholder {
+  inline-size: 12rem;
+  block-size: var(--control-height);
+  border-radius: var(--radius-full);
+}
+
+.controlsPlaceholder {
+  inline-size: 11rem;
+  block-size: var(--control-height);
+  border-radius: var(--radius-full);
+}
+
+.calendarPlaceholder {
+  min-block-size: 44rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+@media (hover: hover) {
+  .iconButton:hover,
+  .closeButton:hover,
+  .sessionDay:hover {
+    background-color: var(--color-surface-soft);
+  }
+}
+
+@media (min-width: 40rem) {
+  .calendarControls {
+    inline-size: auto;
+    justify-content: flex-start;
+  }
+
+  .prescription {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 48rem) {
+  .scrollHint {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .calendarViewport,
+  .dayCell,
+  .iconButton,
+  .closeButton,
+  .dialog,
+  .prescription > div {
+    border-color: CanvasText;
+  }
+
+  .dayNumber[data-today="true"]::after {
+    background-color: Highlight;
+  }
+}
