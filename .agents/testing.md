@@ -13,7 +13,7 @@ Agents may write and review tests but must not execute tests, lint, type checks,
 
 | Layer | Focus |
 | --- | --- |
-| Unit | Provider schemas/mappings, muscle mapping, profile validation/BMI, filter semantics, URL construction, error translation |
+| Unit | Provider schemas/mappings, muscle mapping, profile validation/BMI, filter semantics, calendar arithmetic/response parsing, URL construction, error translation |
 | Component | Exercise states, filter controls, diagram wrapper, keyboard behavior, missing media |
 | Integration | Route rendering with provider success/failure, Clerk protection, owner-scoped operations |
 | End-to-end | Core browse→filter→detail, exercise scheduling with planned sets/reps/weight, and sign-in/onboarding/profile journeys |
@@ -35,11 +35,11 @@ Cover loading, populated, empty, filtered-empty, provider failure, malformed rec
 
 ## 5. Auth and security coverage
 
-For private operations, test unauthenticated access, completed/incomplete profiles, owner scoping, invalid payloads and origins, stale/missing records, deletion, and malicious input. Scheduling coverage includes missing, fractional, and out-of-range sets, repetitions, and weight plus the valid zero-kilogram bodyweight case. Mock Clerk only at the documented boundary. A client visibility test is not an authorization test. Database integration tests remain pending because no test database is approved.
+For private operations, test unauthenticated access, completed/incomplete profiles, owner scoping, invalid payloads and origins, stale/missing records, deletion, and malicious input. Scheduling coverage includes missing, fractional, and out-of-range sets, repetitions, and weight plus the valid zero-kilogram bodyweight case. Calendar-read coverage includes invalid or repeated month parameters, month-boundary arithmetic, malformed responses, private no-store caching, and identifier minimization. Mock Clerk only at the documented boundary. A client visibility test is not an authorization test. Database integration tests remain pending because no test database is approved.
 
 ## 6. Accessibility verification
 
-Automated checks supplement, not replace, manual keyboard navigation, focus order, zoom/reflow, forced colors, contrast, screen-reader smoke testing, and motion preference review. Do not accept snapshot-only coverage for interactive SVGs.
+Automated checks supplement, not replace, manual keyboard navigation, focus order, zoom/reflow, forced colors, contrast, screen-reader smoke testing, and motion preference review. The training calendar additionally requires manual verification of the today underline, marked-date dialog, focus restoration, and labeled horizontal scrolling at narrow widths. Do not accept snapshot-only coverage for interactive SVGs.
 
 ## 7. Performance and resilience
 
