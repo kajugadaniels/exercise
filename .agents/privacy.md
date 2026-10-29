@@ -38,7 +38,7 @@ Do not send Clerk identity, profile data, scheduled dates, IP-derived context, o
 
 ## 6. Logs, caches, and testing
 
-Exclude tokens, raw auth objects, personal profiles, and sensitive queries from logs. Use synthetic fixtures in tests and screenshots. Personalized responses must never enter a public/shared cache.
+Exclude tokens, raw auth objects, personal profiles, and sensitive queries from logs. Use synthetic fixtures in tests and screenshots. Personalized responses must never enter a public/shared cache. The monthly training calendar requests only one bounded month and receives only the current owner's display fields and planned prescription; internal database and Clerk identifiers remain server-side.
 
 ## 7. Health and safety posture
 
