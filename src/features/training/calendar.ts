@@ -64,11 +64,45 @@ function isNullableWeight(value: unknown): value is number | null {
   );
 }
 
+function parseExerciseImage(
+  value: unknown,
+): TrainingSessionCalendarExercise["image"] | undefined {
+  if (value === null) {
+    return null;
+  }
+
+  if (
+    !isRecord(value) ||
+    typeof value.alt !== "string" ||
+    value.alt.length < 1 ||
+    value.alt.length > 240 ||
+    (value.kind !== "gif" && value.kind !== "image") ||
+    typeof value.url !== "string" ||
+    value.url.length > 500
+  ) {
+    return undefined;
+  }
+
+  try {
+    const url = new URL(value.url);
+    if (url.protocol !== "https:") {
+      return undefined;
+    }
+  } catch {
+    return undefined;
+  }
+
+  return { alt: value.alt, kind: value.kind, url: value.url };
+}
+
 function parseExercise(
   value: unknown,
 ): TrainingSessionCalendarExercise | null {
+  const image = isRecord(value) ? parseExerciseImage(value.image) : undefined;
+
   if (
     !isRecord(value) ||
+    image === undefined ||
     typeof value.exerciseId !== "string" ||
     value.exerciseId.length < 3 ||
     value.exerciseId.length > 200 ||
@@ -84,6 +118,7 @@ function parseExercise(
 
   return {
     exerciseId: value.exerciseId,
+    image,
     name: value.name,
     repetitionsPerSet: value.repetitionsPerSet,
     sets: value.sets,
