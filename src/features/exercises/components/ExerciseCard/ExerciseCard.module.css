@@ -62,7 +62,7 @@
 }
 
 @media (hover: hover) {
-  .scheduleAction {
+  .scheduleAction > button {
     opacity: 0;
     pointer-events: none;
     transform: scale(0.92);
@@ -72,8 +72,8 @@
       transform var(--duration-fast) var(--ease-standard);
   }
 
-  .card:hover .scheduleAction,
-  .card:focus-within .scheduleAction {
+  .card:hover .scheduleAction > button,
+  .card:focus-within .scheduleAction > button {
     opacity: 1;
     pointer-events: auto;
     transform: scale(1);
@@ -91,7 +91,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scheduleAction {
+  .scheduleAction > button {
     transition: none;
   }
 }
