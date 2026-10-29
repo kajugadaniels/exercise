@@ -32,6 +32,8 @@ Profile mutation endpoints require a verified Clerk session, same-origin request
 
 Training-session mutations require the same verified-session and same-origin protections, a completed profile, a bounded JSON body, strict date/exercise validation, bounded integer sets and repetitions, bounded quarter-kilogram weight, and server-side provider resolution. The database—not client state—enforces exercise uniqueness and prescription bounds for each owner-scoped session date.
 
+Training-calendar reads require a verified Clerk session and completed profile, accept exactly one bounded `YYYY-MM` query, scope the database query through the session-derived owner, return no internal identifiers, and use `Cache-Control: private, no-store`.
+
 ## 5. External providers and SSRF
 
 - Use fixed HTTPS origins and version-pinned paths for Exercise Gym GIFs DB.
