@@ -12,6 +12,9 @@ import {
   CalendarAdd01Icon,
   Cancel01Icon,
   InformationCircleIcon,
+  Layers01Icon,
+  RepeatIcon,
+  WeightIcon,
 } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/Button/Button";
 import { Icon } from "@/components/ui/Icon/Icon";
@@ -44,6 +47,10 @@ function formatCalendarDate(value: string): string {
   }).format(date);
 }
 
+function formatCount(value: string, singular: string): string {
+  return `${value} ${Number(value) === 1 ? singular : `${singular}s`}`;
+}
+
 export function ScheduleExerciseDialog({
   exerciseId,
   exerciseName,
@@ -53,9 +60,13 @@ export function ScheduleExerciseDialog({
   const dialogId = `schedule-exercise-${generatedId}`;
   const titleId = `${dialogId}-title`;
   const descriptionId = `${dialogId}-description`;
+  const ruleNoteId = `${dialogId}-rule-note`;
   const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [scheduledDate, setScheduledDate] = useState(localCalendarDate);
+  const [sets, setSets] = useState("");
+  const [repetitionsPerSet, setRepetitionsPerSet] = useState("");
+  const [weightKilograms, setWeightKilograms] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -73,6 +84,9 @@ export function ScheduleExerciseDialog({
   function handleClose() {
     setError(null);
     setScheduledDate(localCalendarDate());
+    setSets("");
+    setRepetitionsPerSet("");
+    setWeightKilograms("");
     triggerRef.current?.focus();
   }
 
@@ -85,7 +99,13 @@ export function ScheduleExerciseDialog({
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!scheduledDate || isSubmitting) {
+    if (
+      !scheduledDate ||
+      !sets ||
+      !repetitionsPerSet ||
+      weightKilograms === "" ||
+      isSubmitting
+    ) {
       return;
     }
 
@@ -96,7 +116,13 @@ export function ScheduleExerciseDialog({
       const response = await fetch("/api/training/sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ exerciseId, scheduledDate }),
+        body: JSON.stringify({
+          exerciseId,
+          repetitionsPerSet: Number(repetitionsPerSet),
+          scheduledDate,
+          sets: Number(sets),
+          weightKilograms: Number(weightKilograms),
+        }),
       });
       const payload = (await response.json().catch(() => null)) as
         | ErrorPayload
@@ -109,10 +135,14 @@ export function ScheduleExerciseDialog({
       }
 
       dialogRef.current?.close();
+      const setSummary = formatCount(sets, "set");
+      const repetitionSummary = formatCount(repetitionsPerSet, "rep");
       showToast({
         tone: "success",
         title: "Exercise scheduled",
-        message: `${exerciseName} was added to ${formatCalendarDate(scheduledDate)}.`,
+        message:
+          `${exerciseName}: ${setSummary} × ${repetitionSummary} at ` +
+          `${weightKilograms} kg on ${formatCalendarDate(scheduledDate)}.`,
       });
     } catch (caughtError) {
       const message =
@@ -163,7 +193,7 @@ export function ScheduleExerciseDialog({
                 Add to training session
               </h2>
               <p className={styles.description} id={descriptionId}>
-                Choose when you plan to do {exerciseName}.
+                Choose when and how you plan to do {exerciseName}.
               </p>
             </div>
             <button
@@ -188,18 +218,78 @@ export function ScheduleExerciseDialog({
               value={scheduledDate}
               disabled={isSubmitting}
             />
+            <fieldset
+              className={styles.prescriptionGroup}
+              aria-describedby={ruleNoteId}
+            >
+              <legend className={styles.prescriptionLegend}>
+                Planned work
+              </legend>
+              <div className={styles.prescriptionGrid}>
+                <Input
+                  autoComplete="off"
+                  disabled={isSubmitting}
+                  icon={Layers01Icon}
+                  id={`${dialogId}-sets`}
+                  inputMode="numeric"
+                  label="Sets"
+                  max={50}
+                  min={1}
+                  onChange={(event) => setSets(event.target.value)}
+                  placeholder="3"
+                  required
+                  step={1}
+                  type="number"
+                  value={sets}
+                />
+                <Input
+                  autoComplete="off"
+                  disabled={isSubmitting}
+                  icon={RepeatIcon}
+                  id={`${dialogId}-repetitions`}
+                  inputMode="numeric"
+                  label="Reps per set"
+                  max={1_000}
+                  min={1}
+                  onChange={(event) =>
+                    setRepetitionsPerSet(event.target.value)
+                  }
+                  placeholder="8"
+                  required
+                  step={1}
+                  type="number"
+                  value={repetitionsPerSet}
+                />
+                <Input
+                  autoComplete="off"
+                  disabled={isSubmitting}
+                  icon={WeightIcon}
+                  id={`${dialogId}-weight`}
+                  inputMode="decimal"
+                  label="Weight (kg)"
+                  max={1_000}
+                  min={0}
+                  onChange={(event) => setWeightKilograms(event.target.value)}
+                  placeholder="12.5"
+                  required
+                  step={0.25}
+                  type="number"
+                  value={weightKilograms}
+                />
+              </div>
+            </fieldset>
             {error ? (
               <p className={styles.formError} role="alert">
                 {error}
               </p>
             ) : null}
-            <p className={styles.ruleNote}>
+            <p className={styles.ruleNote} id={ruleNoteId}>
               <span className={styles.noteIcon} aria-hidden="true">
                 <Icon icon={InformationCircleIcon} size={18} />
               </span>
               <span>
-                The same exercise can appear only once in a session on the same
-                date.
+                Enter 0 kg for bodyweight. The same exercise can appear only
+                once on the same date.
               </span>
             </p>
           </div>
