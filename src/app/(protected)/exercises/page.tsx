@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   RefreshIcon,
   SearchRemoveIcon,
@@ -21,6 +22,21 @@ import styles from "./page.module.css";
 type ExercisesPageProps = Readonly<{
   searchParams: Promise<ExerciseSearchParams>;
 }>;
+
+const defaultExerciseQuery = {
+  bodyParts: ["arms", "back", "chest", "shoulders"],
+  categories: ["strength"],
+  equipment: [
+    "barbell",
+    "cable",
+    "dumbbell",
+    "ez-bar",
+    "kettlebell",
+    "sled",
+    "smith",
+  ],
+  page: 1,
+} satisfies ExerciseQuery;
 
 async function loadExerciseCatalogPage(query: ExerciseQuery) {
   try {
@@ -53,6 +69,11 @@ async function ExerciseCatalog({
   searchParams,
 }: Pick<ExercisesPageProps, "searchParams">) {
   const resolvedSearchParams = await searchParams;
+
+  if (Object.keys(resolvedSearchParams).length === 0) {
+    redirect(buildExerciseLibraryUrl(defaultExerciseQuery, 1));
+  }
+
   const query = parseExerciseQuery(resolvedSearchParams);
   const result = await loadExerciseCatalogPage(query);
 
@@ -138,7 +159,7 @@ async function ExerciseCatalog({
             </div>
             <Link
               className={styles.stateAction}
-              href={buildExerciseLibraryUrl({ page: 1 }, 1)}
+              href="/exercises?page=1"
             >
               <Icon icon={RefreshIcon} size={18} />
               <span>Reset filters</span>
