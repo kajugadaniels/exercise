@@ -32,6 +32,11 @@ test("parses a bounded calendar response shape", () => {
           exercises: [
             {
               exerciseId: "biceps/barbell-curl",
+              image: {
+                alt: "Barbell curl animated exercise preview",
+                kind: "gif",
+                url: "https://cdn.jsdelivr.net/exercise.gif",
+              },
               name: "Barbell curl",
               repetitionsPerSet: 8,
               sets: 3,
@@ -60,8 +65,35 @@ test("parses a bounded calendar response shape", () => {
             exercises: [
               {
                 exerciseId: "biceps/barbell-curl",
+                image: null,
                 name: "Barbell curl",
                 repetitionsPerSet: 8.5,
+                sets: 3,
+                weightKilograms: 12.5,
+              },
+            ],
+          },
+        ],
+      },
+    }),
+    null,
+  );
+  assert.equal(
+    parseTrainingSessionsPayload({
+      data: {
+        sessions: [
+          {
+            date: "2026-10-29",
+            exercises: [
+              {
+                exerciseId: "biceps/barbell-curl",
+                image: {
+                  alt: "Untrusted preview",
+                  kind: "gif",
+                  url: "javascript:alert(1)",
+                },
+                name: "Barbell curl",
+                repetitionsPerSet: 8,
                 sets: 3,
                 weightKilograms: 12.5,
               },
