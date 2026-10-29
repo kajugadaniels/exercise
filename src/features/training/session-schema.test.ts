@@ -2,12 +2,17 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { scheduleExerciseSchema } from "./session-schema";
 
-test("accepts a provider exercise and valid calendar date", () => {
+const validSchedule = {
+  exerciseId: "biceps/barbell-curl",
+  repetitionsPerSet: 8,
+  scheduledDate: "2026-10-29",
+  sets: 3,
+  weightKilograms: 12.5,
+};
+
+test("accepts a provider exercise, date, and bounded prescription", () => {
   assert.equal(
-    scheduleExerciseSchema.safeParse({
-      exerciseId: "biceps/barbell-curl",
-      scheduledDate: "2026-10-28",
-    }).success,
+    scheduleExerciseSchema.safeParse(validSchedule).success,
     true,
   );
 });
@@ -15,15 +20,14 @@ test("accepts a provider exercise and valid calendar date", () => {
 test("rejects impossible dates and unknown fields", () => {
   assert.equal(
     scheduleExerciseSchema.safeParse({
-      exerciseId: "biceps/barbell-curl",
+      ...validSchedule,
       scheduledDate: "2026-02-30",
     }).success,
     false,
   );
   assert.equal(
     scheduleExerciseSchema.safeParse({
-      exerciseId: "biceps/barbell-curl",
-      scheduledDate: "2026-10-28",
+      ...validSchedule,
       userId: "untrusted-owner",
     }).success,
     false,
@@ -33,9 +37,40 @@ test("rejects impossible dates and unknown fields", () => {
 test("rejects malformed provider exercise identifiers", () => {
   assert.equal(
     scheduleExerciseSchema.safeParse({
+      ...validSchedule,
       exerciseId: "https://untrusted.example/exercise",
-      scheduledDate: "2026-10-28",
     }).success,
     false,
+  );
+});
+
+test("rejects missing, fractional, and out-of-range prescription values", () => {
+  assert.equal(
+    scheduleExerciseSchema.safeParse({
+      ...validSchedule,
+      sets: undefined,
+    }).success,
+    false,
+  );
+  assert.equal(
+    scheduleExerciseSchema.safeParse({
+      ...validSchedule,
+      repetitionsPerSet: 8.5,
+    }).success,
+    false,
+  );
+  assert.equal(
+    scheduleExerciseSchema.safeParse({
+      ...validSchedule,
+      weightKilograms: 12.3,
+    }).success,
+    false,
+  );
+  assert.equal(
+    scheduleExerciseSchema.safeParse({
+      ...validSchedule,
+      weightKilograms: 0,
+    }).success,
+    true,
   );
 });
