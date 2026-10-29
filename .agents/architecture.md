@@ -53,7 +53,7 @@ Use Server Components for route shells, initial catalog/detail data fetching, me
 
 ### Client Components only for browser state
 
-Use a narrow `"use client"` boundary for filter controls that require immediate local interaction, animation preferences, Clerk client widgets when documented, and React Muscle Highlighter interaction. Pass serializable normalized data across the boundary. Do not mark pages or feature trees as client-side merely for convenience.
+Use a narrow `"use client"` boundary for filter controls that require immediate local interaction, the browser-local training month, animation preferences, Clerk client widgets when documented, and React Muscle Highlighter interaction. Pass serializable normalized data across the boundary. The training route remains a Server Component shell; its calendar island obtains only the selected owner-scoped month through the protected no-store contract. Do not mark pages or feature trees as client-side merely for convenience.
 
 ### Server Actions
 
@@ -94,7 +94,7 @@ Media is a separate capability within the normalized model so a future licensed 
 
 Clerk proves session identity; it does not confer ownership. Every future private mutation re-derives the actor server-side and scopes data access to that actor. Client-only visibility controls are never authorization.
 
-The application user is keyed internally and has one unique Clerk user ID. The profile and dated training sessions reference that internal user. Every personal query derives the Clerk ID from the verified server session and never accepts an owner ID from the browser. Scheduled exercises store a bounded provider identity snapshot plus planned sets, repetitions per set, and weight in integer grams. They are unique per user session date and source exercise. Nullable prescription columns preserve unknown values on records created before the prescription was introduced; all new scheduling writes require them.
+The application user is keyed internally and has one unique Clerk user ID. The profile and dated training sessions reference that internal user. Every personal query derives the Clerk ID from the verified server session and never accepts an owner ID from the browser. The monthly training read is bounded to one validated calendar month and returns no internal user, session, or exercise-record ID. Scheduled exercises store a bounded provider identity snapshot plus planned sets, repetitions per set, and weight in integer grams. They are unique per user session date and source exercise. Nullable prescription columns preserve unknown values on records created before the prescription was introduced; all new scheduling writes require them.
 
 Prisma is server-only. Use Neon's pooled URL for application traffic and its direct URL for Prisma CLI migration work. Development and production are the only approved database environments; do not add a test, preview, branch-per-PR, or shadow database without a new decision.
 
