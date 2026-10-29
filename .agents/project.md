@@ -35,8 +35,8 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | Muscle highlighter on detail pages | MVP after dependency approval | Local React SVG package; explicit normalization |
 | Interactive muscle explorer | Future | Select muscle, filter catalog, open detail |
 | Favorites | Future | Persist only after their product model is approved |
-| Dated training sessions | MVP approved 2026-10-28 and expanded 2026-10-29, unverified | Add provider-verified exercises with planned sets, repetitions per set, and weight to an owner-scoped calendar date; one exercise may appear only once per date |
-| Broader training, workout, and progress features | Removed 2026-10-28 | Planning pages, execution, recommendations, history, analytics, and progress tracking remain out of scope |
+| Dated training sessions | MVP approved 2026-10-28 and expanded 2026-10-29, unverified | Add provider-verified exercises with planned sets, repetitions per set, and weight to an owner-scoped calendar date; review them in a protected monthly calendar; one exercise may appear only once per date |
+| Broader training, workout, and progress features | Removed 2026-10-28 | Workout execution, recommendations, completed history, analytics, and progress tracking remain out of scope; the approved monthly calendar is planning-only |
 | Fitness data portability and deletion | MVP controls implemented in code, unverified | JSON profile/session export and full local application-data deletion; external Clerk account synchronization remains a release gate |
 | PWA | Future | Separate approval and offline/data policy |
 | Native mobile application | Future / pending framework decision | Not supplied by Next.js automatically |
@@ -50,6 +50,7 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 4. The detail page explains supported instructions and muscles without inventing difficulty or safety claims.
 5. An SVG diagram highlights normalized primary/secondary muscles.
 6. A first-time authenticated user completes the required profile before accessing the protected product.
+7. A user can review scheduled exercises and their planned sets, repetitions, and weight by selecting a marked date in the monthly training calendar.
 
 ## 5. Explicit exclusions until approved
 
@@ -83,7 +84,7 @@ Status labels are binding: **Implemented**, **MVP**, **Future**, **Pending appro
 | Dependency installation | Clerk, Zod, Hugeicons, and React Muscle Highlighter versions are approved; developer installation/output pending |
 | Styling architecture | Plain CSS with semantic tokens and colocated CSS Modules is approved; Tailwind/CSS-in-JS/UI kits require a future stack-change approval |
 | Account onboarding scope | Mandatory male/female gender selection, height, weight, country, and derived BMI approved on 2026-10-27; correction and deletion are required |
-| Training and progress scope | Dated exercise scheduling was re-approved on 2026-10-28 and bounded planned sets, repetitions per set, and weight were approved on 2026-10-29; execution, recommendation, history, analytics, and progress features require a new decision |
+| Training and progress scope | Dated exercise scheduling was re-approved on 2026-10-28; bounded prescriptions and a protected planning-only monthly calendar were approved on 2026-10-29; execution, recommendation, completed history, analytics, and progress features require a new decision |
 | Media commercial rights and alternative licensed provider | Blocking public use of ExerciseGymGifsDB GIFs |
 | Native framework | Unresolved |
 | Monetization | Unresolved |
