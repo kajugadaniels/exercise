@@ -2,7 +2,10 @@ import "server-only";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/server/database/prisma";
 import { getExerciseCatalogItem } from "@/features/exercises/server/exercise-catalog";
-import type { ScheduleExerciseInput } from "../session-schema";
+import type {
+  ScheduleExerciseInput,
+  TrainingSessionCalendarItem,
+} from "../session-schema";
 
 export type ScheduleExerciseResult =
   | Readonly<{
@@ -13,6 +16,74 @@ export type ScheduleExerciseResult =
   | Readonly<{
       status: "duplicate" | "exercise-not-found" | "profile-required";
     }>;
+
+export type GetTrainingSessionsResult =
+  | Readonly<{
+      sessions: readonly TrainingSessionCalendarItem[];
+      status: "ok";
+    }>
+  | Readonly<{ status: "profile-required" }>;
+
+function calendarMonthBounds(month: string) {
+  const year = Number(month.slice(0, 4));
+  const monthNumber = Number(month.slice(5, 7));
+
+  return {
+    end: new Date(Date.UTC(year, monthNumber, 1)),
+    start: new Date(Date.UTC(year, monthNumber - 1, 1)),
+  };
+}
+
+export async function getTrainingSessionsForClerkUser(
+  clerkUserId: string,
+  month: string,
+): Promise<GetTrainingSessionsResult> {
+  const { start, end } = calendarMonthBounds(month);
+  const user = await prisma.user.findUnique({
+    where: { clerkUserId },
+    select: {
+      profile: { select: { id: true } },
+      trainingSessions: {
+        where: { scheduledDate: { gte: start, lt: end } },
+        orderBy: { scheduledDate: "asc" },
+        select: {
+          scheduledDate: true,
+          exercises: {
+            orderBy: { createdAt: "asc" },
+            select: {
+              exerciseName: true,
+              exerciseSourceId: true,
+              plannedRepetitionsPerSet: true,
+              plannedSets: true,
+              plannedWeightGrams: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!user?.profile) {
+    return { status: "profile-required" };
+  }
+
+  return {
+    status: "ok",
+    sessions: user.trainingSessions.map((session) => ({
+      date: session.scheduledDate.toISOString().slice(0, 10),
+      exercises: session.exercises.map((exercise) => ({
+        exerciseId: exercise.exerciseSourceId,
+        name: exercise.exerciseName,
+        repetitionsPerSet: exercise.plannedRepetitionsPerSet,
+        sets: exercise.plannedSets,
+        weightKilograms:
+          exercise.plannedWeightGrams === null
+            ? null
+            : exercise.plannedWeightGrams / 1_000,
+      })),
+    })),
+  };
+}
 
 export async function scheduleExerciseForClerkUser(
   clerkUserId: string,
