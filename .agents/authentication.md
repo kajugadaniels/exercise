@@ -3,7 +3,7 @@
 **Purpose:** Define the Clerk account, session, onboarding, and authorization architecture.  
 **Scope:** Sign-up, sign-in, account UI, protected routes, profiles, and private operations.  
 **Related:** [security.md](security.md), [privacy.md](privacy.md), [api.md](api.md)  
-**Last reviewed:** 2026-10-28
+**Last reviewed:** 2026-10-29
 
 ## 1. Provider and boundaries
 
@@ -30,7 +30,7 @@ The developer confirmed an authenticated-first application on 2026-10-27. The ro
 | Sign-in/sign-up | Public Clerk catch-all routes; authenticated users redirect safely |
 | Exercise browse/detail | Authenticated |
 | Profile/account/onboarding | Authenticated |
-| Scheduled training sessions | Authenticated, completed profile, and owner-scoped |
+| Training calendar and scheduled sessions | Authenticated, completed profile, and owner-scoped |
 | Internal callbacks/webhooks | Signature-verified server endpoints, not user sessions |
 
 Keep `clerkMiddleware()` configured for Clerk request integration, but do not treat proxy redirects as authorization. Each protected page, Server Action, Route Handler, and server data function enforces its own policy with the installed Clerk server API.
