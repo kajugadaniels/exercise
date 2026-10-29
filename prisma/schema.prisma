@@ -50,15 +50,18 @@ model TrainingSession {
 }
 
 model TrainingSessionExercise {
-  id                     String          @id @default(cuid())
-  trainingSessionId      String
-  exerciseProvider       String          @db.VarChar(50)
-  exerciseSourceId       String          @db.VarChar(200)
-  exerciseSourceVersion  String          @db.VarChar(50)
-  exerciseAttributionUrl String          @db.VarChar(500)
-  exerciseName           String          @db.VarChar(180)
-  createdAt              DateTime        @default(now())
-  trainingSession        TrainingSession @relation(fields: [trainingSessionId], references: [id], onDelete: Cascade)
+  id                       String          @id @default(cuid())
+  trainingSessionId        String
+  exerciseProvider         String          @db.VarChar(50)
+  exerciseSourceId         String          @db.VarChar(200)
+  exerciseSourceVersion    String          @db.VarChar(50)
+  exerciseAttributionUrl   String          @db.VarChar(500)
+  exerciseName             String          @db.VarChar(180)
+  plannedSets              Int?
+  plannedRepetitionsPerSet Int?
+  plannedWeightGrams       Int?
+  createdAt                DateTime        @default(now())
+  trainingSession          TrainingSession @relation(fields: [trainingSessionId], references: [id], onDelete: Cascade)
 
   @@unique([trainingSessionId, exerciseProvider, exerciseSourceId])
   @@index([trainingSessionId, createdAt])
