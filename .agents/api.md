@@ -3,7 +3,7 @@
 **Purpose:** Define validated external adapters and consistent server HTTP contracts.  
 **Scope:** Exercise providers, Route Handlers, Server Actions, future native APIs, and webhooks.  
 **Related:** [architecture.md](architecture.md), [security.md](security.md), [exercises.md](exercises.md)  
-**Last reviewed:** 2026-10-28
+**Last reviewed:** 2026-10-29
 
 ## 1. Provider adapter contract
 
@@ -90,7 +90,7 @@ The private HTTP surface is:
 | `GET /api/account/data` | Download the current actor's stored profile and scheduled sessions as JSON | Authenticated |
 | `DELETE /api/account/data` | Delete the current actor's local application user and cascaded profile/sessions | Authenticated, same-origin, exact confirmation phrase |
 
-The server derives the Clerk user ID; no contract accepts an owner ID. Personalized responses use `Cache-Control: private, no-store`. Mutation bodies are strict, bounded JSON. Errors use lowercase stable codes and user-safe messages. The scheduling endpoint accepts only a validated provider exercise ID and valid `YYYY-MM-DD` date, reloads exercise identity from the normalized provider, and relies on a database unique constraint to reject the same exercise twice for one owner and date. The export omits internal database and Clerk identifiers, expresses stored weight in kilograms, and includes scheduled exercise provenance. Local data deletion does not delete the external Clerk sign-in account.
+The server derives the Clerk user ID; no contract accepts an owner ID. Personalized responses use `Cache-Control: private, no-store`. Mutation bodies are strict, bounded JSON. Errors use lowercase stable codes and user-safe messages. The scheduling endpoint accepts only a validated provider exercise ID, valid `YYYY-MM-DD` date, integer sets, integer repetitions per set, and quarter-kilogram weight from 0–1,000 kg. It reloads exercise identity from the normalized provider and relies on a database unique constraint to reject the same exercise twice for one owner and date. The export omits internal database and Clerk identifiers, expresses stored weight in kilograms, and includes the scheduled exercise prescription and provenance. Local data deletion does not delete the external Clerk sign-in account.
 
 Workout execution, recommendation, history, analytics, and progress endpoints remain removed. Reintroducing them requires a new product, privacy, schema, and API decision.
 
