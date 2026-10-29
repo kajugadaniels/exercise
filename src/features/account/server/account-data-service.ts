@@ -18,7 +18,7 @@ type StoredAccountExport = Prisma.UserGetPayload<{
 
 function toAccountExport(user: StoredAccountExport) {
   return {
-    formatVersion: 1,
+    formatVersion: 2,
     exportedAt: new Date().toISOString(),
     profile: user.profile
       ? {
@@ -35,6 +35,12 @@ function toAccountExport(user: StoredAccountExport) {
       exercises: session.exercises.map((exercise) => ({
         addedAt: exercise.createdAt.toISOString(),
         name: exercise.exerciseName,
+        plannedRepetitionsPerSet: exercise.plannedRepetitionsPerSet,
+        plannedSets: exercise.plannedSets,
+        plannedWeightKilograms:
+          exercise.plannedWeightGrams === null
+            ? null
+            : exercise.plannedWeightGrams / 1_000,
         provider: exercise.exerciseProvider,
         providerAttributionUrl: exercise.exerciseAttributionUrl,
         providerExerciseId: exercise.exerciseSourceId,
