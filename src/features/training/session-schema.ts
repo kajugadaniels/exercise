@@ -49,6 +49,11 @@ export type ScheduleExerciseInput = z.infer<typeof scheduleExerciseSchema>;
 
 export type TrainingSessionCalendarExercise = Readonly<{
   exerciseId: string;
+  image: Readonly<{
+    alt: string;
+    kind: "gif" | "image";
+    url: string;
+  }> | null;
   name: string;
   repetitionsPerSet: number | null;
   sets: number | null;
