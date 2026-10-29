@@ -3,7 +3,7 @@
 **Purpose:** Define non-negotiable trust, validation, authorization, secret, and external-integration boundaries.  
 **Scope:** All code, configuration, user data, and third-party connections.  
 **Related:** [authentication.md](authentication.md), [api.md](api.md), [privacy.md](privacy.md)  
-**Last reviewed:** 2026-10-28
+**Last reviewed:** 2026-10-29
 
 ## 1. Trust model
 
@@ -30,7 +30,7 @@ Secrets are server-only, never prefixed/exposed as public values, committed, pri
 
 Profile mutation endpoints require a verified Clerk session, same-origin request, JSON content type, a 16 KiB body limit, and strict runtime validation. Profile queries scope through the session-derived Clerk ID. Personalized data is never publicly cached.
 
-Training-session mutations require the same verified-session and same-origin protections, a completed profile, a bounded JSON body, strict date/exercise validation, and server-side provider resolution. The database—not client state—enforces exercise uniqueness for each owner-scoped session date.
+Training-session mutations require the same verified-session and same-origin protections, a completed profile, a bounded JSON body, strict date/exercise validation, bounded integer sets and repetitions, bounded quarter-kilogram weight, and server-side provider resolution. The database—not client state—enforces exercise uniqueness and prescription bounds for each owner-scoped session date.
 
 ## 5. External providers and SSRF
 
