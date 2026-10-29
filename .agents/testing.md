@@ -3,7 +3,7 @@
 **Purpose:** Define proportional automated and manual confidence for the platform.  
 **Scope:** All behavior changes, integrations, UI, and release verification.  
 **Related:** [workflow.md](workflow.md), [accessibility.md](accessibility.md), [git.md](git.md)  
-**Last reviewed:** 2026-10-27
+**Last reviewed:** 2026-10-29
 
 ## 1. Execution policy
 
@@ -16,7 +16,7 @@ Agents may write and review tests but must not execute tests, lint, type checks,
 | Unit | Provider schemas/mappings, muscle mapping, profile validation/BMI, filter semantics, URL construction, error translation |
 | Component | Exercise states, filter controls, diagram wrapper, keyboard behavior, missing media |
 | Integration | Route rendering with provider success/failure, Clerk protection, owner-scoped operations |
-| End-to-end | Core browse→filter→detail, exercise scheduling, and sign-in/onboarding/profile journeys |
+| End-to-end | Core browse→filter→detail, exercise scheduling with planned sets/reps/weight, and sign-in/onboarding/profile journeys |
 | Manual | Visual quality, mobile/touch, real assistive tech, reduced motion, remote-media behavior |
 
 Prefer behavior assertions over implementation details. Tests should remain deterministic and independent of live providers.
@@ -35,7 +35,7 @@ Cover loading, populated, empty, filtered-empty, provider failure, malformed rec
 
 ## 5. Auth and security coverage
 
-For private operations, test unauthenticated access, completed/incomplete profiles, owner scoping, invalid payloads and origins, stale/missing records, deletion, and malicious input. Mock Clerk only at the documented boundary. A client visibility test is not an authorization test. Database integration tests remain pending because no test database is approved.
+For private operations, test unauthenticated access, completed/incomplete profiles, owner scoping, invalid payloads and origins, stale/missing records, deletion, and malicious input. Scheduling coverage includes missing, fractional, and out-of-range sets, repetitions, and weight plus the valid zero-kilogram bodyweight case. Mock Clerk only at the documented boundary. A client visibility test is not an authorization test. Database integration tests remain pending because no test database is approved.
 
 ## 6. Accessibility verification
 
