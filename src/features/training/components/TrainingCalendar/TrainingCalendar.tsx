@@ -17,6 +17,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/Button/Button";
 import { Icon } from "@/components/ui/Icon/Icon";
+import { ExerciseThumbnail } from "@/features/exercises/components/ExerciseThumbnail/ExerciseThumbnail";
 import {
   createCalendarDays,
   getCalendarMonthKey,
@@ -306,7 +307,12 @@ function HydratedTrainingCalendar() {
                             </span>
                           </span>
                           <span className={styles.sessionPreview} aria-hidden="true">
-                            {session.exercises[0]?.name}
+                            <span>{session.exercises[0]?.name}</span>
+                            {session.exercises.length > 1 ? (
+                              <span className={styles.sessionPreviewMeta}>
+                                +{session.exercises.length - 1} more
+                              </span>
+                            ) : null}
                           </span>
                         </button>
                       ) : (
@@ -340,11 +346,14 @@ function HydratedTrainingCalendar() {
         {selectedSession ? (
           <div className={styles.dialogContent}>
             <header className={styles.dialogHeader}>
-              <div>
+              <div className={styles.dialogHeading}>
                 <p className={styles.dialogContext}>Training session</p>
                 <h2 className={styles.dialogTitle} id="training-session-title">
                   {formatSessionDate(selectedSession.date)}
                 </h2>
+                <p className={styles.dialogSummary}>
+                  {exerciseCountLabel(selectedSession.exercises.length)} planned
+                </p>
               </div>
               <button
                 className={styles.closeButton}
@@ -359,26 +368,31 @@ function HydratedTrainingCalendar() {
             <ul className={styles.exerciseList}>
               {selectedSession.exercises.map((exercise) => (
                 <li className={styles.exerciseItem} key={exercise.exerciseId}>
-                  <div className={styles.exerciseIdentity}>
-                    <span className={styles.exerciseIcon} aria-hidden="true">
-                      <Icon icon={Dumbbell01Icon} size={20} />
-                    </span>
-                    <h3>{exercise.name}</h3>
+                  <div className={styles.exerciseMedia}>
+                    <ExerciseThumbnail image={exercise.image} />
                   </div>
-                  <dl className={styles.prescription}>
-                    <div>
-                      <dt>Sets</dt>
-                      <dd>{plannedValue(exercise.sets)}</dd>
+                  <div className={styles.exerciseDetails}>
+                    <div className={styles.exerciseIdentity}>
+                      <span className={styles.exerciseIcon} aria-hidden="true">
+                        <Icon icon={Dumbbell01Icon} size={18} />
+                      </span>
+                      <h3>{exercise.name}</h3>
                     </div>
-                    <div>
-                      <dt>Reps</dt>
-                      <dd>{plannedValue(exercise.repetitionsPerSet)}</dd>
-                    </div>
-                    <div>
-                      <dt>Weight</dt>
-                      <dd>{plannedValue(exercise.weightKilograms, " kg")}</dd>
-                    </div>
-                  </dl>
+                    <dl className={styles.prescription}>
+                      <div>
+                        <dt>Sets</dt>
+                        <dd>{plannedValue(exercise.sets)}</dd>
+                      </div>
+                      <div>
+                        <dt>Reps</dt>
+                        <dd>{plannedValue(exercise.repetitionsPerSet)}</dd>
+                      </div>
+                      <div>
+                        <dt>Weight</dt>
+                        <dd>{plannedValue(exercise.weightKilograms, " kg")}</dd>
+                      </div>
+                    </dl>
+                  </div>
                 </li>
               ))}
             </ul>
