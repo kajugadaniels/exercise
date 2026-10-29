@@ -144,9 +144,12 @@ export function ExerciseFilterSheet({ query }: ExerciseFilterSheetProps) {
       page: 1,
       ...(query.search ? { search: query.search } : {}),
     };
+    const clearFiltersHref = query.search
+      ? buildExerciseLibraryUrl(nextQuery, 1)
+      : "/exercises?page=1";
 
     closeSheet();
-    router.push(buildExerciseLibraryUrl(nextQuery, 1), { scroll: false });
+    router.push(clearFiltersHref, { scroll: false });
   }
 
   return (
