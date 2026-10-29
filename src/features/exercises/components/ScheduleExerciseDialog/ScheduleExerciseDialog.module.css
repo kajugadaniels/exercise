@@ -25,7 +25,7 @@
 .dialog {
   position: fixed;
   inset: 0;
-  inline-size: min(calc(100% - var(--space-6)), 30rem);
+  inline-size: min(calc(100% - var(--space-6)), 34rem);
   max-inline-size: none;
   max-block-size: calc(100dvh - var(--space-6));
   padding: 0;
@@ -124,6 +124,30 @@
   padding: var(--space-5);
 }
 
+.prescriptionGroup,
+.prescriptionGrid {
+  display: grid;
+}
+
+.prescriptionGroup {
+  gap: var(--space-2);
+  min-inline-size: 0;
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+.prescriptionLegend {
+  padding: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.prescriptionGrid {
+  gap: var(--space-3);
+}
+
 .ruleNote {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -167,6 +191,12 @@
   .closeButton:hover {
     background-color: var(--color-surface-soft);
     color: var(--color-text);
+  }
+}
+
+@media (min-width: 40rem) {
+  .prescriptionGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
