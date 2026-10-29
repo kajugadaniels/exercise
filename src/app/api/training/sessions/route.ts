@@ -1,7 +1,13 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { scheduleExerciseSchema } from "@/features/training/session-schema";
-import { scheduleExerciseForClerkUser } from "@/features/training/server/schedule-service";
+import {
+  scheduleExerciseSchema,
+  trainingSessionMonthSchema,
+} from "@/features/training/session-schema";
+import {
+  getTrainingSessionsForClerkUser,
+  scheduleExerciseForClerkUser,
+} from "@/features/training/server/schedule-service";
 
 const MAX_SCHEDULE_BODY_BYTES = 4_096;
 const noStoreHeaders = { "Cache-Control": "private, no-store" };
@@ -15,6 +21,53 @@ function errorResponse(status: number, code: string, message: string) {
 
 function hasTrustedOrigin(request: Request): boolean {
   return request.headers.get("origin") === new URL(request.url).origin;
+}
+
+export async function GET(request: Request) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return errorResponse(401, "unauthenticated", "Sign in to view training.");
+  }
+
+  const searchParams = new URL(request.url).searchParams;
+  const keys = Array.from(searchParams.keys());
+  const monthValues = searchParams.getAll("month");
+
+  if (
+    keys.length !== 1 ||
+    keys[0] !== "month" ||
+    monthValues.length !== 1
+  ) {
+    return errorResponse(400, "invalid_query", "Choose one calendar month.");
+  }
+
+  const parsedMonth = trainingSessionMonthSchema.safeParse(monthValues[0]);
+  if (!parsedMonth.success) {
+    return errorResponse(400, "invalid_month", "Choose a valid calendar month.");
+  }
+
+  try {
+    const result = await getTrainingSessionsForClerkUser(
+      userId,
+      parsedMonth.data,
+    );
+
+    if (result.status === "profile-required") {
+      return errorResponse(
+        428,
+        "profile_required",
+        "Complete your profile before viewing training.",
+      );
+    }
+
+    return NextResponse.json(
+      { data: { sessions: result.sessions } },
+      { headers: noStoreHeaders },
+    );
+  } catch {
+    return errorResponse(500, "internal", "Training could not be loaded.");
+  }
 }
 
 export async function POST(request: Request) {
